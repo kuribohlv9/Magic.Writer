@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{67A984FA-67FC-46B8-AC08-E9B55F98A49E}</ProjectGuid>
+    <ProjectGuid>{83F919EA-6EE8-4383-9047-A60861A27885}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MagicWriter</RootNamespace>
   </PropertyGroup>
