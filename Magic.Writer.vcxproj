@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{83F919EA-6EE8-4383-9047-A60861A27885}</ProjectGuid>
+    <ProjectGuid>{67A984FA-67FC-46B8-AC08-E9B55F98A49E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MagicWriter</RootNamespace>
   </PropertyGroup>
@@ -86,7 +86,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Magic.Writer.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
