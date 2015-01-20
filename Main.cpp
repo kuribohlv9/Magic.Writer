@@ -6,8 +6,13 @@
 
 int main(int argc, char* argv[])
 {
-	//Bus
-	//Jag vill ha PAJ!
+	sf::Window window;
+	window.create(sf::VideoMode(1024, 600), "Magic Writer");
+
+	while (window.isOpen())
+	{
+
+	}
 	return 0;
 }
 
