@@ -100,27 +100,25 @@ int main(int argc, char* argv[])
 				}
 
 			}
-			if (words[i]->IsActive())
+		
+			if (charIndex >= 0)
 			{
-				if (charIndex >= 0)
+				for (int j = 0; j < wordText.size(); j++)
 				{
-					for (int j = 0; j < wordText.size(); j++)
-					{
-						sf::Vector2f position = words[i]->GetPosition();
+					sf::Vector2f position = words[i]->GetPosition();
 
-						singleCharText.setColor(sf::Color::White);
-						if (j <= charIndex)
-							singleCharText.setColor(sf::Color::Red);
-						singleCharText.setString(wordText[j]);
-						singleCharText.setPosition(position.x + j * 15, position.y);
+					singleCharText.setColor(sf::Color::White);
+					if (j <= charIndex)
+						singleCharText.setColor(sf::Color::Red);
+					singleCharText.setString(wordText[j]);
+					singleCharText.setPosition(position.x + j * 15, position.y);
 
-						window.draw(singleCharText);
-					}
+					window.draw(singleCharText);
 				}
-				else
-				{
-					window.draw(text);
-				}
+			}
+			else
+			{
+				window.draw(text);
 			}
 		}
 		//
