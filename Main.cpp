@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "Word.h"
+#include <iostream>
 
 int main(int argc, char* argv[])
 {
@@ -10,7 +11,18 @@ int main(int argc, char* argv[])
 	window.create(sf::VideoMode(1024, 600), "Magic Writer");
 
 	char inputChar;
+	bool enter;
+	bool left, lastLeft, right, lastRight;
+	int xPositionIndex = 1;
 	std::string inputText;
+
+	//Instantiate player
+	sf::Texture texture;
+	texture.loadFromFile("assets/sprites/object.png");
+
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
+	sprite.setPosition(380, 300);
 
 	//Instantiate words
 	Word* words[3];
@@ -19,13 +31,15 @@ int main(int argc, char* argv[])
 	words[2] = new Word("chair", sf::Vector2f(600, 400));
 	int wordCount = sizeof(words) / sizeof(words[0]);
 
+	std::vector<sf::Text> finishedWords;
+
 	//Load font
 	sf::Font font;
 	font.loadFromFile("assets/fonts/font.ttf");
 
 	sf::Text userText;
 	userText.setFont(font);
-	userText.setPosition(300, 200);
+	userText.setPosition(400, 450);
 
 	sf::Text singleCharText;
 	singleCharText.setFont(font);
@@ -35,6 +49,7 @@ int main(int argc, char* argv[])
 	{
 		sf::Event event;
 
+		enter = false;
 		while (window.pollEvent(event))
 		{
 			//Check event types
@@ -48,7 +63,12 @@ int main(int argc, char* argv[])
 				if (event.text.unicode < 1000)
 				{
 					inputChar = static_cast<char>(event.text.unicode);
-					if (inputChar == '\b')
+					if (inputChar == '\r')
+					{
+						enter = true;
+						continue;
+					}
+					else if (inputChar == '\b')
 					{
 						inputText = "";
 						userText.setString(inputText);
@@ -66,6 +86,31 @@ int main(int argc, char* argv[])
 			}
 		}
 
+		//Move sprite
+		left = false;
+		right = false;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		{
+			left = true;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		{
+			right = true;
+		}
+
+		if (left && !lastLeft)
+		{
+			if (xPositionIndex > 1)
+				xPositionIndex--;
+		}
+		else if (right && !lastRight)
+		{
+			if (xPositionIndex < 3)
+				xPositionIndex++;
+		}
+
+		sprite.setPosition(10 + xPositionIndex * 190, 200);
+
 		//Clear screen with single color
 		window.clear(sf::Color::Black);
 
@@ -82,7 +127,6 @@ int main(int argc, char* argv[])
 			text.setString(wordText);
 			text.setPosition(words[i]->GetPosition());
 			
-
 			int charIndex = -1;
 			if (words[i]->IsActive() && inputText.size() > 0)
 			{
@@ -90,14 +134,31 @@ int main(int argc, char* argv[])
 				
 				if (charIndex >= wordText.size())
 					continue;
-				if (wordText[charIndex] != inputChar)
+
+				if (wordText.size() == inputText.size() && enter)
+				{
+					sf::Text finishedText;
+					finishedText.setFont(font);
+					finishedText.setString(wordText);
+					finishedText.setPosition(sprite.getPosition());
+
+					finishedWords.push_back(finishedText);
+
+					//Reset... the same as backslash
+					inputText = "";
+					userText.setString(inputText);
+					for (int i = 0; i < wordCount; i++)
+					{
+						words[i]->SetActive(true);
+					}
+
+				}
+				else if (wordText[charIndex] != inputChar && inputChar != '\r')
 				{
 					words[i]->SetActive(false);
 					continue;
 				}
-				else if (wordText == inputText)
-				{
-				}
+				
 
 			}
 		
@@ -121,11 +182,24 @@ int main(int argc, char* argv[])
 				window.draw(text);
 			}
 		}
+
+		//Draw all finished words
+		for (int i = 0; i < finishedWords.size(); i++)
+		{
+			sf::Vector2f pos = finishedWords[i].getPosition();
+			finishedWords[i].setPosition(pos.x, pos.y - 0.1f);
+
+			window.draw(finishedWords[i]);
+		}
+
+		window.draw(sprite);
 		//
 
 		//Present back buffer
 		window.display();
 
+		lastLeft = left;
+		lastRight = right;
 	}
 	return 0;
 }
