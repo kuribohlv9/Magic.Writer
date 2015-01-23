@@ -186,8 +186,8 @@ int main(int argc, char* argv[])
 		//Draw all finished words
 		for (int i = 0; i < finishedWords.size(); i++)
 		{
-			sf::Vector2f pos = finishedWords[i].getPosition();
-			finishedWords[i].setPosition(pos.x, pos.y - 0.1f);
+			
+			finishedWords[i].move(0, -1);
 
 			window.draw(finishedWords[i]);
 		}
