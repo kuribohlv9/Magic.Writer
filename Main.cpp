@@ -131,9 +131,6 @@ int main(int argc, char* argv[])
 			if (words[i]->IsActive() && inputText.size() > 0)
 			{
 				charIndex = inputText.size() - 1;
-				
-				if (charIndex >= wordText.size())
-					continue;
 
 				if (wordText.size() == inputText.size() && enter)
 				{
