@@ -24,11 +24,6 @@ int main(int argc, char* argv[])
 	sprite.setTexture(texture);
 	sprite.setPosition(380, 300);
 
-	enter ? enter = false : enter = true;
-
-	int i = 0;
-
-	int b = (i < 0) ? 5 : 10;
 	//Instantiate words
 	Word* words[3];
 	words[0] = new Word("brick", sf::Vector2f(200, 400));
@@ -191,8 +186,8 @@ int main(int argc, char* argv[])
 		//Draw all finished words
 		for (int i = 0; i < finishedWords.size(); i++)
 		{
-			finishedWords[i].move(0, -1);
-			
+			sf::Vector2f pos = finishedWords[i].getPosition();
+			finishedWords[i].setPosition(pos.x, pos.y - 0.1f);
 
 			window.draw(finishedWords[i]);
 		}
