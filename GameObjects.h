@@ -19,7 +19,7 @@ protected:
 	virtual void Update(float deltaTime) = 0;
 	virtual GType GetType() = 0;
 	virtual sf::Sprite* GetSprite();
-	// We were not in need for a collider class as it was a built-in class in SFML, so we just used sf::IntRect.
+	// We were not in need of a collider class as it was a built-in class in SFML, so we just used sf::IntRect.
 	virtual sf::IntRect* GetHitBox();
 	virtual bool IsActive();
 	virtual float GetX();
