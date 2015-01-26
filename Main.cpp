@@ -4,13 +4,14 @@
 #include "stdafx.h"
 #include "Word.h"
 #include <iostream>
+#include "InputManager.h"
 
 int main(int argc, char* argv[])
 {
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(1024, 600), "Magic Writer");
 
-	char inputChar;
+	char inputChar = ' ';
 	bool enter;
 	bool left, lastLeft, right, lastRight;
 	int xPositionIndex = 1;
@@ -45,11 +46,15 @@ int main(int argc, char* argv[])
 	singleCharText.setFont(font);
 
 	//Game loop
+	sf::Clock clock;
 	while (window.isOpen())
-	{
+	{	
+		sf::Time time = clock.restart();
+		float deltaTime = time.asSeconds();
 		sf::Event event;
 
 		enter = false;
+		InputManager::SetLastInputs();
 		while (window.pollEvent(event))
 		{
 			//Check event types
@@ -57,6 +62,23 @@ int main(int argc, char* argv[])
 			if (event.type == sf::Event::Closed)
 			{
 				window.close();
+			}
+			else if (event.type == sf::Event::KeyPressed)
+			{
+				InputManager::SetKey(event.key.code, true);
+				
+			}
+			else if (event.type == sf::Event::KeyReleased)
+			{
+				InputManager::SetKey(event.key.code, false);
+			}
+			else if (event.type == sf::Event::MouseButtonPressed)
+			{
+				InputManager::SetButton(event.mouseButton.button, true);
+			}
+			else if (event.type == sf::Event::MouseButtonReleased)
+			{
+				InputManager::SetButton(event.mouseButton.button, false);
 			}
 			else if (event.type == sf::Event::TextEntered)
 			{
