@@ -5,6 +5,7 @@
 #include "Word.h"
 #include <iostream>
 #include "InputManager.h"
+#include "TextureManager.h"
 
 int main(int argc, char* argv[])
 {
