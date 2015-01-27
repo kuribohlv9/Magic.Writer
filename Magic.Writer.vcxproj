@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{72763EFA-5E5F-4868-BE40-8165116A6102}</ProjectGuid>
+    <ProjectGuid>{83F919EA-6EE8-4383-9047-A60861A27885}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MagicWriter</RootNamespace>
   </PropertyGroup>
@@ -84,15 +84,19 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObjects.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Monsters.h" />
     <ClInclude Include="SpriteManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Word.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameObjects.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Monsters.cpp" />
     <ClCompile Include="SpriteManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

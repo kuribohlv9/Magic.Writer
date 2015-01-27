@@ -20,6 +20,12 @@ GameObjects::~GameObjects()
 		delete m_hitBox;
 }
 
+GType GameObjects::GetType()
+{
+	return m_type; 
+};
+
+
 sf::Sprite* GameObjects::GetSprite()
 {
 	return m_sprite;

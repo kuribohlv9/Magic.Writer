@@ -19,6 +19,12 @@
     <Filter Include="Source Files\Managers">
       <UniqueIdentifier>{6858b7c7-5ee7-4d76-bea3-e7673c93a888}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Game objects">
+      <UniqueIdentifier>{3d8e9004-1b46-412e-a470-a0c5e1bc12fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game objects">
+      <UniqueIdentifier>{ac7f3fc4-ce96-4bcd-8bfc-e13fa0294c6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -39,6 +45,12 @@
     <ClInclude Include="InputManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="GameObjects.h">
+      <Filter>Header Files\Game objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Monsters.h">
+      <Filter>Header Files\Game objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -55,6 +67,12 @@
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects.cpp">
+      <Filter>Source Files\Game objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Monsters.cpp">
+      <Filter>Source Files\Game objects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
