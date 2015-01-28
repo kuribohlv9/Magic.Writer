@@ -113,10 +113,10 @@ void Engine::Run()
 	{
 		HandleEvents();
 
-		m_window.clear();
+		m_state_manager->Update(0);
 
+		m_window.clear(sf::Color::Black);
 		m_state_manager->Draw();
-
 		m_window.display();
 	}
 	m_window.close();
@@ -129,11 +129,28 @@ void Engine::HandleEvents()
 	// but we only care about clearing the queue for now
 
 	sf::Event event;
+	m_input_manager->SetLastInputs();
 	while (m_window.pollEvent(event))
 	{
 		if (event.type == sf::Event::Closed)
 		{
 			m_running = false;
+		}
+		else if (event.type == sf::Event::KeyPressed)
+		{
+			m_input_manager->SetKey(event.key.code, true);
+		}
+		else if (event.type == sf::Event::KeyReleased)
+		{
+			m_input_manager->SetKey(event.key.code, false);
+		}
+		else if (event.type == sf::Event::MouseButtonPressed)
+		{
+			m_input_manager->SetButton(event.mouseButton.button, true);
+		}
+		else if (event.type == sf::Event::MouseButtonReleased)
+		{
+			m_input_manager->SetButton(event.mouseButton.button, false);
 		}
 	}
 }

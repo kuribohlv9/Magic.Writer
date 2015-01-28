@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "GameObjects.h"
+#include "GameObject.h"
 #include "Collider.h"
 
 Collider::Collider(int x, int y)
@@ -17,12 +17,12 @@ bool Collider::HasParent()
 	return m_parent != nullptr;
 }
 
-void Collider::SetParent(GameObjects* parent)
+void Collider::SetParent(GameObject* parent)
 {
 	m_parent = parent;
 }
 
-GameObjects* Collider::GetParent()
+GameObject* Collider::GetParent()
 {
 	return m_parent;
 }
@@ -39,24 +39,10 @@ void Collider::SetWidthHeight(int width, int height)
 	m_area.height = height;
 }
 
-int Collider::GetX()
-{
-	return m_area.left;
-}
 
-int Collider::GetY()
+sf::IntRect Collider::GetArea()
 {
-	return m_area.top;
-}
-
-int Collider::GetWidth()
-{
-	return m_area.width;
-}
-
-int Collider::GetHeight()
-{
-	return m_area.height;
+	return m_area;
 }
 
 void Collider::Refresh()

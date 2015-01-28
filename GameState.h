@@ -3,6 +3,8 @@
 
 class DrawManager;
 class TextureManager;
+class InputManager;
+class Monster;
 
 class GameState : public State
 {
@@ -21,7 +23,10 @@ public:
 private:
 	DrawManager* m_drawManager;
 	TextureManager* m_textureManager;
+	InputManager* m_inputManager;
 
 	//TMP
-	sf::Sprite m_sprite;
+	sf::Text m_text;
+	Monster* m_objectOne;
+	Monster* m_objectTwo;
 };

@@ -1,6 +1,6 @@
 #pragma once
 
-class GameObjects;
+class GameObject;
 
 class Collider
 {
@@ -8,20 +8,17 @@ public:
 	Collider(int x, int y);
 
 	bool HasParent();
-	void SetParent(GameObjects* parent);
-	GameObjects* GetParent();
+	void SetParent(GameObject* parent);
+	GameObject* GetParent();
 
 	void SetPosition(int x, int y);
 	void SetWidthHeight(int width, int height);
 
-	int GetX();
-	int GetY();
-	int GetWidth();
-	int GetHeight();
+	sf::IntRect GetArea();
 
 	void Refresh();
 
 private:
-	GameObjects* m_parent;
+	GameObject* m_parent;
 	sf::IntRect m_area;
 };
