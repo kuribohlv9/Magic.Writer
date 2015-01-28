@@ -178,6 +178,14 @@ int main(int argc, char* argv[])
 					words[i]->SetActive(false);
 					continue;
 				}
+				if (wordText.size() == inputText.size())
+				{
+					userText.setPosition(sprite.getPosition().x, sprite.getPosition().y - 50);
+				}
+				else
+				{
+					userText.setPosition(400, 450);
+				}
 				
 
 			}
