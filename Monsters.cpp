@@ -3,12 +3,14 @@
 
 // INTE KLAR HÄR ÄN!!!
 
-Monsters::Monsters(sf::Texture*, int x, int y)
+Monsters::Monsters(sf::Texture* texture, int x, int y)
 {
 	m_type = ENTITY_MONSTERS;
 
 	m_x = x;
 	m_y = y;
+
+	m_sprite->setTexture(*texture);
 	
 }
 

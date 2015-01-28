@@ -5,7 +5,7 @@
 class Monsters : public GameObjects
 {
 public:
-	Monsters(sf::Texture*, int x, int y);
+	Monsters(sf::Texture* texture, int x, int y);
 	~Monsters();
 
 	void Draw(sf::RenderWindow window);
