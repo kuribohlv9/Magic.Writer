@@ -15,7 +15,6 @@ public:
 	GameObjects();
 	virtual ~GameObjects();
 
-protected:
 	// Inside Draw we draw out the sprite using sf::RenderWindow.
 	virtual void Draw(sf::RenderWindow window) = 0;
 	virtual void Update(float deltaTime) = 0;
