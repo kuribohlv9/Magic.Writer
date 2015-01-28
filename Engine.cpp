@@ -114,6 +114,9 @@ void Engine::Run()
 		HandleEvents();
 
 		m_window.clear();
+
+		m_state_manager->Draw();
+
 		m_window.display();
 	}
 	m_window.close();

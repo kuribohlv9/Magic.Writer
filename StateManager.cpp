@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "StateManager.h"
 
+//States
+#include "GameState.h"
+
 
 StateManager::StateManager()
 {
@@ -12,7 +15,8 @@ StateManager::~StateManager()
 
 bool StateManager::Initialize()
 {
-	m_activeState = nullptr;
+	AddState(STATE_GAME, new GameState());
+	SetActiveState(STATE_GAME);
 	return true;
 }
 void StateManager::Shutdown()

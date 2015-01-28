@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{83F919EA-6EE8-4383-9047-A60861A27885}</ProjectGuid>
+    <ProjectGuid>{72763EFA-5E5F-4868-BE40-8165116A6102}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MagicWriter</RootNamespace>
   </PropertyGroup>
@@ -90,6 +90,7 @@
     <ClInclude Include="DrawManager.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="GameObjects.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Monsters.h" />
     <ClInclude Include="ServiceLocator.h" />
@@ -106,6 +107,7 @@
     <ClCompile Include="DrawManager.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObjects.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Monsters.cpp" />

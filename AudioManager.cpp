@@ -50,7 +50,6 @@ sf::Sound* AudioManager::LoadSoundFromFile(const std::string& filename)
 
 	return it->second;
 }
-
 sf::Music* AudioManager::LoadMusicFromFile(const std::string& filename)
 {
 	auto it = m_musics.find(filename);
