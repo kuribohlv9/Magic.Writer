@@ -6,6 +6,9 @@ public:
 	TextureManager();
 	~TextureManager();
 
+	bool Initialize();
+	void Shutdown();
+
 	//Creates and returns a texture via a filename
 	sf::Texture* LoadTexture(const std::string& filename);
 	//Creates and returns a font via filename

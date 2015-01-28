@@ -8,6 +8,15 @@ StateManager::StateManager()
 }
 StateManager::~StateManager()
 {
+}
+
+bool StateManager::Initialize()
+{
+	m_activeState = nullptr;
+	return true;
+}
+void StateManager::Shutdown()
+{
 	m_activeState = nullptr;
 
 	//Delete all states and clear std::map
@@ -77,4 +86,12 @@ void StateManager::AddState(ScreenState screenState, State* state)
 {
 	//Add a new state to the std::map
 	m_states.insert(std::pair<ScreenState, State*>(screenState, state));
+}
+void StateManager::RemoveState(ScreenState screenState)
+{
+	//Deletes and erases the screenState
+	delete m_states[screenState];
+	m_states[screenState] = nullptr;
+
+	m_states.erase(screenState);
 }

@@ -1,6 +1,22 @@
 #include "stdafx.h"
 #include "InputManager.h"
 
+InputManager::InputManager()
+{
+}
+InputManager::~InputManager()
+{
+
+}
+bool InputManager::Initialize()
+{
+	return true;
+}
+void InputManager::Shutdown()
+{
+
+}
+
 bool InputManager::IsKeyDown(sf::Keyboard::Key key)
 {
 	m_keys[key] = sf::Keyboard::isKeyPressed(key);

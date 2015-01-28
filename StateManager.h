@@ -7,12 +7,15 @@ public:
 	StateManager();
 	~StateManager();
 
+	bool Initialize();
+	void Shutdown();
 	bool Update(float deltaTime);
 	void Draw();
 	bool ChangeState(ScreenState nextState);
 
-	void SetActiveState(ScreenState screen);
-	void AddState(ScreenState screen, State* state);
+	void SetActiveState(ScreenState screenState);
+	void AddState(ScreenState screenState, State* state);
+	void RemoveState(ScreenState screenState);
 
 private:
 	State* m_activeState;

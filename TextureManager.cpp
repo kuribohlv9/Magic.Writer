@@ -8,6 +8,14 @@ TextureManager::TextureManager()
 
 TextureManager::~TextureManager()
 {
+}
+
+bool TextureManager::Initialize()
+{
+	return true;
+}
+void TextureManager::Shutdown()
+{
 	//Loop through all textures and delete them
 	auto itTexture = m_textures.begin();
 	while (itTexture != m_textures.end())
@@ -26,7 +34,6 @@ TextureManager::~TextureManager()
 	}
 	m_fonts.clear();
 }
-
 sf::Texture* TextureManager::LoadTexture(const std::string& filename)
 {
 	//Check if the wanted texture already exists
