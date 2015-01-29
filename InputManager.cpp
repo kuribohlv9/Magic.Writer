@@ -62,3 +62,13 @@ void InputManager::SetKey(int key, bool state)
 {
 	m_keys[key] = state;
 }
+
+void InputManager::SetMousePosition(int x, int y)
+{
+	m_mouse_position.x = x;
+	m_mouse_position.y = y;
+}
+sf::Vector2f InputManager::GetMousePosition()
+{
+	return m_mouse_position;
+}

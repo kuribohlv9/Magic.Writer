@@ -14,6 +14,7 @@ Monster::Monster(sf::Texture* texture, int x, int y)
 
 	m_sprite.setTexture(*texture);
 	m_collider = new Collider(m_x, m_y);
+	m_collider->SetParent(this);
 	m_collider->SetWidthHeight(m_sprite.getTextureRect().width, m_sprite.getTextureRect().height);
 }
 

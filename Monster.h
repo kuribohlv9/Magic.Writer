@@ -11,5 +11,4 @@ public:
 
 	void Draw(DrawManager* drawManager);
 	void Update(float deltaTime);
-
 };

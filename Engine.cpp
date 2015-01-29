@@ -113,7 +113,10 @@ void Engine::Run()
 	{
 		HandleEvents();
 
-		m_state_manager->Update(0);
+		if (!m_state_manager->Update(0))
+		{
+			m_running = false;
+		}
 
 		m_window.clear(sf::Color::Black);
 		m_state_manager->Draw();
@@ -151,6 +154,10 @@ void Engine::HandleEvents()
 		else if (event.type == sf::Event::MouseButtonReleased)
 		{
 			m_input_manager->SetButton(event.mouseButton.button, false);
+		}
+		else if (event.type == sf::Event::MouseMoved)
+		{
+			m_input_manager->SetMousePosition(event.mouseMove.x, event.mouseMove.y);
 		}
 	}
 }

@@ -25,6 +25,8 @@ public:
 	virtual bool IsActive();
 	virtual float GetX();
 	virtual float GetY();
+	virtual void Move(float x, float y);
+	virtual void SetPosition(float x, float y);
 
 protected:
 	float m_x;

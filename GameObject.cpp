@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 #include "GameObject.h"
+#include "Collider.h"
 
 GameObject::GameObject()
 {
@@ -52,4 +53,16 @@ float GameObject::GetX()
 float GameObject::GetY()
 {
 	return m_y;
+}
+void GameObject::Move(float x, float y)
+{
+	m_x += x;
+	m_y += y;
+	m_collider->Refresh();
+}
+void GameObject::SetPosition(float x, float y)
+{
+	m_x = x;
+	m_y = y;
+	m_collider->Refresh();
 }

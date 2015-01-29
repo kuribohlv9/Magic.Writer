@@ -18,6 +18,8 @@ public:
 	void SetKey(int key, bool state);
 	void SetButton(int button, bool state);
 	void SetLastInputs();
+	void SetMousePosition(int x, int y);
+	sf::Vector2f GetMousePosition();
 
 private:
 	//Saves current frames keypresses
@@ -29,4 +31,6 @@ private:
 	bool m_buttons[3];
 	//Saves last frames buttonpresses
 	bool m_lastButtons[3];
+
+	sf::Vector2f m_mouse_position;
 };
