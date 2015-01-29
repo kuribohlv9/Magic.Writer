@@ -5,20 +5,20 @@ class GameObject;
 class Collider
 {
 public:
-	Collider(int x, int y);
+	Collider(float x, float y);
 
 	bool HasParent();
 	void SetParent(GameObject* parent);
 	GameObject* GetParent();
 
-	void SetPosition(int x, int y);
+	void SetPosition(float x, float y);
 	void SetWidthHeight(int width, int height);
 
-	sf::IntRect GetArea();
+	sf::FloatRect GetArea();
 
 	void Refresh();
 
 private:
 	GameObject* m_parent;
-	sf::IntRect m_area;
+	sf::FloatRect m_area;
 };

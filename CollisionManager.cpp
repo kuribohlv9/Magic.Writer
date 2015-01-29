@@ -4,8 +4,8 @@
 
 bool CollisionManager::Check(Collider* lhs, Collider* rhs)
 {
-	sf::IntRect areaOne = lhs->GetArea();
-	sf::IntRect areaTwo = rhs->GetArea();
+	sf::FloatRect areaOne = lhs->GetArea();
+	sf::FloatRect areaTwo = rhs->GetArea();
 
 	if (areaOne.intersects(areaTwo))
 	{
@@ -13,10 +13,10 @@ bool CollisionManager::Check(Collider* lhs, Collider* rhs)
 	}
 	return false;
 }
-bool CollisionManager::Check(Collider* lhs, Collider* rhs, sf::IntRect& intersect)
+bool CollisionManager::Check(Collider* lhs, Collider* rhs, sf::FloatRect& intersect)
 {
-	sf::IntRect areaOne = lhs->GetArea();
-	sf::IntRect areaTwo = rhs->GetArea();
+	sf::FloatRect areaOne = lhs->GetArea();
+	sf::FloatRect areaTwo = rhs->GetArea();
 
 	if (areaOne.intersects(areaTwo, intersect))
 	{

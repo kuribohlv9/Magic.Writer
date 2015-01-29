@@ -6,7 +6,7 @@ class DrawManager;
 class Monster : public GameObject
 {
 public:
-	Monster(sf::Texture* texture, int x, int y);
+	Monster(sf::Texture* texture, float x, float y);
 	~Monster();
 
 	void Draw(DrawManager* drawManager);

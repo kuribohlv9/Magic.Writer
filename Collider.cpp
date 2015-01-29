@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include "Collider.h"
 
-Collider::Collider(int x, int y)
+Collider::Collider(float x, float y)
 {
 	m_parent = nullptr;
 
@@ -27,7 +27,7 @@ GameObject* Collider::GetParent()
 	return m_parent;
 }
 
-void Collider::SetPosition(int x, int y)
+void Collider::SetPosition(float x, float y)
 {
 	m_area.left = x;
 	m_area.top = y;
@@ -40,7 +40,7 @@ void Collider::SetWidthHeight(int width, int height)
 }
 
 
-sf::IntRect Collider::GetArea()
+sf::FloatRect Collider::GetArea()
 {
 	return m_area;
 }

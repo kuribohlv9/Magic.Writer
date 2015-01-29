@@ -56,7 +56,7 @@ bool GameState::Update(float deltaTime)
 
 	//m_objectTwo->SetPosition(m_inputManager->GetMousePosition().x - m_objectTwo->GetSprite()->getGlobalBounds().width / 2, m_inputManager->GetMousePosition().y - m_objectTwo->GetSprite()->getGlobalBounds().height / 2);
 
-	sf::IntRect intersect;
+	sf::FloatRect intersect;
 	if (CollisionManager::Check(m_objectTwo->GetCollider(), m_objectOne->GetCollider(), intersect))
 	{
 		m_text.setString(

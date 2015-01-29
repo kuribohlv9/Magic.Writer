@@ -5,7 +5,7 @@
 
 // INTE KLAR HÄR ÄN!!!
 
-Monster::Monster(sf::Texture* texture, int x, int y)
+Monster::Monster(sf::Texture* texture, float x, float y)
 {
 	m_type = ENTITY_MONSTERS;
 
