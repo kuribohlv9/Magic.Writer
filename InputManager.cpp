@@ -1,20 +1,16 @@
 #include "stdafx.h"
 #include "InputManager.h"
+#include "Collider.h"
 
-InputManager::InputManager()
-{
-}
-InputManager::~InputManager()
-{
-
-}
 bool InputManager::Initialize()
 {
+	m_mouseCollider = new Collider(m_mouse_position.x, m_mouse_position.y);
+	m_mouseCollider->SetWidthHeight(1, 1);
 	return true;
 }
 void InputManager::Shutdown()
 {
-
+	delete m_mouseCollider;
 }
 
 bool InputManager::IsKeyDown(sf::Keyboard::Key key)
@@ -67,8 +63,14 @@ void InputManager::SetMousePosition(int x, int y)
 {
 	m_mouse_position.x = x;
 	m_mouse_position.y = y;
+
+	m_mouseCollider->SetPosition(m_mouse_position.x, m_mouse_position.y);
 }
 sf::Vector2f InputManager::GetMousePosition()
 {
 	return m_mouse_position;
+}
+Collider* InputManager::GetMouseCollider()
+{
+	return m_mouseCollider;
 }

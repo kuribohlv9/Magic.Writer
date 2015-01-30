@@ -3,6 +3,7 @@
 
 //States
 #include "GameState.h"
+#include "MenuState.h"
 
 
 StateManager::StateManager()
@@ -16,13 +17,13 @@ StateManager::~StateManager()
 bool StateManager::Initialize()
 {
 	AddState(STATE_GAME, new GameState());
-	SetActiveState(STATE_GAME);
+	AddState(STATE_MENU, new MenuState());
+
+	SetActiveState(STATE_MENU);
 	return true;
 }
 void StateManager::Shutdown()
 {
-	m_activeState = nullptr;
-
 	//Delete all states and clear std::map
 	auto it = m_states.begin();
 	while (it != m_states.end())
@@ -31,10 +32,15 @@ void StateManager::Shutdown()
 		++it;
 	}
 	m_states.clear();
+
+	m_activeState = nullptr;
 }
 
 bool StateManager::Update(float deltaTime)
 {
+	if (!m_activeState)
+		return false;
+
 	if (!m_activeState->Update(deltaTime))
 	{
 		//If the activeState did not update correctly, change state
@@ -50,6 +56,9 @@ bool StateManager::Update(float deltaTime)
 }
 void StateManager::Draw()
 {
+	if (!m_activeState)
+		return;
+
 	//Draw active state
 	m_activeState->Draw();
 }

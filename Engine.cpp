@@ -14,7 +14,6 @@ Engine::Engine()
 	m_draw_manager = nullptr;
 	m_input_manager = nullptr;
 	m_texture_manager = nullptr;
-	m_collision_manager = nullptr;
 	m_audio_manager = nullptr;
 	m_state_manager = nullptr;
 }
@@ -44,11 +43,6 @@ bool Engine::Initialize()
 		return false;
 	ServiceLocator<TextureManager>::SetService(m_texture_manager);
 
-	m_collision_manager = new CollisionManager();
-	if (!m_collision_manager)
-		return false;
-	ServiceLocator<CollisionManager>::SetService(m_collision_manager);
-
 	m_audio_manager = new AudioManager();
 	if (!m_audio_manager || !m_audio_manager->Initialize())
 		return false;
@@ -77,12 +71,6 @@ void Engine::Shutdown()
 		m_audio_manager->Shutdown();
 		delete m_audio_manager;
 		m_audio_manager = nullptr;
-	}
-
-	if (m_collision_manager)
-	{
-		delete m_collision_manager;
-		m_collision_manager = nullptr;
 	}
 
 	if (m_texture_manager)

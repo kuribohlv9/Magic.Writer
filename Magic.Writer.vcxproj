@@ -91,7 +91,11 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GUI_Button.h" />
+    <ClInclude Include="GUI_Element.h" />
+    <ClInclude Include="GUI_Label.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="MenuState.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="State.h" />
@@ -108,8 +112,12 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GUI_Button.cpp" />
+    <ClCompile Include="GUI_Element.cpp" />
+    <ClCompile Include="GUI_Label.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="TextureManager.cpp" />

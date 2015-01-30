@@ -1,11 +1,10 @@
 #pragma once
 
+class Collider;
+
 class InputManager
 {
 public:
-	InputManager();
-	~InputManager();
-
 	bool Initialize();
 	void Shutdown();
 
@@ -20,6 +19,7 @@ public:
 	void SetLastInputs();
 	void SetMousePosition(int x, int y);
 	sf::Vector2f GetMousePosition();
+	Collider* GetMouseCollider();
 
 private:
 	//Saves current frames keypresses
@@ -33,4 +33,5 @@ private:
 	bool m_lastButtons[3];
 
 	sf::Vector2f m_mouse_position;
+	Collider* m_mouseCollider;
 };
