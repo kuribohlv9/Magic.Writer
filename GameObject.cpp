@@ -18,7 +18,7 @@ GameObject::~GameObject()
 	if (m_collider)
 		delete m_collider;
 }
-void GameObject::Update(float delaTime)
+void GameObject::Update(float deltaTime)
 {
 
 }
