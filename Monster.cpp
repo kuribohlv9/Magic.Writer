@@ -20,7 +20,8 @@ Monster::Monster(sf::Texture* texture, float x, float y)
 
 Monster::~Monster()
 {
-
+	if (m_collider)
+		delete m_collider;
 }
 
 void Monster::Draw(DrawManager* drawManager)
