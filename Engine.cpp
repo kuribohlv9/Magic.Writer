@@ -98,11 +98,14 @@ void Engine::Shutdown()
 
 void Engine::Run()
 {
+	sf::Clock clock;
 	while (m_running)
 	{
+		sf::Time time = clock.restart();
+		float deltaTime = time.asSeconds();
 		HandleEvents();
 
-		if (!m_state_manager->Update(0))
+		if (!m_state_manager->Update(deltaTime))
 		{
 			m_running = false;
 		}
