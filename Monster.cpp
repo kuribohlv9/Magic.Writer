@@ -5,12 +5,17 @@
 
 // INTE KLAR HÄR ÄN!!!
 
-Monster::Monster(sf::Texture* texture, float x, float y)
+Monster::Monster(sf::Texture* texture, float x, float y, float speed, int health, ItemProperties weakness)
 {
 	m_type = ENTITY_MONSTERS;
 
 	m_x = x;
 	m_y = y;
+
+	m_weakness = weakness;
+	m_speed = speed;
+	m_health = health;
+	m_frozen = false;
 
 	m_sprite.setTexture(*texture);
 	m_collider = new Collider(m_x, m_y);
@@ -32,5 +37,36 @@ void Monster::Draw(DrawManager* drawManager)
 
 void Monster::Update(float deltaTime)
 {
+	if (!m_frozen)
+	{
+		m_y += m_speed * deltaTime;
+		m_collider->Refresh();
+	}
+}
 
+bool Monster::Frozen()
+{
+	if (!m_frozen)
+	{
+		m_frozen = true;
+		return m_frozen;
+	}
+
+	if (m_frozen)
+	{
+		m_frozen = false;
+		return m_frozen;
+	}
+}
+
+void Monster::Damage(ItemProperties propertyOne, ItemProperties propertyTwo)
+{
+	if (propertyOne == m_weakness || propertyTwo == m_weakness)
+	{
+		m_health -= 3;
+	}
+	else
+	{
+		m_health -= 1;
+	}
 }
