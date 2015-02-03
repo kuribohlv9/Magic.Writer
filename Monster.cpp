@@ -44,19 +44,10 @@ void Monster::Update(float deltaTime)
 	}
 }
 
-bool Monster::Frozen()
+void Monster::Freeze()
 {
-	if (!m_frozen)
-	{
-		m_frozen = true;
-		return m_frozen;
-	}
-
-	if (m_frozen)
-	{
-		m_frozen = false;
-		return m_frozen;
-	}
+	//Inverts the boolean.
+	m_frozen = !m_frozen;
 }
 
 void Monster::Damage(ItemProperties propertyOne, ItemProperties propertyTwo)

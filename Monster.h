@@ -19,7 +19,7 @@ public:
 
 	void Draw(DrawManager* drawManager);
 	void Update(float deltaTime);
-	bool Frozen();
+	void Freeze();
 	void Damage(ItemProperties propertyOne, ItemProperties propertyTwo);
 
 private:
