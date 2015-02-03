@@ -31,7 +31,6 @@ Monster::~Monster()
 
 void Monster::Draw(DrawManager* drawManager)
 {
-	m_sprite.setPosition(m_x, m_y);
 	drawManager->Draw(m_sprite, sf::RenderStates::Default);
 }
 
@@ -39,24 +38,25 @@ void Monster::Update(float deltaTime)
 {
 	if (!m_frozen)
 	{
-		m_y += m_speed * deltaTime;
-		m_collider->Refresh();
+		Move(0, m_speed * deltaTime);
+	}
+	else
+	{
+		m_freezeTimer += deltaTime;
+
+		if (m_freezeTimer >= m_unfreezeDelay)
+		{
+			m_freezeTimer = 0;
+			m_unfreezeDelay = 0;
+			m_frozen = false;
+		}
 	}
 }
 
-bool Monster::Frozen()
+void Monster::Freeze(float time)
 {
-	if (!m_frozen)
-	{
-		m_frozen = true;
-		return m_frozen;
-	}
-
-	if (m_frozen)
-	{
-		m_frozen = false;
-		return m_frozen;
-	}
+	m_unfreezeDelay = time;
+	m_frozen = true;
 }
 
 void Monster::Damage(ItemProperties propertyOne, ItemProperties propertyTwo)
