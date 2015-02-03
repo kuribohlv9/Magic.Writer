@@ -3,8 +3,6 @@
 #include "DrawManager.h"
 #include "Collider.h"
 
-// INTE KLAR HÄR ÄN!!!
-
 Monster::Monster(sf::Texture* texture, float x, float y, float speed, int health, ItemProperties weakness)
 {
 	m_type = ENTITY_MONSTERS;
