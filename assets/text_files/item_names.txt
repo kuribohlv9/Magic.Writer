@@ -1,0 +1,15 @@
+panda
+pig
+worm
+ant
+-
+zombie
+pizza
+-
+skeleton
+pot
+-
+knight
+thorns
+cactus
+crocodile

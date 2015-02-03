@@ -6,9 +6,17 @@ class DrawManager;
 
 enum GType
 {
-	ENTITY_UNKNOWN,
-	ENTITY_MONSTERS,
+	GAMEOBJECT_UNKNOWN,
+	GAMEOBJECT_MONSTERS,
+	GAMEOBJECT_ITEM
+};
 
+enum ItemProperties
+{
+	HARD,
+	SOFT,
+	ALIVE,
+	DEAD
 };
 
 class GameObject
@@ -20,14 +28,16 @@ public:
 	//Inside Draw we draw out the sprite using drawManager
 	virtual void Draw(DrawManager* drawManager);
 	virtual void Update(float deltaTime);
-	virtual GType GetType();
-	virtual sf::Sprite* GetSprite();
-	virtual Collider* GetCollider();
-	virtual bool IsActive();
-	virtual float GetX();
-	virtual float GetY();
-	virtual void Move(float x, float y);
-	virtual void SetPosition(float x, float y);
+
+	GType GetType();
+	sf::Sprite* GetSprite();
+	Collider* GetCollider();
+	bool IsActive();
+	float GetX();
+	float GetY();
+	void Move(float x, float y);
+	void SetPosition(float x, float y);
+	void SetActive(bool state);
 
 protected:
 	float m_x;

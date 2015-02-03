@@ -7,6 +7,7 @@
 #include "InputManager.h"
 #include "CollisionManager.h"
 #include "WordManager.h"
+#include "ItemManager.h"
 
 #include "Monster.h"
 #include "Collider.h"
@@ -18,6 +19,7 @@ GameState::GameState()
 	m_inputManager = ServiceLocator<InputManager >::GetService();
 
 	m_wordManager = new WordManager();
+	m_itemManager = new ItemManager();
 }
 GameState::~GameState()
 {

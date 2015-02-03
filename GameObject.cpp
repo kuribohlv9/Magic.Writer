@@ -69,3 +69,7 @@ void GameObject::SetPosition(float x, float y)
 	m_collider->Refresh();
 	m_sprite.setPosition(m_x, m_y);
 }
+void GameObject::SetActive(bool value)
+{
+	m_active = value;
+}

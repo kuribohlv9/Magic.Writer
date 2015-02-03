@@ -5,7 +5,7 @@
 
 Monster::Monster(sf::Texture* texture, float x, float y, float speed, int health, ItemProperties weakness)
 {
-	m_type = ENTITY_MONSTERS;
+	m_type = GAMEOBJECT_MONSTERS;
 
 	m_x = x;
 	m_y = y;
@@ -19,12 +19,6 @@ Monster::Monster(sf::Texture* texture, float x, float y, float speed, int health
 	m_collider = new Collider(m_x, m_y);
 	m_collider->SetParent(this);
 	m_collider->SetWidthHeight(m_sprite.getTextureRect().width, m_sprite.getTextureRect().height);
-}
-
-Monster::~Monster()
-{
-	if (m_collider)
-		delete m_collider;
 }
 
 void Monster::Draw(DrawManager* drawManager)
