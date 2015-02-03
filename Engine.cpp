@@ -6,6 +6,7 @@
 #include "CollisionManager.h"
 #include "AudioManager.h"
 #include "StateManager.h"
+#include "WordManager.h"
 #include "ServiceLocator.h"
 
 Engine::Engine()
@@ -106,7 +107,7 @@ void Engine::Run()
 			m_running = false;
 		}
 
-		m_window.clear(sf::Color::Black);
+		m_window.clear(sf::Color(50, 50, 50, 255));
 		m_state_manager->Draw();
 		m_window.display();
 	}
@@ -121,6 +122,7 @@ void Engine::HandleEvents()
 
 	sf::Event event;
 	m_input_manager->SetLastInputs();
+	m_input_manager->SetInputChar(' ');
 	while (m_window.pollEvent(event))
 	{
 		if (event.type == sf::Event::Closed)
@@ -146,6 +148,13 @@ void Engine::HandleEvents()
 		else if (event.type == sf::Event::MouseMoved)
 		{
 			m_input_manager->SetMousePosition(event.mouseMove.x, event.mouseMove.y);
+		}
+		else if (event.type == sf::Event::TextEntered)
+		{
+			if (event.text.unicode >= 97 && event.text.unicode <= 122)
+			{
+				m_input_manager->SetInputChar(static_cast<char>(event.text.unicode));
+			}
 		}
 	}
 }

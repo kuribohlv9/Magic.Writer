@@ -1,6 +1,7 @@
 #pragma once
 #include "State.h"
 
+class WordManager;
 class DrawManager;
 class TextureManager;
 class InputManager;
@@ -24,9 +25,5 @@ private:
 	DrawManager* m_drawManager;
 	TextureManager* m_textureManager;
 	InputManager* m_inputManager;
-
-	//TMP
-	sf::Text m_text;
-	Monster* m_objectOne;
-	Monster* m_objectTwo;
+	WordManager* m_wordManager;
 };

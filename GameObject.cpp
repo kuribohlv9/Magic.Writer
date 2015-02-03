@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 #include "GameObject.h"
+#include "DrawManager.h"
 #include "Collider.h"
 
 GameObject::GameObject()
@@ -22,9 +23,9 @@ void GameObject::Update(float deltaTime)
 {
 
 }
-void GameObject::Draw(sf::RenderWindow* window)
+void GameObject::Draw(DrawManager* drawManager)
 {
-	window->draw(m_sprite, sf::RenderStates::Default);
+	drawManager->Draw(m_sprite, sf::RenderStates::Default);
 }
 GType GameObject::GetType()
 {

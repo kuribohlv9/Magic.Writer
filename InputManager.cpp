@@ -6,6 +6,7 @@ bool InputManager::Initialize()
 {
 	m_mouseCollider = new Collider(m_mouse_position.x, m_mouse_position.y);
 	m_mouseCollider->SetWidthHeight(1, 1);
+	m_lastInputChar = ' ';
 	return true;
 }
 void InputManager::Shutdown()
@@ -73,4 +74,12 @@ sf::Vector2f InputManager::GetMousePosition()
 Collider* InputManager::GetMouseCollider()
 {
 	return m_mouseCollider;
+}
+char InputManager::GetInputChar()
+{
+	return m_lastInputChar;
+}
+void InputManager::SetInputChar(char key)
+{
+	m_lastInputChar = key;
 }

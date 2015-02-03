@@ -1,5 +1,6 @@
 // GameObject.h
 class Collider;
+class DrawManager;
 
 #pragma once
 
@@ -16,8 +17,8 @@ public:
 	GameObject();
 	virtual ~GameObject();
 
-	// Inside Draw we draw out the sprite using sf::RenderWindow.
-	virtual void Draw(sf::RenderWindow* window);
+	// Inside Draw we draw out the sprite using drawManager
+	virtual void Draw(DrawManager* drawManager);
 	virtual void Update(float deltaTime);
 	virtual GType GetType();
 	virtual sf::Sprite* GetSprite();
