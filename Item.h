@@ -16,5 +16,6 @@ private:
 	ItemProperties m_propertyTwo;
 
 	float m_speed;
+	float m_rotation;
 };
 

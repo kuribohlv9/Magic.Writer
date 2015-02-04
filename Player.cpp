@@ -16,12 +16,11 @@ Player::Player(sf::Texture* texture)
 
 	m_sprite.setTexture(*texture);
 	sf::IntRect textureRect = m_sprite.getTextureRect();
+	m_sprite.setOrigin(textureRect.width / 2.0f, textureRect.height / 2.0f);
 
 	m_collider = new Collider(m_x, m_y);
 	m_collider->SetParent(this);
 	m_collider->SetWidthHeight(textureRect.width, textureRect.height);
-	
-	m_sprite.setOrigin(textureRect.width / 2.0f, textureRect.height / 2.0f);
 
 	m_lane = 1;
 	ChangeLane(1);
@@ -56,7 +55,7 @@ void Player::ChangeLane(int xDirection)
 	else if (m_lane > 4)
 		m_lane = 4;
 
-	SetPosition(192.0f + 384.0f * m_lane, 750.0f);
+	SetPosition(192.0f + 384.0f * m_lane, 700);
 
 	if (m_item)
 	{

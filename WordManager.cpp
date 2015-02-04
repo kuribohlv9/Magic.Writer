@@ -56,7 +56,7 @@ void WordManager::Draw(DrawManager* drawManager)
 	for (int i = 0; i < m_wordCount; i++)
 	{
 		//Set a position for the word
-		sf::Vector2f position = sf::Vector2f(550 + 350 * i, 900.0f);
+		sf::Vector2f position = sf::Vector2f(540 + 365 * i, 965);
 
 		//Get the current word and it's active state
 		std::string word = m_words[i];
@@ -64,7 +64,7 @@ void WordManager::Draw(DrawManager* drawManager)
 
 		//Apply the position and color to m_text
 		m_text.setPosition(position);
-		m_text.setColor(sf::Color(107, 147, 155, 255)); //Light blue
+		m_text.setColor(sf::Color(137, 177, 185, 255)); //Light blue
 
 		//Check if the current word is active
 		if (active)
@@ -90,7 +90,7 @@ void WordManager::Draw(DrawManager* drawManager)
 					color = sf::Color(88, 153, 11, 255); //Green
 				}
 
-				//Apply position and color (green or gray);
+				//Apply position and color
 				m_text.setColor(color);
 				m_text.setPosition(localPosition);
 

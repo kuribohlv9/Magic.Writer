@@ -37,9 +37,26 @@ GameState::GameState()
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background.png");
 	m_backgroundSprite.setTexture(*texture);
 
+	//Load bubble sprite
+	texture = m_textureManager->LoadTexture("assets/sprites/bubble.png");
+	m_bubbleSprite.setTexture(*texture);
+	m_bubbleSprite.setOrigin(texture->getSize().x / 2, texture->getSize().y);
+
 	//Instantiate player
 	texture = m_textureManager->LoadTexture("assets/sprites/wizard.png");
 	m_player = new Player(texture);
+
+	//TMP MONSTER SPAWNING
+	texture = m_textureManager->LoadTexture("assets/sprites/monster_test.png");
+	for (int i = 0; i < 5; i++)
+	{
+		int randomX = rand() % 5;
+		sf::Vector2f position = sf::Vector2f(192 + 384 * randomX, -i * 300);
+
+		Monster* monster = new Monster(texture, position.x, position.y, 25.0f, 5, SOFT);
+
+		m_monsters.push_back(monster);
+	}
 }
 GameState::~GameState()
 {
@@ -93,6 +110,63 @@ bool GameState::Update(float deltaTime)
 
 	//Update player
 	m_player->Update(deltaTime);
+
+	//TMP UPDATE MONSTER
+	for (int i = 0; i < m_monsters.size(); i++)
+	{
+		m_monsters[i]->Update(deltaTime);
+	}
+
+
+
+
+
+
+	//CHECK COLLISION
+
+	for (int i = 0; i < m_activeItems.size(); i++)
+	{
+		Item* item = m_activeItems[i];
+		if (!item->IsActive())
+			continue;
+
+		for (int j = 0; j < m_monsters.size(); j++)
+		{
+			Monster* monster = m_monsters[j];
+			if (!monster->IsActive())
+				continue;
+
+			if (CollisionManager::Check(item->GetCollider(), monster->GetCollider()))
+			{
+				monster->Damage(SOFT, ALIVE);
+				item->SetActive(false);
+			}
+		}
+	}
+
+	for (int i = 0; i < m_activeItems.size(); i++)
+	{
+		if (!m_activeItems[i]->IsActive())
+		{
+			m_activeItems.erase(m_activeItems.begin() + i);
+		}
+	}
+	for (int i = 0; i < m_monsters.size(); i++)
+	{
+		if (!m_monsters[i]->IsActive())
+		{
+			m_monsters.erase(m_monsters.begin() + i);
+		}
+	}
+
+
+
+
+
+
+
+
+
 	return true;
 }
 void GameState::ConvertWordToItem()
@@ -159,6 +233,26 @@ void GameState::Draw()
 	//Draw background
 	m_drawManager->Draw(m_backgroundSprite, sf::RenderStates::Default);
 
+	//TMP DRAW MONSTER
+	for (int i = 0; i < m_monsters.size(); i++)
+	{
+		m_monsters[i]->Draw(m_drawManager);
+	}
+
+	//Draw player
+	m_player->Draw(m_drawManager);
+
+	//Draw Bubbles and item
+	for (int i = 0; i < m_itemCount; i++)
+	{
+		sf::Vector2f position = sf::Vector2f(600 + 350 * i, 1020);
+		m_bubbleSprite.setPosition(position);
+		m_drawManager->Draw(m_bubbleSprite, sf::RenderStates::Default);
+
+		m_items[i]->SetPosition(position.x, position.y - 100);
+		m_items[i]->Draw(m_drawManager);
+	}
+
 	//Draw typeable words
 	m_wordManager->Draw(m_drawManager);
 
@@ -169,9 +263,6 @@ void GameState::Draw()
 		if (m_activeItems[i]->IsActive())
 			m_activeItems[i]->Draw(m_drawManager);
 	}
-
-	//Draw player
-	m_player->Draw(m_drawManager);
 }
 
 void GameState::Enter()

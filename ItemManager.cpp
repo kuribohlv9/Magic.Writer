@@ -39,7 +39,8 @@ void ItemManager::AddItems(const std::string& spritesheetFilename, const std::st
 	stream.open(textFilename);
 
 	//Create a sourcerectangle (part of a texture)
-	sf::IntRect sourceRectangle = sf::IntRect(0, 0, 150, 150);
+	int itemWidthHeight = 256;
+	sf::IntRect sourceRectangle = sf::IntRect(0, 0, itemWidthHeight, itemWidthHeight);
 
 	//What row in the spritesheet we are on
 	int row = 0;
@@ -54,7 +55,7 @@ void ItemManager::AddItems(const std::string& spritesheetFilename, const std::st
 		{
 			//Change spritesheet row
 			sourceRectangle.left = 0;
-			sourceRectangle.top += 150;
+			sourceRectangle.top += itemWidthHeight;
 			row++;
 		}
 		else
@@ -67,7 +68,7 @@ void ItemManager::AddItems(const std::string& spritesheetFilename, const std::st
 			Item* item = new Item(itemSpriteSheet, sourceRectangle, propertyOne, propertyTwo, itemName);
 			m_items.push_back(item);
 
-			sourceRectangle.left += 150;
+			sourceRectangle.left += itemWidthHeight;
 		}
 	}
 	stream.close();
