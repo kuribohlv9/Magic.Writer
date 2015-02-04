@@ -9,6 +9,7 @@
 //GUI elements
 #include "GUI_Button.h"
 #include "GUI_Label.h"
+#include "GUI_Panel.h"
 
 MenuState::MenuState()
 {
@@ -17,14 +18,18 @@ MenuState::MenuState()
 
 	m_nextState = STATE_INVALID;
 
-	sf::Texture* buttonTexture = m_textureManager->LoadTexture("assets/sprites/spritesheet_menu.png");
+	sf::Texture* menuTexture = m_textureManager->LoadTexture("assets/sprites/spritesheet_menu.png");
 	sf::Font* font = m_textureManager->LoadFont("assets/fonts/font.ttf");
 
-	m_playButton = new GUI_Button(100, 100, nullptr, buttonTexture, 250, 100);
+	m_playButton = new GUI_Button(20, 20, nullptr, menuTexture, 250, 100);
 	m_playButton->SetLabel(new GUI_Label(90, 30, m_playButton, font, "Play"));
 
-	m_exitButton = new GUI_Button(100, 220, nullptr, buttonTexture, 250, 100);
+	m_exitButton = new GUI_Button(20, 150, nullptr, menuTexture, 250, 100);
 	m_exitButton->SetLabel(new GUI_Label(90, 30, m_exitButton, font, "Exit"));
+
+	m_panel = new GUI_Panel(200, 200, nullptr, menuTexture);
+	m_panel->AddChild(m_playButton);
+	m_panel->AddChild(m_exitButton);
 }
 MenuState::~MenuState()
 {
@@ -33,8 +38,11 @@ MenuState::~MenuState()
 }
 bool MenuState::Update(float deltaTime)
 {
-	m_playButton->Update();
-	m_exitButton->Update();
+	m_panel->Update();
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+	{
+		m_panel->SetPosition(300, 100);
+	}
 
 	if (m_playButton->IsPressed())
 	{
@@ -50,8 +58,7 @@ bool MenuState::Update(float deltaTime)
 }
 void MenuState::Draw()
 {
-	m_playButton->Draw(m_drawManager);
-	m_exitButton->Draw(m_drawManager);
+	m_panel->Draw(m_drawManager);
 }
 
 void MenuState::Enter()

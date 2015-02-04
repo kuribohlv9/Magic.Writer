@@ -4,6 +4,7 @@
 class DrawManager;
 class TextureManager;
 class GUI_Button;
+class GUI_Panel;
 
 class MenuState : public State
 {
@@ -27,4 +28,5 @@ private:
 	//GUI elements
 	GUI_Button* m_playButton;
 	GUI_Button* m_exitButton;
+	GUI_Panel* m_panel;
 };

@@ -19,8 +19,8 @@ ItemManager::ItemManager()
 
 ItemManager::~ItemManager()
 {
+	//Delete all items
 	auto itr = m_items.begin();
-
 	while (itr != m_items.end())
 	{
 		delete (*itr);
@@ -32,28 +32,35 @@ ItemManager::~ItemManager()
 
 void ItemManager::AddItems()
 {
+	//Load spritesheet for items
 	sf::Texture* itemSpriteSheet = m_textureManager->LoadTexture("assets/sprites/item_spritesheet.png");
+
+	//Load item names
 	std::ifstream stream;
 	stream.open("assets/text_files/item_names.txt");
 
+	//Create a sourcerectangle (part of a texture)
 	sf::IntRect sourceRectangle = sf::IntRect(0, 0, 150, 150);
 
+	//What row in the spritesheet we are on
 	int row = 0;
+
 	while (!stream.eof())
 	{
 		//Read item name from textfile
 		std::string itemName;
 		stream >> itemName;
 
-		//Change spritesheet row
 		if (itemName == "-")
 		{
+			//Change spritesheet row
 			sourceRectangle.left = 0;
 			sourceRectangle.top += 150;
 			row++;
 		}
 		else
 		{
+			//Add an item
 			ItemProperties propertyOne;
 			ItemProperties propertyTwo;
 			GetProperties(row, propertyOne, propertyTwo);
@@ -68,6 +75,7 @@ void ItemManager::AddItems()
 }
 void ItemManager::GetProperties(int spriteSheetRow, ItemProperties& propertyOne, ItemProperties& propertyTwo)
 {
+	//Return properties depending on which spritesheetrow we are on
 	switch (spriteSheetRow)
 	{
 	case 0:
