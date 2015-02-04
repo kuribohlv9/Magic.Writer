@@ -12,7 +12,7 @@ Item::Item(sf::Texture* texture, sf::IntRect sourceRectangle, ItemProperties pro
 	m_propertyTwo = propertyTwo;
 
 	m_name = name;
-	m_speed = 5.0f;
+	m_speed = 150;
 
 	m_sprite.setTexture(*texture);
 	m_sprite.setTextureRect(sourceRectangle);
@@ -35,4 +35,9 @@ void Item::Activate(float x, float y)
 {
 	SetPosition(x, y);
 	SetActive(true);
+}
+
+std::string Item::GetName()
+{
+	return m_name;
 }

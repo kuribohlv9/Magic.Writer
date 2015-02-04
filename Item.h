@@ -10,6 +10,7 @@ public:
 	void Draw(DrawManager* drawManager);
 
 	void Activate(float x, float y);
+	std::string GetName();
 
 private:
 	std::string m_name;

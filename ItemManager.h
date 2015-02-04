@@ -13,7 +13,7 @@ public:
 	Item* GetItem();
 
 private:
-	void AddItems();
+	void AddItems(const std::string& spritesheetFilename, const std::string& textFilename);
 	void GetProperties(int spriteSheetRow, ItemProperties& propertyOne, ItemProperties& propertyTwo);
 
 private:

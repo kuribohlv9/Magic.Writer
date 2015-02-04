@@ -15,10 +15,11 @@ WordManager::WordManager()
 	sf::Font* font = m_textureManager->LoadFont("assets/fonts/font.ttf");
 	m_text.setFont(*font);
 
-	//TMP, SET WORDS
-	m_words[0] = "panda";
-	m_words[1] = "bread";
-	m_words[2] = "pork";
+	//Get word count
+	m_words[0] = "";
+	m_words[1] = "";
+	m_words[2] = "";
+	m_wordCount = sizeof(m_words) / sizeof(m_words[0]);
 
 	//Reset all words
 	Reset();
@@ -26,6 +27,15 @@ WordManager::WordManager()
 
 void WordManager::Update(float deltaTime)
 {
+	//Check if three words exist
+	for (int i = 0; i < m_wordCount; i++)
+	{
+		if (m_words[i] == "")
+		{
+			return;
+		}
+	}
+
 	//Get input key from keyboard
 	m_userChar = m_inputManager->GetInputChar();
 
@@ -43,10 +53,10 @@ void WordManager::Update(float deltaTime)
 void WordManager::Draw(DrawManager* drawManager)
 {
 	//Loop through each word
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < m_wordCount; i++)
 	{
 		//Set a position for the word
-		sf::Vector2f position = sf::Vector2f(200.0f + 100.0f * i, 500.0f);
+		sf::Vector2f position = sf::Vector2f(200.0f + 200.0f * i, 500.0f);
 
 		//Get the current word and it's active state
 		std::string word = m_words[i];
@@ -54,7 +64,7 @@ void WordManager::Draw(DrawManager* drawManager)
 
 		//Apply the position and color to m_text
 		m_text.setPosition(position);
-		m_text.setColor(sf::Color(25, 25, 25, 255));
+		m_text.setColor(sf::Color(107, 147, 155, 255)); //Light blue
 
 		//Check if the current word is active
 		if (active)
@@ -64,10 +74,12 @@ void WordManager::Draw(DrawManager* drawManager)
 			{
 				//We set the characters position and color
 				sf::Vector2f localPosition = sf::Vector2f(position.x + j * 15, position.y);
-				sf::Color color = sf::Color::White;
+				sf::Color color = sf::Color(0, 28, 34, 255); //Dark blue
 
 				//Gets the current character
 				char currentChar = word[j];
+
+				
 
 				//Apply the character to m_text
 				m_text.setString(currentChar);
@@ -75,7 +87,7 @@ void WordManager::Draw(DrawManager* drawManager)
 				//Check if the current characters index is less than the users word input. If so apply a green color
 				if (j < m_userInput.size())
 				{
-					color = sf::Color::Green;
+					color = sf::Color(88, 153, 11, 255); //Green
 				}
 
 				//Apply position and color (green or gray);
@@ -100,7 +112,7 @@ void WordManager::CheckWords()
 	bool charFits = false;
 
 	//Loop through all words
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < m_wordCount; i++)
 	{
 		//Get the current word and it's active state
 		std::string word = m_words[i];
@@ -131,7 +143,7 @@ void WordManager::CheckWords()
 
 
 	//Loop through the words again
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < m_wordCount; i++)
 	{
 		//Get the current word
 		std::string word = m_words[i];
@@ -155,7 +167,7 @@ void WordManager::CheckWords()
 void WordManager::Reset()
 {
 	//Sets all words to active
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < m_wordCount; i++)
 	{
 		m_words_active[i] = true;
 	}
@@ -170,25 +182,25 @@ std::string WordManager::GetFinishedWord()
 	std::string finishedWord = "";
 
 	//Find any word that matches the user input and return the word. Set the word slot to empty string.
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < m_wordCount; i++)
 	{
 		if (m_words[i] == m_userInput)
 		{
 			finishedWord = m_words[i];
 			m_words[i] = "";
 			Reset();
-			break;
+			return finishedWord;
 		}
 	}
 
-	return finishedWord;
+	return "";
 }
 void WordManager::SetNewWord(const std::string& newWord)
 {
 	//Apply the newWord to empty word slot
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < m_wordCount; i++)
 	{
-		if (m_words[i] == "")
+		if (m_words[i].size() == 0)
 		{
 			m_words[i] = newWord;
 			break;
