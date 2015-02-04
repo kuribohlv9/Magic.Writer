@@ -7,18 +7,17 @@ Monster::Monster(sf::Texture* texture, float x, float y, float speed, int health
 {
 	m_type = GAMEOBJECT_MONSTERS;
 
-	m_x = x;
-	m_y = y;
-
 	m_weakness = weakness;
 	m_speed = speed;
 	m_health = health;
 	m_frozen = false;
 
 	m_sprite.setTexture(*texture);
-	m_collider = new Collider(m_x, m_y);
+	m_collider = new Collider(x, y);
 	m_collider->SetParent(this);
 	m_collider->SetWidthHeight(m_sprite.getTextureRect().width, m_sprite.getTextureRect().height);
+
+	SetPosition(x, y);
 }
 
 void Monster::Draw(DrawManager* drawManager)

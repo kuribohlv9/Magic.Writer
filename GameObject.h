@@ -8,6 +8,7 @@ enum GType
 {
 	GAMEOBJECT_UNKNOWN,
 	GAMEOBJECT_MONSTERS,
+	GAMEOBJECT_PLAYER,
 	GAMEOBJECT_ITEM
 };
 
@@ -25,7 +26,6 @@ public:
 	GameObject();
 	virtual ~GameObject();
 
-	//Inside Draw we draw out the sprite using drawManager
 	virtual void Draw(DrawManager* drawManager);
 	virtual void Update(float deltaTime);
 

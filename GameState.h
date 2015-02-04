@@ -9,6 +9,7 @@ class InputManager;
 
 class Item;
 class Monster;
+class Player;
 
 class GameState : public State
 {
@@ -28,14 +29,21 @@ private:
 	void ConvertWordToItem();
 
 private:
+	//Manager
 	DrawManager* m_drawManager;
 	TextureManager* m_textureManager;
 	InputManager* m_inputManager;
 	WordManager* m_wordManager;
 	ItemManager* m_itemManager;
 
-	Item* m_spawnedItem;
+	//Item & word variables
 	Item* m_items[3];
 	std::vector<Item*> m_activeItems;
 	int m_itemCount;
+
+	//Background
+	sf::Sprite m_backgroundSprite;
+
+	//Player
+	Player* m_player;
 };

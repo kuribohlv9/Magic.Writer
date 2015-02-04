@@ -16,25 +16,17 @@ Item::Item(sf::Texture* texture, sf::IntRect sourceRectangle, ItemProperties pro
 
 	m_sprite.setTexture(*texture);
 	m_sprite.setTextureRect(sourceRectangle);
+	sf::IntRect textureRect = m_sprite.getTextureRect();
+	m_sprite.setOrigin(textureRect.width / 2, textureRect.height / 2);
 
 	m_collider = new Collider(m_x, m_y);
 	m_collider->SetParent(this);
-	m_collider->SetWidthHeight(m_sprite.getTextureRect().width, m_sprite.getTextureRect().height);
+	m_collider->SetWidthHeight(textureRect.width, textureRect.height);
 }
 
 void Item::Update(float deltaTime)
 {
 	Move(0, -m_speed * deltaTime);
-}
-void Item::Draw(DrawManager* drawManager)
-{
-	drawManager->Draw(m_sprite, sf::RenderStates::Default);
-}
-
-void Item::Activate(float x, float y)
-{
-	SetPosition(x, y);
-	SetActive(true);
 }
 
 std::string Item::GetName()
