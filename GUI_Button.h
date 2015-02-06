@@ -13,6 +13,7 @@ public:
 	~GUI_Button();
 	void Update();
 	void Draw(DrawManager* drawManager);
+	void SetParent(GUI_Element* parent);
 	void Refresh();
 	void SetLabel(GUI_Label* label);
 	bool IsPressed();

@@ -7,9 +7,8 @@ public:
 	Item(sf::Texture* texture, sf::IntRect sourceRectangle, ItemProperties propertyOne, ItemProperties propertyTwo, const std::string& name);
 
 	void Update(float deltaTime);
-	void Draw(DrawManager* drawManager);
 
-	void Activate(float x, float y);
+	std::string GetName();
 
 private:
 	std::string m_name;
@@ -17,5 +16,6 @@ private:
 	ItemProperties m_propertyTwo;
 
 	float m_speed;
+	float m_rotation;
 };
 

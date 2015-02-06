@@ -12,27 +12,31 @@ Item::Item(sf::Texture* texture, sf::IntRect sourceRectangle, ItemProperties pro
 	m_propertyTwo = propertyTwo;
 
 	m_name = name;
-	m_speed = 5.0f;
+	m_speed = 150;
 
 	m_sprite.setTexture(*texture);
 	m_sprite.setTextureRect(sourceRectangle);
+	m_sprite.setScale(0.6f, 0.6f);
+	sf::IntRect textureRect = m_sprite.getTextureRect();
+	m_sprite.setOrigin(textureRect.width / 2, textureRect.height / 2);
 
 	m_collider = new Collider(m_x, m_y);
 	m_collider->SetParent(this);
-	m_collider->SetWidthHeight(m_sprite.getTextureRect().width, m_sprite.getTextureRect().height);
+	m_collider->SetWidthHeight(textureRect.width * 0.4f, textureRect.height * 0.4f);
 }
 
 void Item::Update(float deltaTime)
 {
 	Move(0, -m_speed * deltaTime);
-}
-void Item::Draw(DrawManager* drawManager)
-{
-	drawManager->Draw(m_sprite, sf::RenderStates::Default);
+
+	//TMP
+	m_rotation += 0.5f;
+	if (m_rotation >= 360)
+		m_rotation = 0;
+	m_sprite.setRotation(m_rotation);
 }
 
-void Item::Activate(float x, float y)
+std::string Item::GetName()
 {
-	SetPosition(x, y);
-	SetActive(true);
+	return m_name;
 }

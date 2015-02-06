@@ -61,7 +61,10 @@
     <ClCompile Include="ItemManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Animation.cpp">
+    <ClCompile Include="GUI_Panel.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -132,7 +135,10 @@
     <ClInclude Include="ItemManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
+    <ClInclude Include="GUI_Panel.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

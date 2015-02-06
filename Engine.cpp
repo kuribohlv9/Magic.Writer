@@ -25,7 +25,7 @@ Engine::~Engine()
 
 bool Engine::Initialize()
 {
-	m_window.create(sf::VideoMode(1024, 600), "Architecture");
+	m_window.create(sf::VideoMode(1920, 1080), "Architecture");
 	if (!m_window.isOpen())
 		return false;
 

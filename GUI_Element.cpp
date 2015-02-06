@@ -28,6 +28,10 @@ void GUI_Element::SetPosition(int x, int y)
 	m_localY = y;
 	Refresh();
 }
+void GUI_Element::SetParent(GUI_Element* parent)
+{
+	m_parent = parent;
+}
 void GUI_Element::Refresh()
 {
 	if (m_parent)

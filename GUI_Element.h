@@ -14,6 +14,7 @@ public:
 	void SetVisible(bool state);
 	void SetPosition(int x, int y);
 
+	virtual void SetParent(GUI_Element* parent);
 	virtual void Refresh();
 	virtual void Draw(DrawManager* drawManager);
 	virtual void Update();

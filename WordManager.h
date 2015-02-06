@@ -38,4 +38,5 @@ private:
 	//The current words text and active states
 	std::string m_words[3];
 	bool m_words_active[3];
+	int m_wordCount;
 };

@@ -4,6 +4,7 @@
 
 bool CollisionManager::Check(Collider* lhs, Collider* rhs)
 {
+	//Checks if the hitboxes inside the colliders intersect and returns the answer
 	sf::FloatRect areaOne = lhs->GetArea();
 	sf::FloatRect areaTwo = rhs->GetArea();
 
@@ -15,6 +16,8 @@ bool CollisionManager::Check(Collider* lhs, Collider* rhs)
 }
 bool CollisionManager::Check(Collider* lhs, Collider* rhs, sf::FloatRect& intersect)
 {
+	//Checks if the hitboxes inside the colliders intersect and returns the answer
+	//This functions also returns the amount of intersection in width and height via the sf::FloatRect reference
 	sf::FloatRect areaOne = lhs->GetArea();
 	sf::FloatRect areaTwo = rhs->GetArea();
 

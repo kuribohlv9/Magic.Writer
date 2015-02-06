@@ -51,6 +51,10 @@ void GUI_Button::SetLabel(GUI_Label* label)
 {
 	m_label = label;
 }
+void GUI_Button::SetParent(GUI_Element* parent)
+{
+	m_parent = parent;
+}
 void GUI_Button::Update()
 {
 	m_hovered = false;

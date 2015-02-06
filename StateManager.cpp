@@ -19,7 +19,7 @@ bool StateManager::Initialize()
 	AddState(STATE_GAME, new GameState());
 	AddState(STATE_MENU, new MenuState());
 
-	SetActiveState(STATE_MENU);
+	SetActiveState(STATE_GAME);
 	return true;
 }
 void StateManager::Shutdown()
