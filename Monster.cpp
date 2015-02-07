@@ -3,7 +3,7 @@
 #include "DrawManager.h"
 #include "Collider.h"
 
-Monster::Monster(sf::Texture* texture, float x, float y, float speed, int health, ItemProperties weakness)
+Monster::Monster(sf::Texture* texture, float x, float y, float speed, int health, ItemProperty weakness)
 {
 	m_type = GAMEOBJECT_MONSTERS;
 
@@ -13,6 +13,7 @@ Monster::Monster(sf::Texture* texture, float x, float y, float speed, int health
 	m_frozen = false;
 
 	m_sprite.setTexture(*texture);
+	m_sprite.setTextureRect(sf::IntRect(0, 0, 418, 418));
 	m_sprite.setScale(0.6f, 0.6f);
 	sf::IntRect textureRect = m_sprite.getTextureRect();
 	m_sprite.setOrigin(textureRect.width / 2.0f, textureRect.height / 2.0f);
@@ -26,7 +27,21 @@ Monster::Monster(sf::Texture* texture, float x, float y, float speed, int health
 
 void Monster::Draw(DrawManager* drawManager)
 {
-	drawManager->Draw(m_sprite, sf::RenderStates::Default);
+	if (!m_frozen)
+	{
+		m_sprite.setTextureRect(sf::IntRect(418, 0, 418, 418)); //Snail
+		drawManager->Draw(m_sprite, sf::RenderStates::Default);
+
+		m_sprite.setTextureRect(sf::IntRect(418 * 2, 0, 418, 418)); //Middle
+		drawManager->Draw(m_sprite, sf::RenderStates::Default);
+
+		m_sprite.setTextureRect(sf::IntRect(418 * 3, 0, 418, 418)); //Foam
+		drawManager->Draw(m_sprite, sf::RenderStates::Default);
+
+		m_sprite.setTextureRect(sf::IntRect(0, 418, 418, 418)); //Head
+		drawManager->Draw(m_sprite, sf::RenderStates::Default);
+	}
+	//drawManager->Draw(m_sprite, sf::RenderStates::Default);
 }
 
 void Monster::Update(float deltaTime)
@@ -54,9 +69,9 @@ void Monster::Freeze(float time)
 	m_frozen = true;
 }
 
-void Monster::Damage(ItemProperties propertyOne, ItemProperties propertyTwo)
+void Monster::Damage(ItemProperty property)
 {
-	if (propertyOne == m_weakness || propertyTwo == m_weakness)
+	if (property == m_weakness)
 	{
 		m_health -= 3;
 	}

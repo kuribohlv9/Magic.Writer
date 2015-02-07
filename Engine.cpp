@@ -26,6 +26,7 @@ Engine::~Engine()
 bool Engine::Initialize()
 {
 	m_window.create(sf::VideoMode(1920, 1080), "Architecture");
+	m_window.setFramerateLimit(60);
 	if (!m_window.isOpen())
 		return false;
 

@@ -8,6 +8,7 @@ class TextureManager;
 class InputManager;
 
 class Item;
+class Bubble;
 class Monster;
 class Player;
 
@@ -37,18 +38,14 @@ private:
 	ItemManager* m_itemManager;
 
 	//Item & word variables
-	Item* m_items[3];
+	std::vector<Bubble*> m_bubbles;
 	std::vector<Item*> m_activeItems;
-	int m_itemCount;
 
 	//Monster
 	std::vector<Monster*> m_monsters;
 
 	//Background
 	sf::Sprite m_backgroundSprite;
-
-	//Bubble
-	sf::Sprite m_bubbleSprite;
 
 	//Player
 	Player* m_player;

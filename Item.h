@@ -4,17 +4,21 @@
 class Item : public GameObject
 {
 public:
-	Item(sf::Texture* texture, sf::IntRect sourceRectangle, ItemProperties propertyOne, ItemProperties propertyTwo, const std::string& name);
+	Item(sf::Texture* texture, sf::IntRect sourceRectangle, ItemProperty property, const std::string& name);
 
 	void Update(float deltaTime);
 
 	std::string GetName();
+	ItemProperty GetProperty();
+
+	bool IsInGame();
+	void SetInGame(bool state);
 
 private:
 	std::string m_name;
-	ItemProperties m_propertyOne;
-	ItemProperties m_propertyTwo;
+	ItemProperty m_property;
 
+	bool m_inGame;
 	float m_speed;
 	float m_rotation;
 };

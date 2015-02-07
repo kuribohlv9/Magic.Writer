@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameState.h"
 
+//Manager
 #include "ServiceLocator.h"
 #include "DrawManager.h"
 #include "TextureManager.h"
@@ -9,10 +10,12 @@
 #include "WordManager.h"
 #include "ItemManager.h"
 
+//Classes
 #include "Monster.h"
 #include "Collider.h"
 #include "Item.h"
 #include "Player.h"
+#include "Bubble.h"
 
 GameState::GameState()
 {
@@ -23,37 +26,37 @@ GameState::GameState()
 	m_wordManager = new WordManager();
 	m_itemManager = new ItemManager();
 
-	//Count the size of m_items
-	m_itemCount = sizeof(m_items) / sizeof(m_items[0]);
-
-	//Apply starting words
-	for (int i = 0; i < m_itemCount; i++)
-	{
-		m_items[i] = m_itemManager->GetItem();
-		m_wordManager->SetNewWord(m_items[i]->GetName());
-	}
-
 	//Load background sprite
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background.png");
 	m_backgroundSprite.setTexture(*texture);
-
-	//Load bubble sprite
-	texture = m_textureManager->LoadTexture("assets/sprites/bubble.png");
-	m_bubbleSprite.setTexture(*texture);
-	m_bubbleSprite.setOrigin(texture->getSize().x / 2, texture->getSize().y);
 
 	//Instantiate player
 	texture = m_textureManager->LoadTexture("assets/sprites/wizard.png");
 	m_player = new Player(texture);
 
+	//Instantiate thought bubbles
+	texture = m_textureManager->LoadTexture("assets/sprites/bubble_spritesheet.png");
+	for (int i = 0; i < 3; i++)
+	{
+		Bubble* bubble = new Bubble(550 + i * 400 + i * 30, 960, texture);
+
+		Item* item = m_itemManager->GetItem();
+
+		bubble->SetItem(item);
+		m_wordManager->SetNewWord(item->GetName());
+
+		m_bubbles.push_back(bubble);
+	}
+
+
 	//TMP MONSTER SPAWNING
-	texture = m_textureManager->LoadTexture("assets/sprites/monster_test.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/spritesheet_monster.png");
 	for (int i = 0; i < 5; i++)
 	{
 		int randomX = rand() % 5;
 		sf::Vector2f position = sf::Vector2f(192 + 384 * randomX, -i * 300);
 
-		Monster* monster = new Monster(texture, position.x, position.y, 25.0f, 5, SOFT);
+		Monster* monster = new Monster(texture, position.x, position.y, 25.0f, 5, ITEM_ALIVE);
 
 		m_monsters.push_back(monster);
 	}
@@ -66,11 +69,13 @@ GameState::~GameState()
 	m_wordManager = nullptr;
 	m_itemManager = nullptr;
 
-	//Set all bubble items to nullptr
-	for (int i = 0; i < m_itemCount; i++)
+	//Delete all bubbles
+	for (int i = 0; i < m_bubbles.size(); i++)
 	{
-		m_items[i] = nullptr;
+		delete m_bubbles[i];
+		m_bubbles[i] = nullptr;
 	}
+	m_bubbles.clear();
 
 	//Set all active items to nullptr
 	for (int i = 0; i < m_activeItems.size(); i++)
@@ -99,19 +104,12 @@ bool GameState::Update(float deltaTime)
 			break;
 
 		m_activeItems[i]->Update(deltaTime);
-
-		//Remove items that gets above the screen
-		if (m_activeItems[i]->GetY() <= -150)
-		{
-			m_activeItems[i]->SetActive(false);
-			m_activeItems.erase(m_activeItems.begin() + i);
-		}
 	}
 
 	//Update player
 	m_player->Update(deltaTime);
 
-	//TMP UPDATE MONSTER
+	//Update monsters
 	for (int i = 0; i < m_monsters.size(); i++)
 	{
 		m_monsters[i]->Update(deltaTime);
@@ -119,11 +117,7 @@ bool GameState::Update(float deltaTime)
 
 
 
-
-
-
 	//CHECK COLLISION
-
 	for (int i = 0; i < m_activeItems.size(); i++)
 	{
 		Item* item = m_activeItems[i];
@@ -138,8 +132,9 @@ bool GameState::Update(float deltaTime)
 
 			if (CollisionManager::Check(item->GetCollider(), monster->GetCollider()))
 			{
-				monster->Damage(SOFT, ALIVE);
+				monster->Damage(item->GetProperty());
 				item->SetActive(false);
+				item->SetInGame(false);
 			}
 		}
 	}
@@ -155,18 +150,10 @@ bool GameState::Update(float deltaTime)
 	{
 		if (!m_monsters[i]->IsActive())
 		{
+			delete m_monsters[i];
 			m_monsters.erase(m_monsters.begin() + i);
 		}
 	}
-
-
-
-
-
-
-
-
-
 	return true;
 }
 void GameState::ConvertWordToItem()
@@ -178,46 +165,25 @@ void GameState::ConvertWordToItem()
 	if (!spawnedItem)
 	{
 		std::string finishedWord = m_wordManager->GetFinishedWord();
+		if (finishedWord.size() == 0)
+			return;
 
-		if (finishedWord.size() != 0)
+		for (int i = 0; i < m_bubbles.size(); i++)
 		{
-			for (int i = 0; i < m_itemCount; i++)
-			{
-				Item* item = m_items[i];
+			Item* item = m_bubbles[i]->GetItem();
 
-				if (item->GetName() == finishedWord)
-				{
-					//Spawn item
-					m_player->SetItem(item);
+			if (item->GetName() != finishedWord)
+				continue;
 
-					//Get new item and word
-					while (true)
-					{
-						Item* newItem = m_itemManager->GetItem();
-						
-						//Check for duplicate words
-						bool duplicateFound = false;
-						for (int j = 0; j < m_itemCount; j++)
-						{
-							if (m_items[j]->GetName() == newItem->GetName())
-							{
-								duplicateFound = true;
-							}
-						}
+			Item* newItem = m_itemManager->GetItem();
 
-						//If there was no duplicate, add the new word and item
-						if (!duplicateFound)
-						{
-							m_items[i] = newItem;
-							m_wordManager->SetNewWord(m_items[i]->GetName());
-							break;
-						}
-					}
-				}
-			}
+			m_player->SetItem(item);
+			m_wordManager->SetNewWord(newItem->GetName());
+			m_bubbles[i]->SetItem(newItem);
+			break;
 		}
 	}
-	else //If an item is spawned, activate it by pressing space
+	else //If an item is spawned, activate it by pressing ENTER
 	{
 		if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Return))
 		{
@@ -233,29 +199,24 @@ void GameState::Draw()
 	//Draw background
 	m_drawManager->Draw(m_backgroundSprite, sf::RenderStates::Default);
 
-	//TMP DRAW MONSTER
+	//Draw monster
 	for (int i = 0; i < m_monsters.size(); i++)
 	{
-		m_monsters[i]->Draw(m_drawManager);
+		if (m_monsters[i]->IsActive())
+			m_monsters[i]->Draw(m_drawManager);
 	}
 
 	//Draw player
 	m_player->Draw(m_drawManager);
 
-	//Draw Bubbles and item
-	for (int i = 0; i < m_itemCount; i++)
+	//Draw bubbles
+	for (int i = 0; i < m_bubbles.size(); i++)
 	{
-		sf::Vector2f position = sf::Vector2f(600 + 350 * i, 1020);
-		m_bubbleSprite.setPosition(position);
-		m_drawManager->Draw(m_bubbleSprite, sf::RenderStates::Default);
-
-		m_items[i]->SetPosition(position.x, position.y - 100);
-		m_items[i]->Draw(m_drawManager);
+		m_bubbles[i]->Draw(m_drawManager);
 	}
 
 	//Draw typeable words
 	m_wordManager->Draw(m_drawManager);
-
 
 	//Draw active items
 	for (int i = 0; i < m_activeItems.size(); i++)

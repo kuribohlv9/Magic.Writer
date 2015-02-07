@@ -12,12 +12,12 @@ enum GType
 	GAMEOBJECT_ITEM
 };
 
-enum ItemProperties
+enum ItemProperty
 {
-	HARD,
-	SOFT,
-	ALIVE,
-	DEAD
+	ITEM_ALIVE,
+	ITEM_DEAD,
+	ITEM_HOT,
+	ITEM_COLD
 };
 
 class GameObject

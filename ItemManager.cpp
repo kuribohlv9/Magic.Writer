@@ -7,13 +7,15 @@
 #include <fstream>
 #include <time.h>
 
-
 ItemManager::ItemManager()
 {
 	srand(time(NULL));
 
 	m_textureManager = ServiceLocator<TextureManager>::GetService();
-	AddItems("assets/items/item_spritesheet_0.png", "assets/items/item_names_0.txt");
+	AddItems("assets/items/item_alive.png", "assets/items/item_alive.txt", ITEM_ALIVE);
+	AddItems("assets/items/item_dead.png", "assets/items/item_dead.txt", ITEM_DEAD);
+	AddItems("assets/items/item_hot.png", "assets/items/item_hot.txt", ITEM_HOT);
+	AddItems("assets/items/item_cold.png", "assets/items/item_cold.txt", ITEM_COLD);
 }
 
 ItemManager::~ItemManager()
@@ -29,7 +31,7 @@ ItemManager::~ItemManager()
 	m_items.clear();
 }
 
-void ItemManager::AddItems(const std::string& spritesheetFilename, const std::string& textFilename)
+void ItemManager::AddItems(const std::string& spritesheetFilename, const std::string& textFilename, ItemProperty property)
 {
 	//Load spritesheet for items
 	sf::Texture* itemSpriteSheet = m_textureManager->LoadTexture(spritesheetFilename);
@@ -39,7 +41,7 @@ void ItemManager::AddItems(const std::string& spritesheetFilename, const std::st
 	stream.open(textFilename);
 
 	//Create a sourcerectangle (part of a texture)
-	int itemWidthHeight = 256;
+	int itemWidthHeight = 128;
 	sf::IntRect sourceRectangle = sf::IntRect(0, 0, itemWidthHeight, itemWidthHeight);
 
 	//What row in the spritesheet we are on
@@ -49,7 +51,7 @@ void ItemManager::AddItems(const std::string& spritesheetFilename, const std::st
 	{
 		//Read item name from textfile
 		std::string itemName;
-		stream >> itemName;
+		std::getline(stream, itemName);
 
 		if (itemName == "-")
 		{
@@ -60,12 +62,7 @@ void ItemManager::AddItems(const std::string& spritesheetFilename, const std::st
 		}
 		else
 		{
-			//Add an item
-			ItemProperties propertyOne;
-			ItemProperties propertyTwo;
-			GetProperties(row, propertyOne, propertyTwo);
-
-			Item* item = new Item(itemSpriteSheet, sourceRectangle, propertyOne, propertyTwo, itemName);
+			Item* item = new Item(itemSpriteSheet, sourceRectangle, property, itemName);
 			m_items.push_back(item);
 
 			sourceRectangle.left += itemWidthHeight;
@@ -73,37 +70,19 @@ void ItemManager::AddItems(const std::string& spritesheetFilename, const std::st
 	}
 	stream.close();
 }
-void ItemManager::GetProperties(int spriteSheetRow, ItemProperties& propertyOne, ItemProperties& propertyTwo)
-{
-	//Return properties depending on which spritesheetrow we are on
-	switch (spriteSheetRow)
-	{
-	case 0:
-		propertyOne = SOFT;
-		propertyTwo = ALIVE;
-		break;
-	case 1:
-		propertyOne = SOFT;
-		propertyTwo = DEAD;
-		break;
-	case 2:
-		propertyOne = HARD;
-		propertyTwo = DEAD;
-		break;
-	case 3:
-		propertyOne = HARD;
-		propertyTwo = ALIVE;
-		break;
-	}
-}
 
 Item* ItemManager::GetItem()
 {
-	int randomIndex = rand() % m_items.size();
+	while (true)
+	{
+		int randomIndex = rand() % m_items.size();
 
-	Item* item = m_items[randomIndex];
-	//m_items.erase(m_items.begin() + randomIndex);
+		Item* item = m_items[randomIndex];
 
-	return item;
-	//May erase returned item in future, and insert it back later
+		if (!item->IsActive() && !item->IsInGame())
+		{
+			item->SetInGame(true);
+			return item;
+		}
+	}
 }

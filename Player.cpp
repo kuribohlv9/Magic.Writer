@@ -59,7 +59,7 @@ void Player::ChangeLane(int xDirection)
 
 	if (m_item)
 	{
-		m_item->SetPosition(m_x, m_y - m_item->GetSprite()->getTextureRect().height);
+		m_item->SetPosition(m_x - 50, m_y - m_item->GetSprite()->getTextureRect().height + 100);
 	}
 }
 
@@ -69,7 +69,7 @@ void Player::SetItem(Item* item)
 
 	if (m_item)
 	{
-		m_item->SetPosition(m_x, m_y - m_item->GetSprite()->getTextureRect().height);
+		m_item->SetPosition(m_x - 50, m_y - m_item->GetSprite()->getTextureRect().height + 100);
 	}
 }
 Item* Player::GetItem()

@@ -6,15 +6,15 @@ class DrawManager;
 class Monster : public GameObject
 {
 public:
-	Monster(sf::Texture* texture, float x, float y, float speed, int health, ItemProperties weakness);
+	Monster(sf::Texture* texture, float x, float y, float speed, int health, ItemProperty weakness);
 
 	void Draw(DrawManager* drawManager);
 	void Update(float deltaTime);
 	void Freeze(float time);
-	void Damage(ItemProperties propertyOne, ItemProperties propertyTwo);
+	void Damage(ItemProperty property);
 
 private:
-	ItemProperties m_weakness;
+	ItemProperty m_weakness;
 	bool m_frozen;
 	int m_health;
 	float m_speed;
