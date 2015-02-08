@@ -5,12 +5,9 @@
 #include "Item.h"
 
 #include <fstream>
-#include <time.h>
 
 ItemManager::ItemManager()
 {
-	srand(time(NULL));
-
 	m_textureManager = ServiceLocator<TextureManager>::GetService();
 	AddItems("assets/items/item_alive.png", "assets/items/item_alive.txt", ITEM_ALIVE);
 	AddItems("assets/items/item_dead.png", "assets/items/item_dead.txt", ITEM_DEAD);

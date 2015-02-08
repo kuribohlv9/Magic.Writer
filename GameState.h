@@ -6,6 +6,7 @@ class WordManager;
 class DrawManager;
 class TextureManager;
 class InputManager;
+class WaveManager;
 
 class Item;
 class Bubble;
@@ -28,6 +29,7 @@ public:
 
 private:
 	void ConvertWordToItem();
+	void SpawnMonster();
 
 private:
 	//Manager
@@ -36,6 +38,7 @@ private:
 	InputManager* m_inputManager;
 	WordManager* m_wordManager;
 	ItemManager* m_itemManager;
+	WaveManager* m_waveManager;
 
 	//Item & word variables
 	std::vector<Bubble*> m_bubbles;
@@ -43,6 +46,7 @@ private:
 
 	//Monster
 	std::vector<Monster*> m_monsters;
+	sf::Texture* m_monsterTexture;
 
 	//Background
 	sf::Sprite m_backgroundSprite;

@@ -6,7 +6,7 @@ class DrawManager;
 class Monster : public GameObject
 {
 public:
-	Monster(sf::Texture* texture, float x, float y, float speed, int health, ItemProperty weakness);
+	Monster(sf::Texture* texture, float speed, int health);
 
 	void Draw(DrawManager* drawManager);
 	void Update(float deltaTime);

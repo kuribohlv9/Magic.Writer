@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "GameState.h"
+#include <time.h>
 
 //Manager
 #include "ServiceLocator.h"
@@ -9,6 +10,7 @@
 #include "CollisionManager.h"
 #include "WordManager.h"
 #include "ItemManager.h"
+#include "WaveManager.h"
 
 //Classes
 #include "Monster.h"
@@ -19,16 +21,22 @@
 
 GameState::GameState()
 {
+	srand(time(NULL));
+
 	//Initiallize managers
 	m_textureManager = ServiceLocator<TextureManager>::GetService();
 	m_drawManager = ServiceLocator<DrawManager>::GetService();
 	m_inputManager = ServiceLocator<InputManager >::GetService();
 	m_wordManager = new WordManager();
 	m_itemManager = new ItemManager();
+	m_waveManager = new WaveManager();
 
-	//Load background sprite
+	//Load background texture
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background.png");
 	m_backgroundSprite.setTexture(*texture);
+
+	//Load monster texture
+	m_monsterTexture = m_textureManager->LoadTexture("assets/sprites/spritesheet_monster.png");
 
 	//Instantiate player
 	texture = m_textureManager->LoadTexture("assets/sprites/wizard.png");
@@ -46,19 +54,6 @@ GameState::GameState()
 		m_wordManager->SetNewWord(item->GetName());
 
 		m_bubbles.push_back(bubble);
-	}
-
-
-	//TMP MONSTER SPAWNING
-	texture = m_textureManager->LoadTexture("assets/sprites/spritesheet_monster.png");
-	for (int i = 0; i < 5; i++)
-	{
-		int randomX = rand() % 5;
-		sf::Vector2f position = sf::Vector2f(192 + 384 * randomX, -i * 300);
-
-		Monster* monster = new Monster(texture, position.x, position.y, 25.0f, 5, ITEM_ALIVE);
-
-		m_monsters.push_back(monster);
 	}
 }
 GameState::~GameState()
@@ -91,6 +86,13 @@ bool GameState::Update(float deltaTime)
 	if (m_player->GetItem() == nullptr)
 	{
 		m_wordManager->Update(deltaTime);
+	}
+
+	//Update waves
+	m_waveManager->Update(deltaTime);
+	if (m_waveManager->CanSpawnMonster())
+	{
+		SpawnMonster();
 	}
 
 	//Convert written words into item
@@ -156,44 +158,6 @@ bool GameState::Update(float deltaTime)
 	}
 	return true;
 }
-void GameState::ConvertWordToItem()
-{
-	//Get spawned item from player
-	Item* spawnedItem = m_player->GetItem();
-
-	//If the item is not spawned, check if a word is complete and spawn it.
-	if (!spawnedItem)
-	{
-		std::string finishedWord = m_wordManager->GetFinishedWord();
-		if (finishedWord.size() == 0)
-			return;
-
-		for (int i = 0; i < m_bubbles.size(); i++)
-		{
-			Item* item = m_bubbles[i]->GetItem();
-
-			if (item->GetName() != finishedWord)
-				continue;
-
-			Item* newItem = m_itemManager->GetItem();
-
-			m_player->SetItem(item);
-			m_wordManager->SetNewWord(newItem->GetName());
-			m_bubbles[i]->SetItem(newItem);
-			break;
-		}
-	}
-	else //If an item is spawned, activate it by pressing ENTER
-	{
-		if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Return))
-		{
-			//Activate item
-			spawnedItem->SetActive(true);
-			m_activeItems.push_back(spawnedItem);
-			m_player->SetItem(nullptr);
-		}
-	}
-}
 void GameState::Draw()
 {
 	//Draw background
@@ -237,4 +201,48 @@ void GameState::Exit()
 ScreenState GameState::NextState()
 {
 	return STATE_MENU;
+}
+
+void GameState::SpawnMonster()
+{
+	Monster* monster = new Monster(m_monsterTexture, 30.0f, 4);
+	m_monsters.push_back(monster);
+}
+void GameState::ConvertWordToItem()
+{
+	//Get spawned item from player
+	Item* spawnedItem = m_player->GetItem();
+
+	//If the item is not spawned, check if a word is complete and spawn it.
+	if (!spawnedItem)
+	{
+		std::string finishedWord = m_wordManager->GetFinishedWord();
+		if (finishedWord.size() == 0)
+			return;
+
+		for (int i = 0; i < m_bubbles.size(); i++)
+		{
+			Item* item = m_bubbles[i]->GetItem();
+
+			if (item->GetName() != finishedWord)
+				continue;
+
+			Item* newItem = m_itemManager->GetItem();
+
+			m_player->SetItem(item);
+			m_wordManager->SetNewWord(newItem->GetName());
+			m_bubbles[i]->SetItem(newItem);
+			break;
+		}
+	}
+	else //If an item is spawned, activate it by pressing ENTER
+	{
+		if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Return))
+		{
+			//Activate item
+			spawnedItem->SetActive(true);
+			m_activeItems.push_back(spawnedItem);
+			m_player->SetItem(nullptr);
+		}
+	}
 }

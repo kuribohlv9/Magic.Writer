@@ -2,27 +2,56 @@
 #include "Monster.h"
 #include "DrawManager.h"
 #include "Collider.h"
+#include <time.h>
 
-Monster::Monster(sf::Texture* texture, float x, float y, float speed, int health, ItemProperty weakness)
+Monster::Monster(sf::Texture* texture, float speed, int health)
 {
+	srand(time(NULL));
+	//Variables
 	m_type = GAMEOBJECT_MONSTERS;
-
-	m_weakness = weakness;
 	m_speed = speed;
 	m_health = health;
 	m_frozen = false;
 
+	//Sprite
 	m_sprite.setTexture(*texture);
 	m_sprite.setTextureRect(sf::IntRect(0, 0, 418, 418));
 	m_sprite.setScale(0.6f, 0.6f);
 	sf::IntRect textureRect = m_sprite.getTextureRect();
 	m_sprite.setOrigin(textureRect.width / 2.0f, textureRect.height / 2.0f);
 
-	m_collider = new Collider(x, y);
+	//Collider
+	m_collider = new Collider(0, 0);
 	m_collider->SetParent(this);
 	m_collider->SetWidthHeight(textureRect.width * 0.4f, textureRect.height * 0.4f);
 
-	SetPosition(x, y);
+	//Position
+	int randomX = rand() % 5;
+	sf::Vector2f position = sf::Vector2f(192 + 384 * randomX, -textureRect.height);
+	SetPosition(position.x, 0);
+
+	//Weakness
+	int randomWeakness = rand() % 4;
+	ItemProperty weakness;
+	switch (randomWeakness)
+	{
+	case 0:
+		weakness = ITEM_ALIVE;
+		break;
+	case 1:
+		weakness = ITEM_DEAD;
+		m_sprite.setColor(sf::Color(50, 50, 50, 255));
+		break;
+	case 2:
+		weakness = ITEM_COLD;
+		m_sprite.setColor(sf::Color::Blue);
+		break;
+	case 3:
+		weakness = ITEM_HOT;
+		m_sprite.setColor(sf::Color::Red);
+		break;
+	}
+	m_weakness = weakness;
 }
 
 void Monster::Draw(DrawManager* drawManager)
