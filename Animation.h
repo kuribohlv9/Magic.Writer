@@ -9,7 +9,8 @@ public:
 	void Update(float deltaTime);
 
 private:
-	float m_delay;
 	sf::Sprite* m_sprite;
 	float m_timer;
+	std::vector<std::pair<float, sf::IntRect>> m_frames;
+	int m_currentFrame;
 };	
