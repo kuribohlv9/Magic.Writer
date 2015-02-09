@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "WaveManager.h"
 #include <fstream>
-#include <iostream>
 
 WaveManager::WaveManager()
 {
@@ -20,9 +19,7 @@ void WaveManager::Update(float deltaTime)
 
 	if (m_timer >= m_spawnTime)
 	{
-		std::cout << "Spawn" << std::endl;
 		//Get the current wave
-
 		std::vector<float>* currentWave = &m_waves[0];
 
 		if (currentWave->size() > 0)

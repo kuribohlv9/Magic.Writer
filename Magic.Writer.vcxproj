@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{83F919EA-6EE8-4383-9047-A60861A27885}</ProjectGuid>
+    <ProjectGuid>{72763EFA-5E5F-4868-BE40-8165116A6102}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MagicWriter</RootNamespace>
   </PropertyGroup>
@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Animator.h" />
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Bubble.h" />
     <ClInclude Include="Collider.h" />
@@ -114,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Animator.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Bubble.cpp" />
     <ClCompile Include="Collider.cpp" />

@@ -1,9 +1,20 @@
 #pragma once
 #include "GameObject.h"
 
+class Animator;
 class DrawManager;
 class InputManager;
 class Item;
+
+enum PlayerState
+{
+	PLAYER_IDLE,
+	PLAYER_CHANTING,
+	PLAYER_HOLDING,
+	PLAYER_THROWING,
+	PLAYER_KNOCKEDDOWN,
+	PLAYER_JUMPING
+};
 
 class Player : public GameObject
 {
@@ -16,10 +27,13 @@ public:
 	Item* GetItem();
 
 private:
+	void HandleMovement();
 	void ChangeLane(int xDirection);
 
 private:
+	Animator* m_animation;
 	InputManager* m_inputManager;
 	Item* m_item;
+	PlayerState m_state;
 	int m_lane;
 };

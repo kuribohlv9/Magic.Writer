@@ -37,18 +37,18 @@ Monster::Monster(sf::Texture* texture, float speed, int health)
 	{
 	case 0:
 		weakness = ITEM_ALIVE;
+		m_sprite.setColor(sf::Color(50, 50, 50, 255));
 		break;
 	case 1:
 		weakness = ITEM_DEAD;
-		m_sprite.setColor(sf::Color(50, 50, 50, 255));
 		break;
 	case 2:
 		weakness = ITEM_COLD;
-		m_sprite.setColor(sf::Color::Blue);
+		m_sprite.setColor(sf::Color::Red);
 		break;
 	case 3:
 		weakness = ITEM_HOT;
-		m_sprite.setColor(sf::Color::Red);
+		m_sprite.setColor(sf::Color::Blue);
 		break;
 	}
 	m_weakness = weakness;

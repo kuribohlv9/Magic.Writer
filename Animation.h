@@ -1,16 +1,21 @@
 #pragma once
 
+struct Frame
+{
+	float frameTime;
+	sf::IntRect sourceRectangle;
+};
 class Animation
 {
 public:
-	Animation(sf::Sprite* sprite, std::string fileName);
-	~Animation();
+	Animation(bool looping);
 
-	void Update(float deltaTime);
+	void AddFrame(Frame* frame);
+	Frame* GetFrame(int index);
+	bool Looping();
+	int Size();
 
 private:
-	sf::Sprite* m_sprite;
-	float m_timer;
-	std::vector<std::pair<float, sf::IntRect>> m_frames;
-	int m_currentFrame;
-};	
+	bool m_looping;
+	std::vector<Frame*> m_animations;
+};

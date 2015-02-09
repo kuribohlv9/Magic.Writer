@@ -39,7 +39,7 @@ GameState::GameState()
 	m_monsterTexture = m_textureManager->LoadTexture("assets/sprites/spritesheet_monster.png");
 
 	//Instantiate player
-	texture = m_textureManager->LoadTexture("assets/sprites/wizard.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/wizard/spritesheet_wizard.png");
 	m_player = new Player(texture);
 
 	//Instantiate thought bubbles
