@@ -102,7 +102,7 @@ void Monster::Damage(ItemProperty property)
 {
 	if (property == m_weakness)
 	{
-		m_health -= 3;
+		m_health -= 2;
 	}
 	else
 	{

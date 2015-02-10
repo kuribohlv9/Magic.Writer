@@ -239,7 +239,7 @@ ScreenState GameState::NextState()
 
 void GameState::SpawnMonster()
 {
-	Monster* monster = new Monster(m_monsterTexture, 30.0f, 4);
+	Monster* monster = new Monster(m_monsterTexture, 30.0f, 3);
 	m_monsters.push_back(monster);
 }
 void GameState::ConvertWordToItem()
