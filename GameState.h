@@ -53,4 +53,13 @@ private:
 
 	//Player
 	Player* m_player;
+
+	//test font
+	sf::Font* m_font;
+
+	//Test HUD
+	sf::CircleShape m_circle;
+	sf::Text m_scoreDisplay;
+	int m_score;
+
 };

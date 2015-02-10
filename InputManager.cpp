@@ -1,7 +1,14 @@
 #include "stdafx.h"
 #include "InputManager.h"
 #include "Collider.h"
+InputManager::InputManager()
+{
 
+}
+InputManager::~InputManager()
+{
+
+}
 bool InputManager::Initialize()
 {
 	m_mouseCollider = new Collider(m_mouse_position.x, m_mouse_position.y);

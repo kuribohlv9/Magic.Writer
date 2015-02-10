@@ -19,6 +19,8 @@
 #include "Player.h"
 #include "Bubble.h"
 
+#include <sstream>
+
 GameState::GameState()
 {
 	srand(time(NULL));
@@ -54,6 +56,18 @@ GameState::GameState()
 		m_wordManager->SetNewWord(item->GetName());
 
 		m_bubbles.push_back(bubble);
+
+		//Load test font
+		m_font = m_textureManager->LoadFont("assets/fonts/font.ttf");
+
+		//Testing for HUD
+		m_score = 0;
+		m_scoreDisplay.setString("0");
+		m_circle.setFillColor(sf::Color::Red);
+		m_circle.setRadius(50);
+		m_scoreDisplay.setFont(*m_font);
+		m_scoreDisplay.setScale(3, 3);
+		m_scoreDisplay.setPosition(1700, 900);
 	}
 }
 GameState::~GameState()
@@ -137,6 +151,14 @@ bool GameState::Update(float deltaTime)
 				monster->Damage(item->GetProperty());
 				item->SetActive(false);
 				item->SetInGame(false);
+
+				if (monster->IsActive() == false)
+				{
+					//Update score
+					m_score += 100;
+					std::string tempstring = static_cast<std::ostringstream*>(&(std::ostringstream() << m_score))->str();
+					m_scoreDisplay.setString(tempstring);
+				}
 			}
 		}
 	}
@@ -156,6 +178,9 @@ bool GameState::Update(float deltaTime)
 			m_monsters.erase(m_monsters.begin() + i);
 		}
 	}
+
+	
+
 	return true;
 }
 void GameState::Draw()
@@ -188,6 +213,15 @@ void GameState::Draw()
 		if (m_activeItems[i]->IsActive())
 			m_activeItems[i]->Draw(m_drawManager);
 	}
+
+	//Draw HUD
+	for (int i = 0; i < 3; i++)
+	{
+		m_circle.setPosition(60.0f + 100.0f * i, 900);
+		m_drawManager->Draw(m_circle, sf::RenderStates::Default);
+	}
+
+	m_drawManager->Draw(m_scoreDisplay, sf::RenderStates::Default);
 }
 
 void GameState::Enter()
