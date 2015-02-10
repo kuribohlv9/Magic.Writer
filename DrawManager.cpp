@@ -16,7 +16,11 @@ bool DrawManager::Initialize()
 }
 void DrawManager::Shutdown()
 {
-	m_window = nullptr;
+		if (m_window)
+	{
+		delete m_window;
+		m_window = nullptr;
+	}
 }
 
 void DrawManager::Draw(const sf::Drawable& drawable, const sf::RenderStates& states)
