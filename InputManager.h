@@ -5,6 +5,8 @@ class Collider;
 class InputManager
 {
 public:
+	InputManager();
+	~InputManager();
 	bool Initialize();
 	void Shutdown();
 

@@ -18,7 +18,7 @@ void DrawManager::Shutdown()
 {
 		if (m_window)
 	{
-		delete m_window;
+		//delete m_window;
 		m_window = nullptr;
 	}
 }
