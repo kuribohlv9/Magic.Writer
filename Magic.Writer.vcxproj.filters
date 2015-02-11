@@ -160,7 +160,9 @@
     <ClInclude Include="Animator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h" />
+    <ClInclude Include="Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

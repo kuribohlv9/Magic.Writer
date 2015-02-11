@@ -6,13 +6,20 @@ Animation::Animation(bool looping)
 	m_looping = looping;
 }
 
-void Animation::AddFrame(Frame* frame)
+Animation::~Animation()
 {
-	m_animations.push_back(frame);
 }
-Frame* Animation::GetFrame(int index)
+
+void Animation::AddFrame(Frame frame)
 {
-	return m_animations[index];
+	m_frames.push_back(frame);
+}
+Frame* Animation::GetFrame(const int index)
+{
+	if (index < Size())
+		return &m_frames[index];
+	else
+		return nullptr;
 }
 bool Animation::Looping()
 {
@@ -20,5 +27,5 @@ bool Animation::Looping()
 }
 int Animation::Size()
 {
-	return m_animations.size();
+	return m_frames.size();
 }

@@ -3,7 +3,7 @@
 #include "Animator.h"
 #include "Animation.h"
 
-Animator::Animator(sf::Sprite* sprite, std::string fileName)
+Animator::Animator(sf::Sprite* sprite, std::string animationTextFileName)
 {
 	m_frame = 0;
 	m_timer = 0;
@@ -11,7 +11,7 @@ Animator::Animator(sf::Sprite* sprite, std::string fileName)
 	m_sprite = sprite;
 
 	std::ifstream stream;
-	stream.open(fileName);
+	stream.open(animationTextFileName);
 
 	//Load variables
 	std::string animationName;
@@ -35,9 +35,9 @@ Animator::Animator(sf::Sprite* sprite, std::string fileName)
 		stream >> sourceRectangle.width;
 		stream >> sourceRectangle.height;
 
-		Frame* frame = new Frame();
-		frame->frameTime = frameDelay;
-		frame->sourceRectangle = sourceRectangle;
+		Frame frame;
+		frame.frameTime = frameDelay;
+		frame.sourceRectangle = sourceRectangle;
 
 		animation->AddFrame(frame);
 
