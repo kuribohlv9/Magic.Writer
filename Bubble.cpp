@@ -7,7 +7,7 @@ Bubble::Bubble(float x, float y, sf::Texture* texture)
 {
 	m_sprite.setPosition(x, y);
 	m_width = texture->getSize().x / 4;
-	m_height = texture->getSize().y;
+	m_height = texture->getSize().y / 2;
 
 	m_sprite.setTexture(*texture);
 	m_sprite.setTextureRect(sf::IntRect(0, 0, m_width, m_height));
@@ -31,7 +31,15 @@ Item* Bubble::GetItem()
 }
 void Bubble::Draw(DrawManager* drawManager)
 {
+	int x = (int)(m_item->GetProperty());
+
+	m_sprite.setColor(sf::Color(255, 255, 255, 200));
+	m_sprite.setTextureRect(sf::IntRect(x * m_width, 0, m_width, m_height));
 	drawManager->Draw(m_sprite, sf::RenderStates::Default);
 	if (m_item)
 		m_item->Draw(drawManager);
+
+	m_sprite.setColor(sf::Color(255, 255, 255, 255));
+	m_sprite.setTextureRect(sf::IntRect(0, m_height, m_width, m_height));
+	drawManager->Draw(m_sprite, sf::RenderStates::Default);
 }
