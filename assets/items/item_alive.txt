@@ -1,5 +1,5 @@
 panda
-pig
-earthworm
 crocodile
+earthworm
+pig
 fireant

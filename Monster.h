@@ -15,6 +15,8 @@ public:
 
 private:
 	ItemProperty m_weakness;
+	sf::Color m_color;
+	float m_totalLifeTime;
 	bool m_frozen;
 	int m_health;
 	float m_speed;

@@ -15,8 +15,7 @@ Monster::Monster(sf::Texture* texture, float speed, int health)
 
 	//Sprite
 	m_sprite.setTexture(*texture);
-	m_sprite.setTextureRect(sf::IntRect(0, 0, 418, 418));
-	m_sprite.setScale(0.6f, 0.6f);
+	m_sprite.setTextureRect(sf::IntRect(0, 0, 207, 207));
 	sf::IntRect textureRect = m_sprite.getTextureRect();
 	m_sprite.setOrigin(textureRect.width / 2.0f, textureRect.height / 2.0f);
 
@@ -37,18 +36,18 @@ Monster::Monster(sf::Texture* texture, float speed, int health)
 	{
 	case 0:
 		weakness = ITEM_ALIVE;
-		m_sprite.setColor(sf::Color(50, 50, 50, 255));
+		m_color = sf::Color(100, 100, 100, 255);
 		break;
 	case 1:
 		weakness = ITEM_DEAD;
 		break;
 	case 2:
 		weakness = ITEM_COLD;
-		m_sprite.setColor(sf::Color::Red);
+		m_color = sf::Color::Red;
 		break;
 	case 3:
 		weakness = ITEM_HOT;
-		m_sprite.setColor(sf::Color::Blue);
+		m_color = sf::Color::Blue;
 		break;
 	}
 	m_weakness = weakness;
@@ -58,23 +57,38 @@ void Monster::Draw(DrawManager* drawManager)
 {
 	if (!m_frozen)
 	{
-		m_sprite.setTextureRect(sf::IntRect(418, 0, 418, 418)); //Snail
+		//Change snails y scale
+		float y_scale = 1.0f + abs(0.1f * cos(m_totalLifeTime * 3.0f));
+		if (y_scale >= 1.3f)
+			y_scale = 1.3f;
+		m_sprite.setScale(1, y_scale);
+
+		//Draw snail
+		m_sprite.setTextureRect(sf::IntRect(207, 0, 207, 207));
 		drawManager->Draw(m_sprite, sf::RenderStates::Default);
 
-		m_sprite.setTextureRect(sf::IntRect(418 * 2, 0, 418, 418)); //Middle
+		//Reset scale for the other parts
+		m_sprite.setScale(1, 1);
+
+		//Draw torso part
+		m_sprite.setTextureRect(sf::IntRect(207 * 2, 0, 207, 207));
 		drawManager->Draw(m_sprite, sf::RenderStates::Default);
 
-		m_sprite.setTextureRect(sf::IntRect(418 * 3, 0, 418, 418)); //Foam
+
+		//Draw ocean foam
+		m_sprite.setTextureRect(sf::IntRect(207 * 3, 0, 207, 207));
 		drawManager->Draw(m_sprite, sf::RenderStates::Default);
 
-		m_sprite.setTextureRect(sf::IntRect(0, 418, 418, 418)); //Head
+		//Draw head
+		m_sprite.setTextureRect(sf::IntRect(0, 207, 207, 207));
 		drawManager->Draw(m_sprite, sf::RenderStates::Default);
 	}
-	//drawManager->Draw(m_sprite, sf::RenderStates::Default);
 }
 
 void Monster::Update(float deltaTime)
 {
+	m_totalLifeTime += deltaTime;
+
 	if (!m_frozen)
 	{
 		Move(0, m_speed * deltaTime);

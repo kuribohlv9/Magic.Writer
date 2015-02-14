@@ -20,6 +20,7 @@ class Player : public GameObject
 {
 public:
 	Player(sf::Texture* texture);
+	~Player();
 	void Update(float deltaTime);
 	void Draw(DrawManager* drawManager);
 
@@ -31,7 +32,7 @@ private:
 	void ChangeLane(int xDirection);
 
 private:
-	Animator* m_animation;
+	Animator* m_animator;
 	InputManager* m_inputManager;
 	Item* m_item;
 	PlayerState m_state;

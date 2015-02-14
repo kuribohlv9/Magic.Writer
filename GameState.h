@@ -36,6 +36,7 @@ private:
 	DrawManager* m_drawManager;
 	TextureManager* m_textureManager;
 	InputManager* m_inputManager;
+
 	WordManager* m_wordManager;
 	ItemManager* m_itemManager;
 	WaveManager* m_waveManager;

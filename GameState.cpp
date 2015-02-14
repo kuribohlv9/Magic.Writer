@@ -85,13 +85,31 @@ GameState::~GameState()
 		m_bubbles[i] = nullptr;
 	}
 	m_bubbles.clear();
-
-	//Set all active items to nullptr
-	for (int i = 0; i < m_activeItems.size(); i++)
-	{
-		m_activeItems[i] = nullptr;
-	}
 	m_activeItems.clear();
+
+	//Delete all monsters
+	auto it = m_monsters.begin();
+	while (it != m_monsters.end())
+	{
+		delete *it;
+		++it;
+	}
+	m_monsters.clear();
+
+
+	//Delete player
+	if (m_player)
+	{
+		delete m_player;
+	}
+
+	//Delete managers
+	if (m_wordManager)
+		delete m_wordManager;
+	if (m_itemManager)
+		delete m_itemManager;
+	if (m_waveManager)
+		delete m_waveManager;
 }
 
 bool GameState::Update(float deltaTime)
@@ -239,7 +257,7 @@ ScreenState GameState::NextState()
 
 void GameState::SpawnMonster()
 {
-	Monster* monster = new Monster(m_monsterTexture, 30.0f, 3);
+	Monster* monster = new Monster(m_monsterTexture, 25.0f, 3);
 	m_monsters.push_back(monster);
 }
 void GameState::ConvertWordToItem()

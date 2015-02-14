@@ -18,8 +18,8 @@ Player::Player(sf::Texture* texture)
 
 	//Animator
 	m_sprite.setTexture(*texture);
-	m_animation = new Animator(&m_sprite, "assets/sprites/wizard/wizard_animation.txt");
-	m_animation->SetAnimation("idle");
+	m_animator = new Animator(&m_sprite, "assets/sprites/wizard/wizard_animation.txt");
+	m_animator->SetAnimation("idle");
 
 	//Set origin
 	sf::IntRect textureRect = m_sprite.getTextureRect();
@@ -34,8 +34,21 @@ Player::Player(sf::Texture* texture)
 	m_lane = 1;
 	ChangeLane(1);
 }
+Player::~Player()
+{
+	//Delete the newed animator
+	if (m_animator)
+	{
+		delete m_animator;
+	}
+
+	//Point item towards nullptr
+	m_item = nullptr;
+}
+
 void Player::Update(float deltaTime)
 {
+	//Handle movement between lanes
 	HandleMovement();
 
 	switch (m_state)
@@ -45,31 +58,31 @@ void Player::Update(float deltaTime)
 		if (m_inputManager->GetInputChar() != ' ')
 		{
 			m_state = PLAYER_CHANTING;
-			m_animation->SetAnimation("chanting");
+			m_animator->SetAnimation("chanting");
 		}
 		break;
 
 	case PLAYER_CHANTING:
 		if (m_inputManager->GetInputChar() != ' ')
 		{
-			m_animation->Update(1000);
+			m_animator->Update(1000);
 		}
 		break;
 
 	case PLAYER_HOLDING:
 		break;
 	case PLAYER_THROWING:
-		m_animation->Update(deltaTime);
+		m_animator->Update(deltaTime);
 
-		if (m_animation->Complete())
+		if (m_animator->Complete())
 		{
 			m_state = PLAYER_IDLE;
-			m_animation->SetAnimation("idle");
+			m_animator->SetAnimation("idle");
 		}
 		break;
 	case PLAYER_KNOCKEDDOWN:
-		m_animation->Update(deltaTime);
-		if (m_animation->Complete())
+		m_animator->Update(deltaTime);
+		if (m_animator->Complete())
 		{
 			m_state = PLAYER_IDLE;
 		}
@@ -80,8 +93,10 @@ void Player::Update(float deltaTime)
 }
 void Player::Draw(DrawManager* drawManager)
 {
+	//Draw player sprite
 	drawManager->Draw(m_sprite, sf::RenderStates::Default);
 	
+	//Draw possible item
 	if (m_item)
 	{
 		m_item->Draw(drawManager);
@@ -90,45 +105,56 @@ void Player::Draw(DrawManager* drawManager)
 
 void Player::ChangeLane(int xDirection)
 {
+	//Change lane number
 	m_lane += xDirection;
 
+	//Keep lane number within bounds (0 and 4)
 	if (m_lane < 0)
 		m_lane = 0;
 	else if (m_lane > 4)
 		m_lane = 4;
 
+	//Set player position
 	SetPosition(192.0f + 384.0f * m_lane, 700);
 
+	//Set possible item position
 	if (m_item)
 	{
-		m_item->SetPosition(m_x - 50, m_y - m_item->GetSprite()->getTextureRect().height + 100);
+		m_item->SetPosition(m_x - 25, m_y - 60);
 	}
 }
 
 void Player::SetItem(Item* item)
 {
+	//Apply or remove conjured item to player
 	m_item = item;
 
+	//If applied
 	if (m_item)
 	{
-		m_item->SetPosition(m_x - 50, m_y - m_item->GetSprite()->getTextureRect().height + 100);
+		//Update items position
+		ChangeLane(0);
+
+		//Change state to holding and change animation
 		m_state = PLAYER_HOLDING;
-		m_animation->SetAnimation("idle");
+		m_animator->SetAnimation("idle");
 	}
-	else
+	else //If removed
 	{
+		//Change state to throwing and change animation
 		m_state = PLAYER_THROWING;
-		m_animation->SetAnimation("throwing");
+		m_animator->SetAnimation("throwing");
 	}
 }
 Item* Player::GetItem()
 {
+	//Returns an item if the wizard is holding one, else it returns nullptr
 	return m_item;
 }
 
 void Player::HandleMovement()
 {
-	//Change lane
+	//Change lane with arrowkeys
 	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Left))
 	{
 		ChangeLane(-1);

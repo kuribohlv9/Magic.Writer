@@ -5,13 +5,16 @@ class Animation;
 class Animator
 {
 public:
-	Animator(sf::Sprite* sprite, std::string animationTextFileName);
+	Animator(sf::Sprite* sprite, const std::string& animationTextFileName);
 	~Animator();
 
 	void Update(float deltaTime);
 	void SetAnimation(const std::string& animationName);
 
 	bool Complete();
+
+private:
+	void LoadAnimations(const std::string& filename);
 
 private:
 	float m_timer;

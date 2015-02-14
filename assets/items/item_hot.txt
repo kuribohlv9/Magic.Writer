@@ -1,2 +1,5 @@
-pot
+sun
+oven
 pizza
+fryingpan
+fireplace
