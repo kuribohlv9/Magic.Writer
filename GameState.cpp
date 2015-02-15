@@ -69,6 +69,7 @@ GameState::GameState()
 		m_scoreDisplay.setFont(*m_font);
 		m_scoreDisplay.setScale(3, 3);
 		m_scoreDisplay.setPosition(1700, 900);
+		m_life = 3;
 	}
 }
 GameState::~GameState()
@@ -234,7 +235,7 @@ void GameState::Draw()
 	}
 
 	//Draw HUD
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < m_life; i++)
 	{
 		m_circle.setPosition(60.0f + 100.0f * i, 900);
 		m_drawManager->Draw(m_circle, sf::RenderStates::Default);

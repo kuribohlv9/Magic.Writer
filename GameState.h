@@ -62,5 +62,6 @@ private:
 	sf::CircleShape m_circle;
 	sf::Text m_scoreDisplay;
 	int m_score;
+	unsigned int m_life;
 
 };
