@@ -36,18 +36,19 @@ Monster::Monster(sf::Texture* texture, float speed, int health)
 	{
 	case 0:
 		weakness = ITEM_ALIVE;
-		m_color = sf::Color(100, 100, 100, 255);
+		m_color = sf::Color(50, 50, 50, 255);
 		break;
 	case 1:
 		weakness = ITEM_DEAD;
+		m_color = sf::Color::White;
 		break;
 	case 2:
 		weakness = ITEM_COLD;
-		m_color = sf::Color::Red;
+		m_color = sf::Color(150, 0, 0, 255);
 		break;
 	case 3:
 		weakness = ITEM_HOT;
-		m_color = sf::Color::Blue;
+		m_color = sf::Color(0, 0, 150, 255);
 		break;
 	}
 	m_weakness = weakness;
@@ -64,8 +65,18 @@ void Monster::Draw(DrawManager* drawManager)
 		m_sprite.setScale(1, y_scale);
 
 		//Draw snail
+		sf::Color c = m_color;
+		int a = ((m_y - 400) / 400) * 255;
+		if (a < 0)
+			a = 0;
+		else if (a > 255)
+			a = 255;
+		c.a = a;
+		m_sprite.setColor(c);
 		m_sprite.setTextureRect(sf::IntRect(207, 0, 207, 207));
 		drawManager->Draw(m_sprite, sf::RenderStates::Default);
+
+		m_sprite.setColor(m_color);
 
 		//Reset scale for the other parts
 		m_sprite.setScale(1, 1);
@@ -73,7 +84,6 @@ void Monster::Draw(DrawManager* drawManager)
 		//Draw torso part
 		m_sprite.setTextureRect(sf::IntRect(207 * 2, 0, 207, 207));
 		drawManager->Draw(m_sprite, sf::RenderStates::Default);
-
 
 		//Draw ocean foam
 		m_sprite.setTextureRect(sf::IntRect(207 * 3, 0, 207, 207));
