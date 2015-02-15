@@ -3,8 +3,7 @@ class Utility
 {
 public:
 
-private:
-	int m_screenWidth = 920;
-	int m_screenHeight = 1080;
+	const static int m_screenWidth = 920;
+	const static int m_screenHeight = 1080;
 };
 
