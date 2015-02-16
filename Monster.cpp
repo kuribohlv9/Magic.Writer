@@ -92,6 +92,19 @@ void Monster::Draw(DrawManager* drawManager)
 		//Draw head
 		m_sprite.setTextureRect(sf::IntRect(0, 207, 207, 207));
 		drawManager->Draw(m_sprite, sf::RenderStates::Default);
+
+		//Draw health
+		sf::CircleShape hp;
+		for (int i = 0; i < m_health; i++)
+		{
+			hp.setFillColor(sf::Color::White);
+			hp.setRadius(15);
+			hp.setPosition(m_x + i*30, m_y-100);
+			drawManager->Draw(hp, sf::RenderStates::Default);
+			hp.setFillColor(sf::Color::Black);
+			hp.setRadius(10);
+			drawManager->Draw(hp, sf::RenderStates::Default);
+		}
 	}
 }
 
