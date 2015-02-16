@@ -56,7 +56,7 @@ void WordManager::Draw(DrawManager* drawManager)
 	for (int i = 0; i < m_wordCount; i++)
 	{
 		//Set a position for the word
-		sf::Vector2f position = sf::Vector2f(500 + 400 * i + i * 30, 35);
+		sf::Vector2f position = sf::Vector2f(500 + 400 * i + i * 30, 1000);
 
 		//Get the current word and it's active state
 		std::string word = m_words[i];

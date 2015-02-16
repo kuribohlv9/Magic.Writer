@@ -47,10 +47,10 @@ GameState::GameState()
 	m_player = new Player(texture);
 
 	//Instantiate thought bubbles
-	texture = m_textureManager->LoadTexture("assets/sprites/bubble_test.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/bubbles_spritesheet.png");
 	for (int i = 0; i < 3; i++)
 	{
-		Bubble* bubble = new Bubble(550 + i * 400 + i * 30, 188/2, texture);
+		Bubble* bubble = new Bubble(550 + i * 400 + i * 30, 960, texture);
 
 		Item* item = m_itemManager->GetItem();
 

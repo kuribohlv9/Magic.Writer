@@ -115,7 +115,7 @@ void Player::ChangeLane(int xDirection)
 		m_lane = 4;
 
 	//Set player position
-	SetPosition(192.0f + 384.0f * m_lane, 850);
+	SetPosition(192.0f + 384.0f * m_lane, 700);
 
 	//Set possible item position
 	if (m_item)
