@@ -159,6 +159,10 @@ void Engine::HandleEvents()
 			{
 				m_input_manager->SetInputChar(static_cast<char>(event.text.unicode));
 			}
+			else if (event.text.unicode >= 65 && event.text.unicode <= 90)
+			{
+				m_input_manager->SetInputChar(static_cast<char>(event.text.unicode + 32));
+			}
 		}
 	}
 }
