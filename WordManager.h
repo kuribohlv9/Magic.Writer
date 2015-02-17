@@ -18,6 +18,8 @@ public:
 	//Sets a new word
 	void SetNewWord(const std::string& newWord);
 
+	bool GetCorrectKey();
+
 private:
 	TextureManager* m_textureManager;
 	InputManager* m_inputManager;
@@ -39,4 +41,5 @@ private:
 	std::string m_words[3];
 	bool m_words_active[3];
 	int m_wordCount;
+	bool m_correctKey;
 };

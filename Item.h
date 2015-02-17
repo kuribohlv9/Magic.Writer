@@ -13,6 +13,9 @@ public:
 
 	bool IsInGame();
 	void SetInGame(bool state);
+	void ActivateItem();
+
+	void Reset();
 
 private:
 	std::string m_name;
@@ -22,4 +25,3 @@ private:
 	float m_speed;
 	float m_rotation;
 };
-

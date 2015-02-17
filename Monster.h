@@ -11,7 +11,7 @@ public:
 	void Draw(DrawManager* drawManager);
 	void Update(float deltaTime);
 	void Freeze(float time);
-	void Damage(ItemProperty property);
+	void Damage(ItemProperty property, int &score);
 
 private:
 	ItemProperty m_weakness;

@@ -135,15 +135,17 @@ void Monster::Freeze(float time)
 	m_frozen = true;
 }
 
-void Monster::Damage(ItemProperty property)
+void Monster::Damage(ItemProperty property, int &score)
 {
 	if (property == m_weakness)
 	{
 		m_health -= 2;
+		score += 5000;
 	}
 	else
 	{
 		m_health -= 1;
+		score += 2500;
 	}
 
 	if (m_health <= 0)

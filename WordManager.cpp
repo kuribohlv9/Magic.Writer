@@ -37,6 +37,7 @@ void WordManager::Update(float deltaTime)
 	}
 
 	//Get input key from keyboard
+	m_correctKey = false;
 	m_userChar = m_inputManager->GetInputChar();
 
 	//Check if a key was pressed
@@ -45,10 +46,6 @@ void WordManager::Update(float deltaTime)
 		//If a key was pressed, check the words using the character
 		CheckWords();
 	}
-
-	//TMP
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::BackSpace))
-		Reset();
 }
 void WordManager::Draw(DrawManager* drawManager)
 {
@@ -138,6 +135,7 @@ void WordManager::CheckWords()
 	//If the key fits in any word, apply the key to the full userText
 	if (charFits)
 	{
+		m_correctKey = true;
 		m_userInput += m_userChar;
 	}
 
@@ -189,6 +187,7 @@ std::string WordManager::GetFinishedWord()
 			finishedWord = m_words[i];
 			m_words[i] = "";
 			Reset();
+			m_correctKey = false;
 			return finishedWord;
 		}
 	}
@@ -206,4 +205,9 @@ void WordManager::SetNewWord(const std::string& newWord)
 			break;
 		}
 	}
+}
+
+bool WordManager::GetCorrectKey()
+{
+	return m_correctKey;
 }

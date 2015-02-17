@@ -40,10 +40,6 @@ void Item::Update(float deltaTime)
 	{
 		SetActive(false);
 		SetInGame(false);
-
-		//Reset rotation
-		m_rotation = 0;
-		m_sprite.setRotation(m_rotation);
 	}
 }
 
@@ -62,5 +58,22 @@ bool Item::IsInGame()
 }
 void Item::SetInGame(bool state)
 {
+	if (state)
+		Reset();
+
 	m_inGame = state;
+}
+
+void Item::ActivateItem()
+{
+	m_sprite.setScale(1, 1);
+	SetActive(true);
+}
+
+void Item::Reset()
+{
+	m_rotation = 0;
+	m_sprite.setRotation(m_rotation);
+
+	m_sprite.setScale(0.5, 0.5);
 }

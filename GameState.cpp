@@ -169,7 +169,7 @@ bool GameState::Update(float deltaTime)
 
 			if (CollisionManager::Check(item->GetCollider(), monster->GetCollider()))
 			{
-				monster->Damage(item->GetProperty());
+				monster->Damage(item->GetProperty(), m_score);
 				item->SetActive(false);
 				item->SetInGame(false);
 
@@ -177,8 +177,6 @@ bool GameState::Update(float deltaTime)
 				{
 					//Update score
 					m_score += 100;
-					std::string tempstring = static_cast<std::ostringstream*>(&(std::ostringstream() << m_score))->str();
-					m_scoreDisplay.setString(tempstring);
 				}
 			}
 		}
@@ -200,7 +198,18 @@ bool GameState::Update(float deltaTime)
 		}
 	}
 
-	
+
+	//Increase score if player enters correct key
+	if (m_wordManager->GetCorrectKey())
+	{
+		m_score += 10;
+	}
+
+
+	if (m_score != m_lastScore)
+		m_scoreDisplay.setString(std::to_string(m_score));
+
+	m_lastScore = m_score;
 
 	return true;
 }
@@ -287,6 +296,7 @@ void GameState::ConvertWordToItem()
 			m_player->SetItem(item);
 			m_wordManager->SetNewWord(newItem->GetName());
 			m_bubbles[i]->SetItem(newItem);
+			m_score += 500;
 			break;
 		}
 	}
@@ -295,7 +305,7 @@ void GameState::ConvertWordToItem()
 		if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Return))
 		{
 			//Activate item
-			spawnedItem->SetActive(true);
+			spawnedItem->ActivateItem();
 			m_activeItems.push_back(spawnedItem);
 			m_player->SetItem(nullptr);
 		}
