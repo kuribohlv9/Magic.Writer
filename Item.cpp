@@ -12,7 +12,7 @@ Item::Item(sf::Texture* texture, sf::IntRect sourceRectangle, ItemProperty prope
 
 	m_name = name;
 	m_inGame = false;
-	m_speed = 400;
+	m_speed = 1000;
 
 	m_sprite.setTexture(*texture);
 	m_sprite.setTextureRect(sourceRectangle);
@@ -30,7 +30,7 @@ void Item::Update(float deltaTime)
 	Move(0, -m_speed * deltaTime);
 
 	//Rotate item
-	m_rotation += 5.0f;
+	m_rotation += 10.0f;
 	if (m_rotation >= 360)
 		m_rotation = 0;
 	m_sprite.setRotation(m_rotation);

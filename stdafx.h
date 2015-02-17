@@ -32,4 +32,6 @@
 #pragma comment(lib, "sfml-audio.lib")
 #endif
 
+#include "Utility.h"
+
 // TODO: reference additional headers your program requires here

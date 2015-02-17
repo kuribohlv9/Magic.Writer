@@ -40,7 +40,7 @@ GameState::GameState()
 	m_backgroundSprite.setPosition(0, 0);
 
 	//Load monster texture
-	m_monsterTexture = m_textureManager->LoadTexture("assets/sprites/spritesheet_monster.png");
+	m_monsterTexture = m_textureManager->LoadTexture("assets/sprites/monster/spritesheet_monster.png");
 
 	//Instantiate player
 	texture = m_textureManager->LoadTexture("assets/sprites/wizard/spritesheet_wizard.png");
