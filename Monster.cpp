@@ -11,7 +11,7 @@ Monster::Monster(sf::Texture* texture, float speed, int health)
 	//Variables
 	m_type = GAMEOBJECT_MONSTERS;
 	m_state = MONSTER_MOVE;
-	m_speed = 90;
+	m_speed = speed;
 	m_health = health;
 	m_frozen = false;
 
@@ -147,7 +147,7 @@ void Monster::Update(float deltaTime)
 		m_snail_sprite.setScale(1, y_scale);
 
 		//Change snails color
-		if (m_y >= 400)
+		if (m_y >= 500)
 		{
 			sf::Color snail_color = m_snail_sprite.getColor();
 
@@ -162,12 +162,12 @@ void Monster::Update(float deltaTime)
 		}
 
 		//Change foam color
-		if (m_y >= 450)
+		if (m_y >= 550)
 		{
 			sf::Color foam_color = m_foam_sprite.getColor();
 
 			int foam_alpha = foam_color.a;
-			foam_alpha -= 1.25f;
+			foam_alpha -= 2;
 
 			if (foam_alpha < 0)
 				foam_alpha = 0;
