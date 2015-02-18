@@ -62,7 +62,7 @@ GameState::GameState()
 
 		m_bubbles.push_back(bubble);
 	}
-
+	
 	//HUD
 	m_font = m_textureManager->LoadFont("assets/fonts/font.ttf");
 	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
@@ -76,6 +76,30 @@ GameState::GameState()
 	m_score = 0;
 	m_lastScore = 0;
 	m_life = 3;
+	//Monster pool
+	for (int i = 0; i < 20; i++)
+	{
+		if (i < 5)
+		{
+			Monster* deadMonster = new Monster(m_monsterTexture, 45, 3, ITEM_ALIVE);
+			m_monsters.push_back(deadMonster);
+		}
+		else if (i > 4 && i < 10)
+		{
+			Monster* hotMonster = new Monster(m_monsterTexture, 45, 3, ITEM_COLD);
+			m_monsters.push_back(hotMonster);
+		}
+		else if (i > 9 && i < 15)
+		{
+			Monster* aliveMonster = new Monster(m_monsterTexture, 45, 3, ITEM_DEAD);
+			m_monsters.push_back(aliveMonster);
+		}
+		else if (i > 14)
+		{
+			Monster* coldMonster = new Monster(m_monsterTexture, 45, 3, ITEM_HOT);
+			m_monsters.push_back(coldMonster);
+		}
+	}
 }
 GameState::~GameState()
 {
@@ -155,6 +179,9 @@ bool GameState::Update(float deltaTime)
 	//Update monsters
 	for (int i = 0; i < m_monsters.size(); i++)
 	{
+		if (!m_monsters[i]->IsActive())
+			continue;
+
 		m_monsters[i]->Update(deltaTime);
 	}
 
@@ -169,7 +196,12 @@ bool GameState::Update(float deltaTime)
 
 	//Check collision
 	CheckCollision();
-
+	
+	//Increase score if player enters correct key
+	if (m_wordManager->GetCorrectKey())
+	{
+		m_score += 10;
+	}
 
 	if (m_score != m_lastScore)
 		m_scoreDisplay.setString(std::to_string(m_score));
@@ -219,11 +251,6 @@ void GameState::CheckCollision()
 		}
 	}
 
-
-
-
-
-
 	//Cleanup
 
 	//Remove active items
@@ -232,15 +259,6 @@ void GameState::CheckCollision()
 		if (!m_activeItems[i]->IsActive())
 		{
 			m_activeItems.erase(m_activeItems.begin() + i);
-		}
-	}
-	//Remove inactive monsters
-	for (int i = 0; i < m_monsters.size(); i++)
-	{
-		if (!m_monsters[i]->IsActive())
-		{
-			delete m_monsters[i];
-			m_monsters.erase(m_monsters.begin() + i);
 		}
 	}
 }
@@ -309,8 +327,19 @@ ScreenState GameState::NextState()
 
 void GameState::SpawnMonster()
 {
-	Monster* monster = new Monster(m_monsterTexture, 45, 3);
-	m_monsters.push_back(monster);
+	while (true)
+	{
+		int randomMonster = rand() % 20;
+		Monster* monster = m_monsters[randomMonster];
+		if (!monster->IsActive())
+		{
+			monster->Activate();
+			break;
+		}
+	}
+
+	/*Monster* monster = new Monster(m_monsterTexture, 45, 3);
+	m_monsters.push_back(monster);*/
 }
 void GameState::ConvertWordToItem()
 {

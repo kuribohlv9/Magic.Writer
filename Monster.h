@@ -14,13 +14,14 @@ enum MonsterState
 class Monster : public GameObject
 {
 public:
-	Monster(sf::Texture* texture, float speed, int health);
+	Monster(sf::Texture* texture, float speed, int health, ItemProperty weakness);
 	~Monster();
 
 	void Draw(DrawManager* drawManager);
 	void Update(float deltaTime);
 	void Freeze(float time);
 	void Damage(ItemProperty property, int &score);
+	void Activate();
 
 private:
 	MonsterState m_state;
