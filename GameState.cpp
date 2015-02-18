@@ -72,6 +72,32 @@ GameState::GameState()
 		m_scoreDisplay.setPosition(1700, 900);
 		m_life = 3;
 	}
+
+	//Monster pool
+	for (int i = 0; i < 20; i++)
+	{
+		if (i < 5)
+		{
+			Monster* deadMonster = new Monster(m_monsterTexture, 45, 3, ITEM_ALIVE);
+			m_monsters.push_back(deadMonster);
+		}
+		else if (i > 4 && i < 10)
+		{
+			Monster* hotMonster = new Monster(m_monsterTexture, 45, 3, ITEM_COLD);
+			m_monsters.push_back(hotMonster);
+		}
+		else if (i > 9 && i < 15)
+		{
+			Monster* aliveMonster = new Monster(m_monsterTexture, 45, 3, ITEM_DEAD);
+			m_monsters.push_back(aliveMonster);
+		}
+		else if (i > 14)
+		{
+			Monster* coldMonster = new Monster(m_monsterTexture, 45, 3, ITEM_HOT);
+			m_monsters.push_back(coldMonster);
+		}
+	}
+	
 }
 GameState::~GameState()
 {
@@ -138,7 +164,7 @@ bool GameState::Update(float deltaTime)
 	for (int i = 0; i < m_activeItems.size(); i++)
 	{
 		if (!m_activeItems[i]->IsActive())
-			break;
+			continue;
 
 		m_activeItems[i]->Update(deltaTime);
 	}
@@ -149,6 +175,9 @@ bool GameState::Update(float deltaTime)
 	//Update monsters
 	for (int i = 0; i < m_monsters.size(); i++)
 	{
+		if (!m_monsters[i]->IsActive())
+			continue;
+
 		m_monsters[i]->Update(deltaTime);
 	}
 
@@ -185,18 +214,11 @@ bool GameState::Update(float deltaTime)
 	for (int i = 0; i < m_activeItems.size(); i++)
 	{
 		if (!m_activeItems[i]->IsActive())
-		{
-			m_activeItems.erase(m_activeItems.begin() + i);
-		}
+			continue;
+
+		m_activeItems.erase(m_activeItems.begin() + i);
 	}
-	for (int i = 0; i < m_monsters.size(); i++)
-	{
-		if (!m_monsters[i]->IsActive())
-		{
-			delete m_monsters[i];
-			m_monsters.erase(m_monsters.begin() + i);
-		}
-	}
+
 
 
 	//Increase score if player enters correct key
@@ -269,8 +291,19 @@ ScreenState GameState::NextState()
 
 void GameState::SpawnMonster()
 {
-	Monster* monster = new Monster(m_monsterTexture, 45, 3);
-	m_monsters.push_back(monster);
+	while (true)
+	{
+		int randomMonster = rand() % 20;
+		Monster* monster = m_monsters[randomMonster];
+		if (!monster->IsActive())
+		{
+			monster->Activate();
+			break;
+		}
+	}
+
+	/*Monster* monster = new Monster(m_monsterTexture, 45, 3);
+	m_monsters.push_back(monster);*/
 }
 void GameState::ConvertWordToItem()
 {

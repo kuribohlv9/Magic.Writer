@@ -5,8 +5,9 @@
 #include "Collider.h"
 #include <time.h>
 
-Monster::Monster(sf::Texture* texture, float speed, int health)
+Monster::Monster(sf::Texture* texture, float speed, int health, ItemProperty weakness)
 {
+	m_active = false;
 	srand(time(NULL));
 	//Variables
 	m_type = GAMEOBJECT_MONSTERS;
@@ -52,28 +53,28 @@ Monster::Monster(sf::Texture* texture, float speed, int health)
 	int xPosition = laneWidth / 2 + laneWidth * randomLane;
 	SetPosition(xPosition, -m_sprite_height);
 
-	//Weakness
-	int randomWeakness = rand() % 4;
-	ItemProperty weakness;
-	switch (randomWeakness)
-	{
-	case 0:
-		weakness = ITEM_ALIVE;
-		m_color = sf::Color(80, 80, 80, 255);
-		break;
-	case 1:
-		weakness = ITEM_DEAD;
-		m_color = sf::Color::White;
-		break;
-	case 2:
-		weakness = ITEM_COLD;
-		m_color = sf::Color(150, 50, 50, 255);
-		break;
-	case 3:
-		weakness = ITEM_HOT;
-		m_color = sf::Color(50, 50, 150, 255);
-		break;
-	}
+	////Weakness
+	//int randomWeakness = rand() % 4;
+	//ItemProperty weakness;
+	//switch (randomWeakness)
+	//{
+	//case 0:
+	//	weakness = ITEM_ALIVE;
+	//	m_color = sf::Color(80, 80, 80, 255);
+	//	break;
+	//case 1:
+	//	weakness = ITEM_DEAD;
+	//	m_color = sf::Color::White;
+	//	break;
+	//case 2:
+	//	weakness = ITEM_COLD;
+	//	m_color = sf::Color(150, 50, 50, 255);
+	//	break;
+	//case 3:
+	//	weakness = ITEM_HOT;
+	//	m_color = sf::Color(50, 50, 150, 255);
+	//	break;
+	//}
 
 	m_sprite.setColor(m_color);
 	m_head_sprite.setColor(m_color);
@@ -188,6 +189,11 @@ void Monster::Update(float deltaTime)
 			m_sprite.setTextureRect(sf::IntRect(m_sprite_width * 2, 0, m_sprite_width, m_sprite_height));
 		}
 	}
+
+	if (m_y > ScreenHeight)
+	{
+		m_active = false;
+	}
 }
 
 void Monster::Freeze(float time)
@@ -218,4 +224,9 @@ void Monster::Damage(ItemProperty property, int &score)
 	{
 		SetActive(false);
 	}
+}
+
+void Monster::Activate()
+{
+	m_active = true;
 }

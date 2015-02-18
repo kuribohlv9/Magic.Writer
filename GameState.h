@@ -45,6 +45,7 @@ private:
 	std::vector<Bubble*> m_bubbles;
 	std::vector<Item*> m_activeItems;
 
+
 	//Monster
 	std::vector<Monster*> m_monsters;
 	sf::Texture* m_monsterTexture;
