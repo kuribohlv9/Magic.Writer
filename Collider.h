@@ -5,7 +5,7 @@ class GameObject;
 class Collider
 {
 public:
-	Collider(float x, float y);
+	Collider(int xOffset, int yOffset);
 
 	bool HasParent();
 	void SetParent(GameObject* parent);
@@ -21,4 +21,6 @@ public:
 private:
 	GameObject* m_parent;
 	sf::FloatRect m_area;
+	int m_xOffset;
+	int m_yOffset;
 };

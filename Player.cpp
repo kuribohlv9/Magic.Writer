@@ -26,9 +26,9 @@ Player::Player(sf::Texture* texture)
 	m_sprite.setOrigin(textureRect.width / 2.0f, textureRect.height / 2.0f);
 
 	//Set collider
-	m_collider = new Collider(m_x, m_y);
+	m_collider = new Collider(-33, 40);
 	m_collider->SetParent(this);
-	m_collider->SetWidthHeight(textureRect.width, textureRect.height);
+	m_collider->SetWidthHeight(textureRect.width / 2, textureRect.height - 100);
 
 	//Set start position
 	m_lane = 1;
@@ -49,7 +49,8 @@ Player::~Player()
 void Player::Update(float deltaTime)
 {
 	//Handle movement between lanes
-	HandleMovement();
+	if (!IsStunned())
+		HandleMovement();
 
 	switch (m_state)
 	{
@@ -85,6 +86,8 @@ void Player::Update(float deltaTime)
 		if (m_animator->Complete())
 		{
 			m_state = PLAYER_IDLE;
+			m_animator->SetAnimation("idle");
+			m_sprite.setScale(1, 1);
 		}
 		break;
 	case PLAYER_JUMPING:
@@ -115,7 +118,7 @@ void Player::ChangeLane(int xDirection)
 		m_lane = 4;
 
 	//Set player position
-	SetPosition(192.0f + 384.0f * m_lane, 700);
+	SetPosition(192.0f + 384.0f * m_lane, 800);
 
 	//Set possible item position
 	if (m_item)
@@ -132,6 +135,9 @@ void Player::SetItem(Item* item)
 	//If applied
 	if (m_item)
 	{
+		//Change items scale to fit hands
+		m_item->GetSprite()->setScale(1, 1);
+
 		//Update items position
 		ChangeLane(0);
 
@@ -163,4 +169,32 @@ void Player::HandleMovement()
 	{
 		ChangeLane(1);
 	}
+}
+void Player::Knockdown()
+{
+	if (m_state == PLAYER_KNOCKEDDOWN)
+		return;
+	
+	m_state = PLAYER_KNOCKEDDOWN;
+	m_animator->SetAnimation("knockeddown");
+	int knockDirection = rand() % 2;
+
+	if (knockDirection == 0)
+		knockDirection = -1;
+	else
+		knockDirection = 1;
+
+	int newLane = m_lane + knockDirection;
+
+	if (newLane < 0 || newLane > 4)
+	{
+		knockDirection *= -1;
+	}
+	m_sprite.setScale(knockDirection, 1);
+
+	ChangeLane(knockDirection);
+}
+bool Player::IsStunned()
+{
+	return (m_state == PLAYER_KNOCKEDDOWN);
 }

@@ -17,6 +17,7 @@ public:
 
 	//Sets a new word
 	void SetNewWord(const std::string& newWord);
+	void SetWordPosition(sf::Vector2f position, int wordIndex);
 
 	bool GetCorrectKey();
 
@@ -42,4 +43,6 @@ private:
 	bool m_words_active[3];
 	int m_wordCount;
 	bool m_correctKey;
+
+	sf::Vector2f m_wordPositions[3];
 };

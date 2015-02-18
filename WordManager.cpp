@@ -14,6 +14,7 @@ WordManager::WordManager()
 	//Load a font
 	sf::Font* font = m_textureManager->LoadFont("assets/fonts/font.ttf");
 	m_text.setFont(*font);
+	m_text.setCharacterSize(25);
 
 	//Get word count
 	m_words[0] = "";
@@ -53,7 +54,9 @@ void WordManager::Draw(DrawManager* drawManager)
 	for (int i = 0; i < m_wordCount; i++)
 	{
 		//Set a position for the word
-		sf::Vector2f position = sf::Vector2f(500 + 400 * i + i * 30, 1000);
+		sf::Vector2f position = m_wordPositions[i];
+		position.x -= 40;
+		position.y += 20;
 
 		//Get the current word and it's active state
 		std::string word = m_words[i];
@@ -75,8 +78,6 @@ void WordManager::Draw(DrawManager* drawManager)
 
 				//Gets the current character
 				char currentChar = word[j];
-
-				
 
 				//Apply the character to m_text
 				m_text.setString(currentChar);
@@ -173,6 +174,10 @@ void WordManager::Reset()
 	//Reset the userinput and character
 	m_userInput = "";
 	m_userChar = ' ';
+}
+void WordManager::SetWordPosition(sf::Vector2f position, int wordIndex)
+{
+	m_wordPositions[wordIndex] = position;
 }
 
 std::string WordManager::GetFinishedWord()

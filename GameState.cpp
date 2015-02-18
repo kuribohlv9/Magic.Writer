@@ -50,7 +50,10 @@ GameState::GameState()
 	texture = m_textureManager->LoadTexture("assets/sprites/bubbles_spritesheet.png");
 	for (int i = 0; i < 3; i++)
 	{
-		Bubble* bubble = new Bubble(550 + i * 400 + i * 30, 960, texture);
+		int yOffset = 0;
+		if (i == 1)
+			yOffset = 50;
+		Bubble* bubble = new Bubble(725 + i * 200, 910 + yOffset, texture, m_player);
 
 		Item* item = m_itemManager->GetItem();
 
@@ -58,20 +61,21 @@ GameState::GameState()
 		m_wordManager->SetNewWord(item->GetName());
 
 		m_bubbles.push_back(bubble);
-
-		//Load test font
-		m_font = m_textureManager->LoadFont("assets/fonts/font.ttf");
-
-		//Testing for HUD
-		m_score = 0;
-		m_scoreDisplay.setString("0");
-		m_circle.setFillColor(sf::Color::Red);
-		m_circle.setRadius(50);
-		m_scoreDisplay.setFont(*m_font);
-		m_scoreDisplay.setScale(3, 3);
-		m_scoreDisplay.setPosition(1700, 900);
-		m_life = 3;
 	}
+
+	//HUD
+	m_font = m_textureManager->LoadFont("assets/fonts/font.ttf");
+	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
+	
+	m_scoreDisplay.setFont(*m_font);
+	m_scoreDisplay.setScale(1.5f, 1.5f);
+	m_scoreDisplay.setPosition(1750, 950);
+	m_scoreDisplay.setString("0");
+	m_scoreDisplay.setColor(sf::Color(30, 58, 64, 255));
+
+	m_score = 0;
+	m_lastScore = 0;
+	m_life = 3;
 }
 GameState::~GameState()
 {
@@ -117,30 +121,32 @@ GameState::~GameState()
 
 bool GameState::Update(float deltaTime)
 {
-	//Handle word input if an item is not spawned
-	if (m_player->GetItem() == nullptr)
+	//Handle word input
+	if (m_player->GetItem() == nullptr && !m_player->IsStunned())
 	{
 		m_wordManager->Update(deltaTime);
 	}
 
-	//Update waves
+	//Update wave manager
 	m_waveManager->Update(deltaTime);
 	if (m_waveManager->CanSpawnMonster())
 	{
 		SpawnMonster();
 	}
 
-	//Convert written words into item
-	ConvertWordToItem();
-	
-
 	//Update active items
 	for (int i = 0; i < m_activeItems.size(); i++)
 	{
 		if (!m_activeItems[i]->IsActive())
-			break;
+			continue;
 
 		m_activeItems[i]->Update(deltaTime);
+	}
+
+	for (int i = 0; i < m_bubbles.size(); i++)
+	{
+		m_bubbles[i]->Update(deltaTime);
+		m_wordManager->SetWordPosition(m_bubbles[i]->GetPosition(), i);
 	}
 
 	//Update player
@@ -152,9 +158,29 @@ bool GameState::Update(float deltaTime)
 		m_monsters[i]->Update(deltaTime);
 	}
 
+	//Increase score if player enters correct key
+	if (m_wordManager->GetCorrectKey())
+	{
+		m_score += 10;
+	}
+
+	//Convert written words into item
+	ConvertWordToItem();
+
+	//Check collision
+	CheckCollision();
 
 
-	//CHECK COLLISION
+	if (m_score != m_lastScore)
+		m_scoreDisplay.setString(std::to_string(m_score));
+
+	m_lastScore = m_score;
+
+	return true;
+}
+void GameState::CheckCollision()
+{
+	//Collision between items and monsters
 	for (int i = 0; i < m_activeItems.size(); i++)
 	{
 		Item* item = m_activeItems[i];
@@ -167,6 +193,7 @@ bool GameState::Update(float deltaTime)
 			if (!monster->IsActive())
 				continue;
 
+			//Collision check
 			if (CollisionManager::Check(item->GetCollider(), monster->GetCollider()))
 			{
 				monster->Damage(item->GetProperty(), m_score);
@@ -175,13 +202,31 @@ bool GameState::Update(float deltaTime)
 
 				if (monster->IsActive() == false)
 				{
-					//Update score
+					//Increase score
 					m_score += 100;
 				}
 			}
 		}
 	}
 
+	
+	//Collision between monsters and player
+	for (int i = 0; i < m_monsters.size(); i++)
+	{
+		if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
+		{
+			m_player->Knockdown();
+		}
+	}
+
+
+
+
+
+
+	//Cleanup
+
+	//Remove active items
 	for (int i = 0; i < m_activeItems.size(); i++)
 	{
 		if (!m_activeItems[i]->IsActive())
@@ -189,6 +234,7 @@ bool GameState::Update(float deltaTime)
 			m_activeItems.erase(m_activeItems.begin() + i);
 		}
 	}
+	//Remove inactive monsters
 	for (int i = 0; i < m_monsters.size(); i++)
 	{
 		if (!m_monsters[i]->IsActive())
@@ -197,22 +243,8 @@ bool GameState::Update(float deltaTime)
 			m_monsters.erase(m_monsters.begin() + i);
 		}
 	}
-
-
-	//Increase score if player enters correct key
-	if (m_wordManager->GetCorrectKey())
-	{
-		m_score += 10;
-	}
-
-
-	if (m_score != m_lastScore)
-		m_scoreDisplay.setString(std::to_string(m_score));
-
-	m_lastScore = m_score;
-
-	return true;
 }
+
 void GameState::Draw()
 {
 	//Draw background
@@ -222,7 +254,14 @@ void GameState::Draw()
 	for (int i = 0; i < m_monsters.size(); i++)
 	{
 		if (m_monsters[i]->IsActive())
+		{
 			m_monsters[i]->Draw(m_drawManager);
+			sf::RectangleShape shape;
+			shape.setPosition(m_monsters[i]->GetCollider()->GetArea().left, m_monsters[i]->GetCollider()->GetArea().top);
+			shape.setSize(sf::Vector2f(m_monsters[i]->GetCollider()->GetArea().width, m_monsters[i]->GetCollider()->GetArea().height));
+			shape.setFillColor(sf::Color(0, 255, 0, 125));
+			m_drawManager->Draw(shape, sf::RenderStates::Default);
+		}
 	}
 
 	//Draw player
@@ -241,19 +280,20 @@ void GameState::Draw()
 	for (int i = 0; i < m_activeItems.size(); i++)
 	{
 		if (m_activeItems[i]->IsActive())
+		{
 			m_activeItems[i]->Draw(m_drawManager);
+		}
 	}
 
 	//Draw HUD
 	for (int i = 0; i < m_life; i++)
 	{
-		m_circle.setPosition(60.0f + 100.0f * i, 900);
-		m_drawManager->Draw(m_circle, sf::RenderStates::Default);
+		m_life_sprite.setPosition(60.0f + 100.0f * i, 900);
+		m_drawManager->Draw(m_life_sprite, sf::RenderStates::Default);
 	}
 
 	m_drawManager->Draw(m_scoreDisplay, sf::RenderStates::Default);
 }
-
 void GameState::Enter()
 {
 
@@ -296,7 +336,7 @@ void GameState::ConvertWordToItem()
 			m_player->SetItem(item);
 			m_wordManager->SetNewWord(newItem->GetName());
 			m_bubbles[i]->SetItem(newItem);
-			m_score += 500;
+			m_score += 200;
 			break;
 		}
 	}
@@ -305,7 +345,7 @@ void GameState::ConvertWordToItem()
 		if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Return))
 		{
 			//Activate item
-			spawnedItem->ActivateItem();
+			spawnedItem->SetActive(true);
 			m_activeItems.push_back(spawnedItem);
 			m_player->SetItem(nullptr);
 		}

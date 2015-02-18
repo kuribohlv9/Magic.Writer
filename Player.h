@@ -27,6 +27,9 @@ public:
 	void SetItem(Item* item);
 	Item* GetItem();
 
+	void Knockdown();
+	bool IsStunned();
+
 private:
 	void HandleMovement();
 	void ChangeLane(int xDirection);

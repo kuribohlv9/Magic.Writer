@@ -42,9 +42,9 @@ Monster::Monster(sf::Texture* texture, float speed, int health)
 	m_foam_sprite.setOrigin(m_sprite_width / 2.0f, m_sprite_height / 2.0f);
 
 	//Collider
-	m_collider = new Collider(0, 0);
+	m_collider = new Collider(-15, 0);
 	m_collider->SetParent(this);
-	m_collider->SetWidthHeight(m_sprite_width / 2, m_sprite_height / 2);
+	m_collider->SetWidthHeight(m_sprite_width / 4, m_sprite_height / 4);
 
 	//Randomize start position
 	int randomLane = rand() % 5;
@@ -124,6 +124,8 @@ void Monster::Update(float deltaTime)
 
 	if (!m_frozen)
 	{
+		//Update animation
+		m_head_animator->Update(deltaTime);
 		if (m_state == MONSTER_HIT || m_state == MONSTER_CRITICAL)
 		{
 			if (m_head_animator->Complete())
@@ -133,7 +135,7 @@ void Monster::Update(float deltaTime)
 			}
 		}
 
-		m_head_animator->Update(deltaTime);
+		//Move monster position
 		Move(0, m_speed * deltaTime);
 
 		m_head_sprite.setPosition(m_sprite.getPosition());
@@ -174,7 +176,14 @@ void Monster::Update(float deltaTime)
 
 			foam_color.a = foam_alpha;
 			m_foam_sprite.setColor(foam_color);
-		}	
+		}
+
+		//TMP BURST
+		if (m_y >= 660)
+		{
+			m_collider->SetWidthHeight(0, 0);
+			m_speed = 400;
+		}
 	}
 	else
 	{
@@ -202,14 +211,15 @@ void Monster::Damage(ItemProperty property, int &score)
 	if (property == m_weakness)
 	{
 		m_health -= 2;
-		score += 5000;
+		score += 500;
 		m_state = MONSTER_CRITICAL;
 		m_head_animator->SetAnimation("critical");
+		Move(0, -75);
 	}
 	else
 	{
 		m_health -= 1;
-		score += 2500;
+		score += 250;
 		m_state = MONSTER_HIT;
 		m_head_animator->SetAnimation("hit");
 	}

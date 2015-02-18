@@ -29,6 +29,7 @@ public:
 
 private:
 	void ConvertWordToItem();
+	void CheckCollision();
 	void SpawnMonster();
 
 private:
@@ -59,9 +60,9 @@ private:
 	sf::Font* m_font;
 
 	//Test HUD
-	sf::CircleShape m_circle;
+	sf::Sprite m_life_sprite;
 	sf::Text m_scoreDisplay;
 	int m_score;
-	unsigned int m_life;
 	int m_lastScore;
+	unsigned int m_life;
 };

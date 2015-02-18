@@ -13,7 +13,6 @@ public:
 
 	bool IsInGame();
 	void SetInGame(bool state);
-	void ActivateItem();
 
 	void Reset();
 
