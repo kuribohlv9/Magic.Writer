@@ -14,7 +14,7 @@ enum MonsterState
 class Monster : public GameObject
 {
 public:
-	Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, int health, ItemProperty weakness);
+	Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, ItemProperty weakness);
 	~Monster();
 
 	void Draw(DrawManager* drawManager);
@@ -38,6 +38,7 @@ private:
 	bool m_frozen;
 	int m_health;
 	float m_speed;
+	float m_originalSpeed;
 	float m_freezeTimer;
 	float m_unfreezeDelay;
 };

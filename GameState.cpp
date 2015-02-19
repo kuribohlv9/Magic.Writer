@@ -84,22 +84,22 @@ GameState::GameState()
 	{
 		if (i < 5)
 		{
-			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 288, 304, 45, 3, ITEM_ALIVE);
+			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 288, 304, 45, ITEM_ALIVE);
 			m_monsters.push_back(undeadMonster);
 		}
 		else if (i > 4 && i < 10)
 		{
-			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 255, 289, 45, 3, ITEM_COLD);
+			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 255, 289, 45, ITEM_COLD);
 			m_monsters.push_back(lavaMonster);
 		}
 		else if (i > 9 && i < 15)
 		{
-			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 207, 207, 45, 3, ITEM_DEAD);
+			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 207, 207, 45, ITEM_DEAD);
 			m_monsters.push_back(aliveMonster);
 		}
 		else if (i > 14)
 		{
-			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 304, 297, 45, 3, ITEM_HOT);
+			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 304, 297, 45, ITEM_HOT);
 			m_monsters.push_back(iceMonster);
 		}
 	}

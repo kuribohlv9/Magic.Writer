@@ -5,7 +5,7 @@
 #include "Collider.h"
 #include <time.h>
 
-Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, int health, ItemProperty weakness)
+Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, ItemProperty weakness)
 {
 	m_active = false;
 	srand(time(NULL));
@@ -14,7 +14,8 @@ Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spr
 	m_type = GAMEOBJECT_MONSTERS;
 	m_state = MONSTER_MOVE;
 	m_speed = speed;
-	m_health = health;
+	m_originalSpeed = m_speed;
+	m_health = 3;
 	m_frozen = false;
 
 	//Calculate sprite width and height
@@ -38,7 +39,7 @@ Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spr
 	m_snail_sprite.setOrigin(m_sprite_width / 2.0f, m_sprite_height / 2.0f);
 	m_snail_sprite.setColor(sf::Color(255, 255, 255, 0));
 
-	//Foeam sprite
+	//Foam sprite
 	m_foam_sprite.setTexture(*texture);
 	m_foam_sprite.setTextureRect(sf::IntRect(m_sprite_width * 3, 0, m_sprite_width, m_sprite_height));
 	m_foam_sprite.setOrigin(m_sprite_width / 2.0f, m_sprite_height / 2.0f);
@@ -47,12 +48,6 @@ Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spr
 	m_collider = new Collider(-15, 0);
 	m_collider->SetParent(this);
 	m_collider->SetWidthHeight(m_sprite_width / 4, m_sprite_height / 4);
-
-	//Randomize start position
-	int randomLane = rand() % 5;
-	int laneWidth = ScreenWidth / 5;
-	int xPosition = laneWidth / 2 + laneWidth * randomLane;
-	SetPosition(xPosition, -m_sprite_height);
 
 	m_weakness = weakness;
 }
@@ -214,5 +209,16 @@ void Monster::Damage(ItemProperty property, int &score)
 
 void Monster::Activate()
 {
+	//Activation and reset function
+	m_frozen = false;
+	m_speed = m_originalSpeed;
+	m_health = 3;
+
+	//Randomize start position
+	int randomLane = rand() % 5;
+	int laneWidth = ScreenWidth / 5;
+	int xPosition = laneWidth / 2 + laneWidth * randomLane;
+	SetPosition(xPosition, -m_sprite_height);
+
 	m_active = true;
 }
