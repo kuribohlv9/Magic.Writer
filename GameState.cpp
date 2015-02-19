@@ -66,9 +66,10 @@ GameState::GameState()
 	
 	m_scoreDisplay.setFont(*m_font);
 	m_scoreDisplay.setScale(1.5f, 1.5f);
-	m_scoreDisplay.setPosition(1750, 950);
+	m_scoreDisplay.setPosition(1750, 15);
 	m_scoreDisplay.setString("0");
-	m_scoreDisplay.setColor(sf::Color(30, 58, 64, 255));
+	m_scoreDisplay.setColor(sf::Color(255, 255, 255, 255));
+	//m_scoreDisplay.setColor(sf::Color(32, 58, 64, 255));
 
 	m_score = 0;
 	m_lastScore = 0;
@@ -315,7 +316,7 @@ void GameState::Draw()
 	//Draw HUD
 	for (int i = 0; i < m_life; i++)
 	{
-		m_life_sprite.setPosition(60.0f + 100.0f * i, 900);
+		m_life_sprite.setPosition(15.0f + 100.0f * i, 15);
 		m_drawManager->Draw(m_life_sprite, sf::RenderStates::Default);
 	}
 

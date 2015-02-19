@@ -103,6 +103,14 @@ void Monster::Update(float deltaTime)
 				m_head_animator->SetAnimation("move");
 			}
 		}
+		else if (m_state == MONSTER_DEATH)
+		{
+			if (!m_head_animator->Complete())
+				m_speed = 0;
+			else if (m_head_animator->Complete())
+				SetActive(false);
+		}
+			
 
 		//Move monster position
 		Move(0, m_speed * deltaTime);
@@ -204,7 +212,8 @@ void Monster::Damage(ItemProperty property, int &score)
 
 	if (m_health <= 0)
 	{
-		SetActive(false);
+		m_state = MONSTER_DEATH;
+		m_head_animator->SetAnimation("death");
 	}
 }
 
@@ -215,11 +224,16 @@ void Monster::Activate()
 	m_speed = m_originalSpeed;
 	m_health = 3;
 
+
+	m_foam_sprite.setColor(sf::Color(255, 255, 255, 255));
+	m_snail_sprite.setColor(sf::Color(255, 255, 255, 0));
+
+
 	//Randomize start position
 	int randomLane = rand() % 5;
 	int laneWidth = ScreenWidth / 5;
 	int xPosition = laneWidth / 2 + laneWidth * randomLane;
 	SetPosition(xPosition, -m_sprite_height);
 
-	m_active = true;
+	SetActive(true);
 }
