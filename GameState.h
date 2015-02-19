@@ -31,7 +31,7 @@ private:
 	void ConvertWordToItem();
 	void CheckCollision();
 	void SpawnMonster();
-	void Freeze();
+	void HandleFreeze(float deltaTime);
 
 private:
 	//Manager
@@ -47,12 +47,16 @@ private:
 	std::vector<Bubble*> m_bubbles;
 	std::vector<Item*> m_activeItems;
 
+	//Freeze
+	bool m_frozen;
+	float m_freezeTimer;
 
 	//Monster
 	std::vector<Monster*> m_monsters;
 
 	//Background
 	sf::Sprite m_backgroundSprite;
+	sf::Sprite m_ice_backgroundSprite;
 
 	//Player
 	Player* m_player;

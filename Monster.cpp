@@ -104,84 +104,50 @@ void Monster::Update(float deltaTime)
 			}
 		}
 
+		//Change bodyparts scale and alpha
+		HandleBodyParts();
+
 		//Move monster position
 		Move(0, m_speed * deltaTime);
-
 		m_head_sprite.setPosition(m_sprite.getPosition());
 		m_snail_sprite.setPosition(m_sprite.getPosition());
 		m_foam_sprite.setPosition(m_sprite.getPosition());
 
-		//Change snails y scale
-		float y_scale = 1.0f + abs(0.1f * cos(m_totalLifeTime * 3.0f));
-		if (y_scale >= 1.3f)
-			y_scale = 1.3f;
-		m_snail_sprite.setScale(1, y_scale);
-
-		//Change snails color
-		if (m_y >= 500)
+		//Activate burst
+		if (m_y >= 775 && !m_activeBurst)
 		{
-			sf::Color snail_color = m_snail_sprite.getColor();
-
-			int snail_alpha = snail_color.a;
-			snail_alpha += 1.5f;
-
-			if (snail_alpha > 255)
-				snail_alpha = 255;
-
-			snail_color.a = snail_alpha;
-			m_snail_sprite.setColor(snail_color);
+			Burst();
 		}
+	}
 
-		//Change foam color
-		if (m_y >= 550)
+	//Deactivate monster
+	if (m_y > ScreenHeight)
+	{
+		SetActive(false);
+	}
+}
+
+void Monster::Freeze(bool state)
+{
+	if (state)
+	{
+		if (m_y < 700)
 		{
-			sf::Color foam_color = m_foam_sprite.getColor();
-
-			int foam_alpha = foam_color.a;
-			foam_alpha -= 2;
-
-			if (foam_alpha < 0)
-				foam_alpha = 0;
-
-			foam_color.a = foam_alpha;
-			m_foam_sprite.setColor(foam_color);
-		}
-
-		//TMP BURST
-		if (m_y >= 660)
-		{
-			m_collider->SetWidthHeight(0, 0);
-			m_speed = 400;
+			m_frozen = true;
+			m_sprite.setTextureRect(sf::IntRect(0, 0, m_sprite_width, m_sprite_height));
 		}
 	}
 	else
 	{
-		m_freezeTimer += deltaTime;
-
-		if (m_freezeTimer >= m_unfreezeDelay)
-		{
-			m_freezeTimer = 0;
-			m_unfreezeDelay = 0;
-			m_frozen = false;
-			m_sprite.setTextureRect(sf::IntRect(m_sprite_width * 2, 0, m_sprite_width, m_sprite_height));
-		}
-	}
-
-	if (m_y > ScreenHeight)
-	{
-		m_active = false;
+		m_frozen = false;
+		m_sprite.setTextureRect(sf::IntRect(m_sprite_width * 2, 0, m_sprite_width, m_sprite_height));
 	}
 }
-
-void Monster::Freeze(float time)
+void Monster::Burst()
 {
-	if (m_y < 700)
-	{
-
-		m_unfreezeDelay = time;
-		m_frozen = true;
-		m_sprite.setTextureRect(sf::IntRect(0, 0, m_sprite_width, m_sprite_height));
-	}
+	m_activeBurst = true;
+	m_collider->SetWidthHeight(0, 0);
+	m_speed = 400;
 }
 
 void Monster::Damage(ItemProperty property, int &score)
@@ -208,6 +174,45 @@ void Monster::Damage(ItemProperty property, int &score)
 	}
 }
 
+void Monster::HandleBodyParts()
+{
+	//Change snails y scale
+	float y_scale = 1.0f + abs(0.1f * cos(m_totalLifeTime * 3.0f));
+	if (y_scale >= 1.3f)
+		y_scale = 1.3f;
+	m_snail_sprite.setScale(1, y_scale);
+
+	//Change snails color
+	if (m_y >= 500)
+	{
+		sf::Color snail_color = m_snail_sprite.getColor();
+
+		int snail_alpha = snail_color.a;
+		snail_alpha += 1.5f;
+
+		if (snail_alpha > 255)
+			snail_alpha = 255;
+
+		snail_color.a = snail_alpha;
+		m_snail_sprite.setColor(snail_color);
+	}
+
+	//Change foam color
+	if (m_y >= 550)
+	{
+		sf::Color foam_color = m_foam_sprite.getColor();
+
+		int foam_alpha = foam_color.a;
+		foam_alpha -= 2;
+
+		if (foam_alpha < 0)
+			foam_alpha = 0;
+
+		foam_color.a = foam_alpha;
+		m_foam_sprite.setColor(foam_color);
+	}
+}
+
 void Monster::Activate()
 {
 	//Activation and reset function
@@ -217,9 +222,10 @@ void Monster::Activate()
 
 	//Randomize start position
 	int randomLane = rand() % 5;
-	int laneWidth = ScreenWidth / 5;
-	int xPosition = laneWidth / 2 + laneWidth * randomLane;
-	SetPosition(xPosition, -m_sprite_height);
+	SetPosition(Lanes[randomLane], -m_sprite_height);
+
+	//Reset collider
+	m_collider->SetWidthHeight(m_sprite_width / 4, m_sprite_height / 4);
 
 	m_active = true;
 }

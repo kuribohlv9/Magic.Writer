@@ -118,7 +118,7 @@ void Player::ChangeLane(int xDirection)
 		m_lane = 4;
 
 	//Set player position
-	SetPosition(192.0f + 384.0f * m_lane, 800);
+	SetPosition(Lanes[m_lane], 800);
 
 	//Set possible item position
 	if (m_item)
@@ -197,4 +197,8 @@ void Player::Knockdown()
 bool Player::IsStunned()
 {
 	return (m_state == PLAYER_KNOCKEDDOWN);
+}
+int Player::GetCurrentLane()
+{
+	return m_lane;
 }

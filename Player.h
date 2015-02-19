@@ -29,6 +29,7 @@ public:
 
 	void Knockdown();
 	bool IsStunned();
+	int GetCurrentLane();
 
 private:
 	void HandleMovement();

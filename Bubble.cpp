@@ -19,7 +19,13 @@ Bubble::Bubble(float x, float y, sf::Texture* texture, Player* player)
 	m_player = player;
 	m_playerOffset = m_sprite.getPosition().x - player->GetX();
 
-	m_lifeTime = rand() % 1000;
+	m_lifeTime += 75 + x * 100;
+
+	m_lanePositions[0] = 444;
+	m_lanePositions[1] = 774;
+	m_lanePositions[2] = 960;
+	m_lanePositions[3] = 1146;
+	m_lanePositions[4] = 1476;
 }
 
 
@@ -47,8 +53,8 @@ void Bubble::Update(float deltaTime)
 
 	sf::Vector2f pos = m_sprite.getPosition();
 
-	pos.x = m_player->GetX() + m_playerOffset;
-	pos.y += 0.5 * cos(m_lifeTime * 3.0f);
+	pos.x = m_lanePositions[m_player->GetCurrentLane()] + m_playerOffset;
+	pos.y += 0.25f * cos(m_lifeTime * 3.0f);
 
 	m_sprite.setPosition(pos);
 

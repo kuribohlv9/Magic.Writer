@@ -19,9 +19,13 @@ public:
 
 	void Draw(DrawManager* drawManager);
 	void Update(float deltaTime);
-	void Freeze(float time);
+	void Freeze(bool state);
 	void Damage(ItemProperty property, int &score);
 	void Activate();
+
+private:
+	void HandleBodyParts();
+	void Burst();
 
 private:
 	MonsterState m_state;
@@ -36,9 +40,8 @@ private:
 
 	float m_totalLifeTime;
 	bool m_frozen;
+	bool m_activeBurst;
 	int m_health;
 	float m_speed;
 	float m_originalSpeed;
-	float m_freezeTimer;
-	float m_unfreezeDelay;
 };

@@ -37,7 +37,8 @@ GameState::GameState()
 	//Load background texture
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background.png");
 	m_backgroundSprite.setTexture(*texture);
-	m_backgroundSprite.setPosition(0, 0);
+	texture = m_textureManager->LoadTexture("assets/sprites/ice_background.png");
+	m_ice_backgroundSprite.setTexture(*texture);
 
 	//Instantiate player
 	texture = m_textureManager->LoadTexture("assets/sprites/wizard/spritesheet_wizard.png");
@@ -84,12 +85,12 @@ GameState::GameState()
 	{
 		if (i < 5)
 		{
-			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 288, 304, 45, ITEM_ALIVE);
+			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 225, 238, 45, ITEM_ALIVE);
 			m_monsters.push_back(undeadMonster);
 		}
 		else if (i > 4 && i < 10)
 		{
-			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 255, 289, 45, ITEM_COLD);
+			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 200, 227, 45, ITEM_COLD);
 			m_monsters.push_back(lavaMonster);
 		}
 		else if (i > 9 && i < 15)
@@ -99,7 +100,7 @@ GameState::GameState()
 		}
 		else if (i > 14)
 		{
-			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 304, 297, 45, ITEM_HOT);
+			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 226, 220, 45, ITEM_HOT);
 			m_monsters.push_back(iceMonster);
 		}
 	}
@@ -212,10 +213,7 @@ bool GameState::Update(float deltaTime)
 
 	m_lastScore = m_score;
 
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Num3))
-	{
-		Freeze();
-	}
+	HandleFreeze(deltaTime);
 
 	return true;
 }
@@ -275,7 +273,14 @@ void GameState::CheckCollision()
 void GameState::Draw()
 {
 	//Draw background
-	m_drawManager->Draw(m_backgroundSprite, sf::RenderStates::Default);
+	if (!m_frozen)
+	{
+		m_drawManager->Draw(m_backgroundSprite, sf::RenderStates::Default);
+	}
+	else
+	{
+		m_drawManager->Draw(m_ice_backgroundSprite, sf::RenderStates::Default);
+	}
 
 	//Draw monster
 	for (int i = 0; i < m_monsters.size(); i++)
@@ -389,13 +394,48 @@ void GameState::ConvertWordToItem()
 		}
 	}
 }
-void GameState::Freeze()
+void GameState::HandleFreeze(float deltaTime)
 {
-	for (int i = 0; i < m_monsters.size(); i++)
+	//Activate freeze powerup
+	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num3))
 	{
-		if (!m_monsters[i]->IsActive())
-			continue;
+		if (!m_frozen)
+		{
+			m_frozen = true;
 
-		m_monsters[i]->Freeze(5.0f);
+			//Freeze all monsters;
+			for (int i = 0; i < m_monsters.size(); i++)
+			{
+				if (!m_monsters[i]->IsActive())
+					continue;
+
+				m_monsters[i]->Freeze(true);
+			}
+
+			//Change background
+			
+		}
 	}
+
+	//Deactivate freeze powerup
+	if (m_frozen)
+	{
+		m_freezeTimer += deltaTime;
+
+		if (m_freezeTimer >= 1.5f)
+		{
+			m_freezeTimer = 0;
+			m_frozen = false;
+
+			//Unfreeze all monsters;
+			for (int i = 0; i < m_monsters.size(); i++)
+			{
+				if (!m_monsters[i]->IsActive())
+					continue;
+
+				m_monsters[i]->Freeze(false);
+			}
+		}
+	}
+	
 }
