@@ -49,7 +49,6 @@ private:
 
 	//Monster
 	std::vector<Monster*> m_monsters;
-	sf::Texture* m_monsterTexture;
 
 	//Background
 	sf::Sprite m_backgroundSprite;

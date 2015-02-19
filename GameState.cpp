@@ -39,9 +39,6 @@ GameState::GameState()
 	m_backgroundSprite.setTexture(*texture);
 	m_backgroundSprite.setPosition(0, 0);
 
-	//Load monster texture
-	m_monsterTexture = m_textureManager->LoadTexture("assets/sprites/monster/spritesheet_monster.png");
-
 	//Instantiate player
 	texture = m_textureManager->LoadTexture("assets/sprites/wizard/spritesheet_wizard.png");
 	m_player = new Player(texture);
@@ -76,28 +73,34 @@ GameState::GameState()
 	m_score = 0;
 	m_lastScore = 0;
 	m_life = 3;
+
+	sf::Texture* undeadTexture = m_textureManager->LoadTexture("assets/sprites/monster/undead_monster_spritesheet.png");
+	sf::Texture* lavaTexture = m_textureManager->LoadTexture("assets/sprites/monster/lava_monster_spritesheet.png");
+	sf::Texture* aliveTexture = m_textureManager->LoadTexture("assets/sprites/monster/alive_monster_spritesheet.png");
+	sf::Texture* iceTexture = m_textureManager->LoadTexture("assets/sprites/monster/ice_monster_spritesheet.png");
+
 	//Monster pool
 	for (int i = 0; i < 20; i++)
 	{
 		if (i < 5)
 		{
-			Monster* deadMonster = new Monster(m_monsterTexture, 45, 3, ITEM_ALIVE);
-			m_monsters.push_back(deadMonster);
+			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 288, 304, 45, 3, ITEM_ALIVE);
+			m_monsters.push_back(undeadMonster);
 		}
 		else if (i > 4 && i < 10)
 		{
-			Monster* hotMonster = new Monster(m_monsterTexture, 45, 3, ITEM_COLD);
-			m_monsters.push_back(hotMonster);
+			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 255, 289, 45, 3, ITEM_COLD);
+			m_monsters.push_back(lavaMonster);
 		}
 		else if (i > 9 && i < 15)
 		{
-			Monster* aliveMonster = new Monster(m_monsterTexture, 45, 3, ITEM_DEAD);
+			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 207, 207, 45, 3, ITEM_DEAD);
 			m_monsters.push_back(aliveMonster);
 		}
 		else if (i > 14)
 		{
-			Monster* coldMonster = new Monster(m_monsterTexture, 45, 3, ITEM_HOT);
-			m_monsters.push_back(coldMonster);
+			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 304, 297, 45, 3, ITEM_HOT);
+			m_monsters.push_back(iceMonster);
 		}
 	}
 }

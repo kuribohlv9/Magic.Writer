@@ -5,10 +5,11 @@
 #include "Collider.h"
 #include <time.h>
 
-Monster::Monster(sf::Texture* texture, float speed, int health, ItemProperty weakness)
+Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, int health, ItemProperty weakness)
 {
 	m_active = false;
 	srand(time(NULL));
+
 	//Variables
 	m_type = GAMEOBJECT_MONSTERS;
 	m_state = MONSTER_MOVE;
@@ -17,8 +18,8 @@ Monster::Monster(sf::Texture* texture, float speed, int health, ItemProperty wea
 	m_frozen = false;
 
 	//Calculate sprite width and height
-	m_sprite_width = 207;
-	m_sprite_height = 207;
+	m_sprite_width = spriteWidth;
+	m_sprite_height = spriteHeight;
 
 	//Sprite
 	m_sprite.setTexture(*texture);
@@ -28,7 +29,7 @@ Monster::Monster(sf::Texture* texture, float speed, int health, ItemProperty wea
 	//Head sprite
 	m_head_sprite.setTexture(*texture);
 	m_head_sprite.setOrigin(m_sprite_width / 2.0f, m_sprite_height / 2.0f);
-	m_head_animator = new Animator(&m_head_sprite, "assets/sprites/monster/monster_animation.txt");
+	m_head_animator = new Animator(&m_head_sprite, animationFile);
 	m_head_animator->SetAnimation("move");
 
 	//Snail sprite
@@ -53,31 +54,6 @@ Monster::Monster(sf::Texture* texture, float speed, int health, ItemProperty wea
 	int xPosition = laneWidth / 2 + laneWidth * randomLane;
 	SetPosition(xPosition, -m_sprite_height);
 
-	////Weakness
-	//int randomWeakness = rand() % 4;
-	//ItemProperty weakness;
-	//switch (randomWeakness)
-	//{
-	//case 0:
-	//	weakness = ITEM_ALIVE;
-	//	m_color = sf::Color(80, 80, 80, 255);
-	//	break;
-	//case 1:
-	//	weakness = ITEM_DEAD;
-	//	m_color = sf::Color::White;
-	//	break;
-	//case 2:
-	//	weakness = ITEM_COLD;
-	//	m_color = sf::Color(150, 50, 50, 255);
-	//	break;
-	//case 3:
-	//	weakness = ITEM_HOT;
-	//	m_color = sf::Color(50, 50, 150, 255);
-	//	break;
-	//}
-
-	m_sprite.setColor(m_color);
-	m_head_sprite.setColor(m_color);
 	m_weakness = weakness;
 }
 Monster::~Monster()

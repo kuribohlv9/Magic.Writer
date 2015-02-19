@@ -14,7 +14,7 @@ enum MonsterState
 class Monster : public GameObject
 {
 public:
-	Monster(sf::Texture* texture, float speed, int health, ItemProperty weakness);
+	Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, int health, ItemProperty weakness);
 	~Monster();
 
 	void Draw(DrawManager* drawManager);
@@ -26,7 +26,6 @@ public:
 private:
 	MonsterState m_state;
 	ItemProperty m_weakness;
-	sf::Color m_color;
 
 	Animator* m_head_animator;
 	sf::Sprite m_head_sprite;
