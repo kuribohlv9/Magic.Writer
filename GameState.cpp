@@ -20,7 +20,7 @@
 #include "Bubble.h"
 #include "Utility.h"
 
-#include <sstream>
+#include <iostream>
 
 GameState::GameState()
 {
@@ -158,6 +158,7 @@ bool GameState::Update(float deltaTime)
 	m_waveManager->Update(deltaTime);
 	if (m_waveManager->CanSpawnMonster())
 	{
+		std::cout << "Spawn monster" << std::endl;
 		SpawnMonster();
 	}
 
@@ -210,6 +211,11 @@ bool GameState::Update(float deltaTime)
 		m_scoreDisplay.setString(std::to_string(m_score));
 
 	m_lastScore = m_score;
+
+	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Num3))
+	{
+		Freeze();
+	}
 
 	return true;
 }
@@ -381,5 +387,15 @@ void GameState::ConvertWordToItem()
 			m_activeItems.push_back(spawnedItem);
 			m_player->SetItem(nullptr);
 		}
+	}
+}
+void GameState::Freeze()
+{
+	for (int i = 0; i < m_monsters.size(); i++)
+	{
+		if (!m_monsters[i]->IsActive())
+			continue;
+
+		m_monsters[i]->Freeze(5.0f);
 	}
 }

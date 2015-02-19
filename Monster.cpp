@@ -61,32 +61,29 @@ Monster::~Monster()
 
 void Monster::Draw(DrawManager* drawManager)
 {
-	if (!m_frozen)
+	if (m_frozen)
 	{
-		if (m_frozen)
-		{
-			drawManager->Draw(m_sprite, sf::RenderStates::Default);
-		}
-		else
-		{
-			drawManager->Draw(m_snail_sprite, sf::RenderStates::Default);
-			drawManager->Draw(m_sprite, sf::RenderStates::Default);
-			drawManager->Draw(m_foam_sprite, sf::RenderStates::Default);
-			drawManager->Draw(m_head_sprite, sf::RenderStates::Default);
-		}
-
-		//Draw health
-		sf::CircleShape hp;
-		for (int i = 0; i < m_health; i++)
-		{
-			hp.setFillColor(sf::Color::White);
-			hp.setRadius(15);
-			hp.setPosition(m_x + i*30, m_y-100);
-			drawManager->Draw(hp, sf::RenderStates::Default);
-			hp.setFillColor(sf::Color::Black);
-			hp.setRadius(10);
-			drawManager->Draw(hp, sf::RenderStates::Default);
-		}
+		drawManager->Draw(m_sprite, sf::RenderStates::Default);
+		drawManager->Draw(m_foam_sprite, sf::RenderStates::Default);
+	}
+	else
+	{
+		drawManager->Draw(m_snail_sprite, sf::RenderStates::Default);
+		drawManager->Draw(m_sprite, sf::RenderStates::Default);
+		drawManager->Draw(m_foam_sprite, sf::RenderStates::Default);
+		drawManager->Draw(m_head_sprite, sf::RenderStates::Default);
+	}
+	//Draw health
+	sf::CircleShape hp;
+	for (int i = 0; i < m_health; i++)
+	{
+		hp.setFillColor(sf::Color::White);
+		hp.setRadius(15);
+		hp.setPosition(m_x + i*30, m_y-100);
+		drawManager->Draw(hp, sf::RenderStates::Default);
+		hp.setFillColor(sf::Color::Black);
+		hp.setRadius(10);
+		drawManager->Draw(hp, sf::RenderStates::Default);
 	}
 }
 
@@ -178,9 +175,13 @@ void Monster::Update(float deltaTime)
 
 void Monster::Freeze(float time)
 {
-	m_unfreezeDelay = time;
-	m_frozen = true;
-	m_sprite.setTextureRect(sf::IntRect(0, 0, m_sprite_width, m_sprite_height));
+	if (m_y < 700)
+	{
+
+		m_unfreezeDelay = time;
+		m_frozen = true;
+		m_sprite.setTextureRect(sf::IntRect(0, 0, m_sprite_width, m_sprite_height));
+	}
 }
 
 void Monster::Damage(ItemProperty property, int &score)

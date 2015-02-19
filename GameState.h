@@ -31,6 +31,7 @@ private:
 	void ConvertWordToItem();
 	void CheckCollision();
 	void SpawnMonster();
+	void Freeze();
 
 private:
 	//Manager

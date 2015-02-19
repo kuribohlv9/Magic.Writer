@@ -9,7 +9,6 @@ Bubble::Bubble(float x, float y, sf::Texture* texture, Player* player)
 {
 	m_width = texture->getSize().x / 4;
 	m_height = texture->getSize().y;
-	m_speed = 30;
 
 	m_sprite.setPosition(x, y);
 	m_sprite.setTexture(*texture);
@@ -19,6 +18,8 @@ Bubble::Bubble(float x, float y, sf::Texture* texture, Player* player)
 	m_item = nullptr;
 	m_player = player;
 	m_playerOffset = m_sprite.getPosition().x - player->GetX();
+
+	m_lifeTime = rand() % 1000;
 }
 
 
@@ -42,37 +43,16 @@ sf::Vector2f Bubble::GetPosition()
 
 void Bubble::Update(float deltaTime)
 {
-	float playerX = m_player->GetX() + m_playerOffset;
-	float bubbleX = m_sprite.getPosition().x;
-	float direction = m_speed;
-
-	float max = playerX;
-	float min = bubbleX;
-
-	if (max < min)
-	{
-		int tmp = max;
-		max = min;
-		min = tmp;
-		direction *= -1;
-	}
-
-	float length = (max - min) / max;
-
-	direction *= length;
-	
-
-	m_sprite.move(direction, 0);
+	m_lifeTime += deltaTime;
 
 	sf::Vector2f pos = m_sprite.getPosition();
-	if (pos.x <= m_width / 2)
-	{
-		m_sprite.setPosition(m_width / 2, pos.y);
-	}
-	else if (pos.x > ScreenWidth - m_width / 2)
-	{
-		m_sprite.setPosition(ScreenWidth - m_width / 2, pos.y);
-	}
+
+	pos.x = m_player->GetX() + m_playerOffset;
+	pos.y += 0.5 * cos(m_lifeTime * 3.0f);
+
+	m_sprite.setPosition(pos);
+
+	//Set item position
 	if (m_item)
 	{
 		m_item->SetPosition(m_sprite.getPosition().x, m_sprite.getPosition().y);

@@ -17,7 +17,7 @@ public:
 	sf::Vector2f GetPosition();
 
 private:
-	float m_speed;
+	float m_lifeTime;
 	int m_playerOffset;
 	int m_width;
 	int m_height;
