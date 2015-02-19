@@ -3,3 +3,5 @@ crocodile
 earthworm
 pig
 fireant
+hippopotamus
+chick

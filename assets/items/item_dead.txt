@@ -3,3 +3,5 @@ thorns
 skeleton
 tombstone
 dracula
+coffin
+cross
