@@ -8,7 +8,8 @@ enum MonsterState
 {
 	MONSTER_MOVE,
 	MONSTER_HIT,
-	MONSTER_CRITICAL
+	MONSTER_CRITICAL,
+	MONSTER_DEATH
 };
 
 class Monster : public GameObject
