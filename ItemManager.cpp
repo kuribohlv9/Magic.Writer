@@ -38,46 +38,31 @@ void ItemManager::AddItems(const std::string& spritesheetFilename, const std::st
 	stream.open(textFilename);
 
 	//Create a sourcerectangle (part of a texture)
-	int itemWidthHeight = 128;
-	sf::IntRect sourceRectangle = sf::IntRect(0, 0, itemWidthHeight, itemWidthHeight);
+	int itemSize = 128;
+	sf::IntRect sourceRectangle = sf::IntRect(0, 0, itemSize, itemSize);
 
 	//What row in the spritesheet we are on
 	int row = 0;
 
-	while (!stream.eof())
-	{
-		//Read item name from textfile
-		std::string itemName;
-		std::getline(stream, itemName);
-
-		if (itemName == "-")
-		{
-			//Change spritesheet row
-			sourceRectangle.left = 0;
-			sourceRectangle.top += itemWidthHeight;
-			row++;
-		}
-		else
-		{
-			Item* item = new Item(itemSpriteSheet, sourceRectangle, property, itemName);
-			m_items.push_back(item);
-
-			sourceRectangle.left += itemWidthHeight;
-		}
-	}
+	 
 	stream.close();
 }
 
 Item* ItemManager::GetItem()
 {
+	//Start an infinite loop.
 	while (true)
 	{
+		//Randomize a index between 0 and the total item count.
 		int randomIndex = rand() % m_items.size();
 
+		//Access the item at randomized index.
 		Item* item = m_items[randomIndex];
 
+		//Check if the item is not active and is not inside the game.
 		if (!item->IsActive() && !item->IsInGame())
 		{
+			//Return the item and set in game to true.
 			item->SetInGame(true);
 			return item;
 		}
