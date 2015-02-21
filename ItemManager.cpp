@@ -43,7 +43,27 @@ void ItemManager::AddItems(const std::string& spritesheetFilename, const std::st
 
 	//What row in the spritesheet we are on
 	int row = 0;
+	while (!stream.eof())
+	{
+		//Read item name from textfile
+		std::string itemName;
+		std::getline(stream, itemName);
 
+		if (itemName == "-")
+		{
+			//Change spritesheet row
+			sourceRectangle.left = 0;
+			sourceRectangle.top += itemSize;
+			row++;
+		}
+		else
+		{
+			Item* item = new Item(itemSpriteSheet, sourceRectangle, property, itemName);
+			m_items.push_back(item);
+
+			sourceRectangle.left += itemSize;
+		}
+	}
 	 
 	stream.close();
 }
