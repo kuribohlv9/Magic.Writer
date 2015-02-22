@@ -31,7 +31,7 @@ GUI_Button::GUI_Button(int x, int y, GUI_Element* parent, sf::Texture* texture, 
 	m_sprite.setTextureRect(sf::IntRect(0, 0, m_buttonWidth, m_buttonHeight));
 	m_sprite.setPosition(m_x, m_y);
 
-	m_collider = new Collider(m_x, m_y);
+	m_collider = new Collider(0, 0);
 	m_collider->SetWidthHeight(m_sprite.getGlobalBounds().width, m_sprite.getGlobalBounds().height);
 	m_inputManager = ServiceLocator<InputManager>::GetService();
 

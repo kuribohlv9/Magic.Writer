@@ -11,7 +11,7 @@ InputManager::~InputManager()
 }
 bool InputManager::Initialize()
 {
-	m_mouseCollider = new Collider(m_mouse_position.x, m_mouse_position.y);
+	m_mouseCollider = new Collider(0, 0);
 	m_mouseCollider->SetWidthHeight(1, 1);
 	m_lastInputChar = ' ';
 	return true;

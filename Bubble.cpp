@@ -2,20 +2,32 @@
 #include "Bubble.h"
 #include "DrawManager.h"
 #include "Item.h"
+#include "Player.h"
+#include <iostream>
 
-Bubble::Bubble(float x, float y, sf::Texture* texture)
+Bubble::Bubble(float x, float y, sf::Texture* texture, Player* player)
 {
-	m_sprite.setPosition(x, y);
 	m_width = texture->getSize().x / 4;
-	m_height = texture->getSize().y / 2;
+	m_height = texture->getSize().y;
 
+	m_sprite.setPosition(x, y);
 	m_sprite.setTexture(*texture);
 	m_sprite.setTextureRect(sf::IntRect(0, 0, m_width, m_height));
 	m_sprite.setOrigin(m_width / 2, m_height / 2);
-	m_sprite.setColor(sf::Color(255, 255, 255, 200));
 
 	m_item = nullptr;
+	m_player = player;
+	m_playerOffset = m_sprite.getPosition().x - player->GetX();
+
+	m_lifeTime += 75 + x * 100;
+
+	m_lanePositions[0] = 444;
+	m_lanePositions[1] = 774;
+	m_lanePositions[2] = 960;
+	m_lanePositions[3] = 1146;
+	m_lanePositions[4] = 1476;
 }
+
 
 void Bubble::SetItem(Item* item)
 {
@@ -29,6 +41,28 @@ void Bubble::SetItem(Item* item)
 Item* Bubble::GetItem()
 {
 	return m_item;
+}
+sf::Vector2f Bubble::GetPosition()
+{
+	return m_sprite.getPosition();
+}
+
+void Bubble::Update(float deltaTime)
+{
+	m_lifeTime += deltaTime;
+
+	sf::Vector2f pos = m_sprite.getPosition();
+
+	pos.x = m_lanePositions[m_player->GetCurrentLane()] + m_playerOffset;
+	pos.y += 0.25f * cos(m_lifeTime * 3.0f);
+
+	m_sprite.setPosition(pos);
+
+	//Set item position
+	if (m_item)
+	{
+		m_item->SetPosition(m_sprite.getPosition().x, m_sprite.getPosition().y);
+	}
 }
 void Bubble::Draw(DrawManager* drawManager)
 {

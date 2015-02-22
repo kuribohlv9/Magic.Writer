@@ -3,3 +3,9 @@ oven
 pizza
 fryingpan
 fireplace
+volcano
+flatiron
+chili pepper
+match
+campfire
+hot sauce

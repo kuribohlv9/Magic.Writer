@@ -29,7 +29,9 @@ public:
 
 private:
 	void ConvertWordToItem();
+	void CheckCollision();
 	void SpawnMonster();
+	void HandleFreeze(float deltaTime);
 
 private:
 	//Manager
@@ -45,12 +47,16 @@ private:
 	std::vector<Bubble*> m_bubbles;
 	std::vector<Item*> m_activeItems;
 
+	//Freeze
+	bool m_frozen;
+	float m_freezeTimer;
+
 	//Monster
 	std::vector<Monster*> m_monsters;
-	sf::Texture* m_monsterTexture;
 
 	//Background
 	sf::Sprite m_backgroundSprite;
+	sf::Sprite m_ice_backgroundSprite;
 
 	//Player
 	Player* m_player;
@@ -59,9 +65,9 @@ private:
 	sf::Font* m_font;
 
 	//Test HUD
-	sf::CircleShape m_circle;
+	sf::Sprite m_life_sprite;
 	sf::Text m_scoreDisplay;
 	int m_score;
+	int m_lastScore;
 	unsigned int m_life;
-
 };

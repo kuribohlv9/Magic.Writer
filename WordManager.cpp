@@ -14,6 +14,7 @@ WordManager::WordManager()
 	//Load a font
 	sf::Font* font = m_textureManager->LoadFont("assets/fonts/font.ttf");
 	m_text.setFont(*font);
+	m_text.setCharacterSize(25);
 
 	//Get word count
 	m_words[0] = "";
@@ -37,6 +38,7 @@ void WordManager::Update(float deltaTime)
 	}
 
 	//Get input key from keyboard
+	m_correctKey = false;
 	m_userChar = m_inputManager->GetInputChar();
 
 	//Check if a key was pressed
@@ -45,10 +47,6 @@ void WordManager::Update(float deltaTime)
 		//If a key was pressed, check the words using the character
 		CheckWords();
 	}
-
-	//TMP
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::BackSpace))
-		Reset();
 }
 void WordManager::Draw(DrawManager* drawManager)
 {
@@ -56,7 +54,9 @@ void WordManager::Draw(DrawManager* drawManager)
 	for (int i = 0; i < m_wordCount; i++)
 	{
 		//Set a position for the word
-		sf::Vector2f position = sf::Vector2f(500 + 400 * i + i * 30, 1000);
+		sf::Vector2f position = m_wordPositions[i];
+		position.x -= 40;
+		position.y += 20;
 
 		//Get the current word and it's active state
 		std::string word = m_words[i];
@@ -78,8 +78,6 @@ void WordManager::Draw(DrawManager* drawManager)
 
 				//Gets the current character
 				char currentChar = word[j];
-
-				
 
 				//Apply the character to m_text
 				m_text.setString(currentChar);
@@ -138,6 +136,7 @@ void WordManager::CheckWords()
 	//If the key fits in any word, apply the key to the full userText
 	if (charFits)
 	{
+		m_correctKey = true;
 		m_userInput += m_userChar;
 	}
 
@@ -176,6 +175,10 @@ void WordManager::Reset()
 	m_userInput = "";
 	m_userChar = ' ';
 }
+void WordManager::SetWordPosition(sf::Vector2f position, int wordIndex)
+{
+	m_wordPositions[wordIndex] = position;
+}
 
 std::string WordManager::GetFinishedWord()
 {
@@ -189,6 +192,7 @@ std::string WordManager::GetFinishedWord()
 			finishedWord = m_words[i];
 			m_words[i] = "";
 			Reset();
+			m_correctKey = false;
 			return finishedWord;
 		}
 	}
@@ -206,4 +210,9 @@ void WordManager::SetNewWord(const std::string& newWord)
 			break;
 		}
 	}
+}
+
+bool WordManager::GetCorrectKey()
+{
+	return m_correctKey;
 }
