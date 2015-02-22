@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{72763EFA-5E5F-4868-BE40-8165116A6102}</ProjectGuid>
+    <ProjectGuid>{67A984FA-67FC-46B8-AC08-E9B55F98A49E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MagicWriter</RootNamespace>
   </PropertyGroup>
@@ -101,6 +101,7 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemManager.h" />
+    <ClInclude Include="LosingState.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Player.h" />
@@ -132,6 +133,7 @@
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemManager.cpp" />
+    <ClCompile Include="LosingState.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Monster.cpp" />
