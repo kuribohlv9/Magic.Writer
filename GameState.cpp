@@ -81,27 +81,28 @@ GameState::GameState()
 	sf::Texture* aliveTexture = m_textureManager->LoadTexture("assets/sprites/monster/alive_monster_spritesheet.png");
 	sf::Texture* iceTexture = m_textureManager->LoadTexture("assets/sprites/monster/ice_monster_spritesheet.png");
 
+	texture = m_textureManager->LoadTexture("assets/sprites/particle.png");
 	//Monster pool
 	for (int i = 0; i < 20; i++)
 	{
 		if (i < 5)
 		{
-			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 225, 238, 45, ITEM_ALIVE);
+			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 225, 238, 45, ITEM_ALIVE, texture);
 			m_monsters.push_back(undeadMonster);
 		}
 		else if (i > 4 && i < 10)
 		{
-			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 200, 227, 45, ITEM_COLD);
+			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 200, 227, 45, ITEM_COLD, texture);
 			m_monsters.push_back(lavaMonster);
 		}
 		else if (i > 9 && i < 15)
 		{
-			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 207, 207, 45, ITEM_DEAD);
+			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 207, 207, 45, ITEM_DEAD, texture);
 			m_monsters.push_back(aliveMonster);
 		}
 		else if (i > 14)
 		{
-			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 226, 220, 45, ITEM_HOT);
+			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 226, 220, 45, ITEM_HOT, texture);
 			m_monsters.push_back(iceMonster);
 		}
 	}

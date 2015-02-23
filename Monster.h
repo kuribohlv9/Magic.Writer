@@ -3,6 +3,7 @@
 
 class Animator;
 class DrawManager;
+class ParticleEmitter;
 
 enum MonsterState
 {
@@ -15,7 +16,7 @@ enum MonsterState
 class Monster : public GameObject
 {
 public:
-	Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, ItemProperty weakness);
+	Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, ItemProperty weakness, sf::Texture* particleTexture);
 	~Monster();
 
 	void Draw(DrawManager* drawManager);
@@ -32,6 +33,7 @@ private:
 	MonsterState m_state;
 	ItemProperty m_weakness;
 
+	ParticleEmitter* m_emitter;
 	Animator* m_head_animator;
 	sf::Sprite m_head_sprite;
 	sf::Sprite m_snail_sprite;
