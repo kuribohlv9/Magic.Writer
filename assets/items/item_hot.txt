@@ -5,7 +5,7 @@ fryingpan
 fireplace
 volcano
 flatiron
-chili
+chilipepper
 -
 match
 campfire

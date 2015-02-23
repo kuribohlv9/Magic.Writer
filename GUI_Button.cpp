@@ -7,7 +7,7 @@
 #include "InputManager.h"
 #include "ServiceLocator.h"
 
-GUI_Button::GUI_Button(int x, int y, GUI_Element* parent, sf::Texture* texture, int buttonWidth, int buttonHeight)
+GUI_Button::GUI_Button(int x, int y, GUI_Element* parent, sf::Texture* texture, sf::IntRect sourceRectangle)
 {
 	if (parent)
 	{
@@ -25,24 +25,29 @@ GUI_Button::GUI_Button(int x, int y, GUI_Element* parent, sf::Texture* texture, 
 		m_y = m_localY;
 	}
 
-	m_buttonWidth = buttonWidth;
-	m_buttonHeight = buttonHeight;
+	m_buttonRectangle = sourceRectangle;
 	m_sprite.setTexture(*texture);
-	m_sprite.setTextureRect(sf::IntRect(0, 0, m_buttonWidth, m_buttonHeight));
+	m_sprite.setTextureRect(sourceRectangle);
 	m_sprite.setPosition(m_x, m_y);
 
 	m_collider = new Collider(0, 0);
-	m_collider->SetWidthHeight(m_sprite.getGlobalBounds().width, m_sprite.getGlobalBounds().height);
+	m_collider->SetWidthHeight(m_buttonRectangle.width, m_buttonRectangle.height);
 	m_inputManager = ServiceLocator<InputManager>::GetService();
 
 }
 GUI_Button::~GUI_Button()
 {
-	delete m_label;
-	m_label = nullptr;
+	if (m_label)
+	{
+		delete m_label;
+		m_label = nullptr;
+	}
 
-	delete m_collider;
-	m_collider = nullptr;
+	if (m_collider)
+	{
+		delete m_collider;
+		m_collider = nullptr;
+	}
 
 	m_inputManager = nullptr;
 }
@@ -84,14 +89,20 @@ void GUI_Button::Draw(DrawManager* drawManager)
 	{
 		if (m_hovered)
 		{
-			m_sprite.setTextureRect(sf::IntRect(0, m_buttonHeight, m_buttonWidth, m_buttonHeight));
+			sf::IntRect rect = m_buttonRectangle;
+			rect.top += rect.height;
+			m_sprite.setTextureRect(rect);
 		}
 		else
 		{
-			m_sprite.setTextureRect(sf::IntRect(0, 0, m_buttonWidth, m_buttonHeight));
+			m_sprite.setTextureRect(m_buttonRectangle);
 		}
 		drawManager->Draw(m_sprite, sf::RenderStates::Default);
-		m_label->Draw(drawManager);
+
+		if (m_label)
+		{
+			m_label->Draw(drawManager);
+		}
 	}
 }
 GUI_Label* GUI_Button::GetLabel()
