@@ -73,6 +73,7 @@ void Monster::Draw(DrawManager* drawManager)
 		drawManager->Draw(m_foam_sprite, sf::RenderStates::Default);
 		drawManager->Draw(m_head_sprite, sf::RenderStates::Default);
 	}
+
 	//Draw health
 	sf::CircleShape hp;
 	for (int i = 0; i < m_health; i++)
@@ -81,6 +82,7 @@ void Monster::Draw(DrawManager* drawManager)
 		hp.setRadius(15);
 		hp.setPosition(m_x + i*30, m_y-100);
 		drawManager->Draw(hp, sf::RenderStates::Default);
+
 		hp.setFillColor(sf::Color::Black);
 		hp.setRadius(10);
 		drawManager->Draw(hp, sf::RenderStates::Default);
@@ -120,12 +122,6 @@ void Monster::Update(float deltaTime)
 		m_head_sprite.setPosition(m_sprite.getPosition());
 		m_snail_sprite.setPosition(m_sprite.getPosition());
 		m_foam_sprite.setPosition(m_sprite.getPosition());
-
-		//Activate burst
-		if (m_y >= 775 && !m_activeBurst)
-		{
-			Burst();
-		}
 	}
 
 	//Deactivate monster
@@ -151,11 +147,16 @@ void Monster::Freeze(bool state)
 		m_sprite.setTextureRect(sf::IntRect(m_sprite_width * 2, 0, m_sprite_width, m_sprite_height));
 	}
 }
-void Monster::Burst()
+bool Monster::Burst()
 {
-	m_activeBurst = true;
-	m_collider->SetWidthHeight(0, 0);
-	m_speed = 400;
+	if (!m_activeBurst)
+	{
+		m_activeBurst = true;
+		m_collider->SetWidthHeight(0, 0);
+		m_speed = 400;
+		return true;
+	}
+	return false;
 }
 
 void Monster::Damage(ItemProperty property, int &score)

@@ -9,7 +9,7 @@ class Collider;
 class GUI_Button : public GUI_Element
 {
 public:
-	GUI_Button(int x, int y, GUI_Element* parent, sf::Texture* texture, int buttonWidth, int buttonHeight);
+	GUI_Button(int x, int y, GUI_Element* parent, sf::Texture* texture, int textureX, int textureY, int buttonWidth, int buttonHeight);
 	~GUI_Button();
 	void Update();
 	void Draw(DrawManager* drawManager);

@@ -23,10 +23,10 @@ public:
 	void Freeze(bool state);
 	void Damage(ItemProperty property, int &score);
 	void Activate();
+	bool Burst();
 
 private:
 	void HandleBodyParts();
-	void Burst();
 
 private:
 	MonsterState m_state;

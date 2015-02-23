@@ -189,6 +189,14 @@ bool GameState::Update(float deltaTime)
 			continue;
 
 		m_monsters[i]->Update(deltaTime);
+		//Activate burst
+		if (m_monsters[i]->GetY() >= 775 && m_monsters[i]->Burst())
+		{
+			if (m_life > 0)
+			{
+				m_life -= 1;
+			}
+		}
 	}
 
 	//Increase score if player enters correct key
@@ -216,7 +224,14 @@ bool GameState::Update(float deltaTime)
 
 	HandleFreeze(deltaTime);
 
-	return true;
+	if (m_life > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 void GameState::CheckCollision()
 {

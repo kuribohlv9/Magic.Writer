@@ -18,13 +18,14 @@ MenuState::MenuState()
 
 	m_nextState = STATE_INVALID;
 
+	sf::Texture* signTexture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");
 	sf::Texture* menuTexture = m_textureManager->LoadTexture("assets/sprites/spritesheet_menu.png");
 	sf::Font* font = m_textureManager->LoadFont("assets/fonts/font.ttf");
 
-	m_playButton = new GUI_Button(20, 20, nullptr, menuTexture, 250, 100);
+	m_playButton = new GUI_Button(20, 20, nullptr, signTexture, 34, 13, 427, 202);
 	m_playButton->SetLabel(new GUI_Label(90, 30, m_playButton, font, "Play"));
 
-	m_exitButton = new GUI_Button(20, 150, nullptr, menuTexture, 250, 100);
+	m_exitButton = new GUI_Button(20, 150, nullptr, signTexture, 924, 496, 342, 192);
 	m_exitButton->SetLabel(new GUI_Label(90, 30, m_exitButton, font, "Exit"));
 
 	m_panel = new GUI_Panel(200, 200, nullptr, menuTexture);
