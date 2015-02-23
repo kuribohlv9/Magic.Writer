@@ -289,11 +289,6 @@ void GameState::Draw()
 		if (m_monsters[i]->IsActive())
 		{
 			m_monsters[i]->Draw(m_drawManager);
-			sf::RectangleShape shape;
-			shape.setPosition(m_monsters[i]->GetCollider()->GetArea().left, m_monsters[i]->GetCollider()->GetArea().top);
-			shape.setSize(sf::Vector2f(m_monsters[i]->GetCollider()->GetArea().width, m_monsters[i]->GetCollider()->GetArea().height));
-			shape.setFillColor(sf::Color(0, 255, 0, 125));
-			m_drawManager->Draw(shape, sf::RenderStates::Default);
 		}
 	}
 
