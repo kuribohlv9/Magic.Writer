@@ -79,11 +79,16 @@
     <ClCompile Include="Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Particle.cpp">
       <Filter>Source Files\Particle</Filter>
     </ClCompile>
     <ClCompile Include="ParticleEmitter.cpp">
       <Filter>Source Files\Particle</Filter>
+=======
+    <ClCompile Include="LosingState.cpp">
+      <Filter>Source Files\States</Filter>
+>>>>>>> origin/master
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="Utility.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LosingState.h">
+      <Filter>Header Files\States</Filter>
     </ClInclude>
     <ClInclude Include="Bubble.h">
       <Filter>Header Files</Filter>

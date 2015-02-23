@@ -6,6 +6,7 @@ enum ScreenState
 	STATE_INVALID,
 	STATE_MENU,
 	STATE_GAME,
+	STATE_LOSING
 };
 
 class State
