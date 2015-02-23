@@ -29,6 +29,7 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="WaveManager.cpp" />
     <ClCompile Include="WordManager.cpp" />
+    <ClCompile Include="Wave.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -62,6 +63,7 @@
     <ClInclude Include="Utility.h" />
     <ClInclude Include="WaveManager.h" />
     <ClInclude Include="WordManager.h" />
+    <ClInclude Include="Wave.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

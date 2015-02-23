@@ -19,6 +19,7 @@
 #include "Player.h"
 #include "Bubble.h"
 #include "Utility.h"
+#include "Wave.h"
 
 #include <iostream>
 
@@ -35,7 +36,7 @@ GameState::GameState()
 	m_waveManager = new WaveManager();
 
 	//Load background texture
-	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background.png");
+	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background_copy.png");
 	m_backgroundSprite.setTexture(*texture);
 	texture = m_textureManager->LoadTexture("assets/sprites/ice_background.png");
 	m_ice_backgroundSprite.setTexture(*texture);
@@ -105,6 +106,14 @@ GameState::GameState()
 			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 226, 220, 45, ITEM_HOT, texture);
 			m_monsters.push_back(iceMonster);
 		}
+	}
+
+	texture = m_textureManager->LoadTexture("assets/sprites/wave_spritesheet.png");
+	//Wave pool
+	for (int i = 0; i < 5; i++)
+	{
+		Wave* wave = new Wave(texture);
+		m_waves.push_back(wave);
 	}
 }
 GameState::~GameState()
@@ -200,6 +209,12 @@ bool GameState::Update(float deltaTime)
 		}
 	}
 
+	//Update waves
+	for (int i = 0; i < m_waves.size(); i++)
+	{
+		m_waves[i]->Update(deltaTime);
+	}
+
 	//Increase score if player enters correct key
 	if (m_wordManager->GetCorrectKey())
 	{
@@ -231,7 +246,7 @@ bool GameState::Update(float deltaTime)
 	}
 	else
 	{
-		return false;
+		//return false;
 	}
 }
 void GameState::CheckCollision()
@@ -310,6 +325,12 @@ void GameState::Draw()
 
 	//Draw player
 	m_player->Draw(m_drawManager);
+
+	//Draw waves
+	for (int i = 0; i < m_waves.size(); i++)
+	{
+		m_waves[i]->Draw(m_drawManager);
+	}
 
 	//Draw bubbles
 	for (int i = 0; i < m_bubbles.size(); i++)

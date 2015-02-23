@@ -31,8 +31,8 @@ GameObject* Collider::GetParent()
 
 void Collider::SetPosition(float x, float y)
 {
-	m_area.left = x;
-	m_area.top = y;
+	m_area.left = x - m_area.width / 2 + m_xOffset;
+	m_area.top = y - m_area.height / 2 + m_yOffset;
 }
 
 void Collider::SetWidthHeight(int width, int height)

@@ -12,6 +12,7 @@ class Item;
 class Bubble;
 class Monster;
 class Player;
+class Wave;
 
 class GameState : public State
 {
@@ -53,6 +54,9 @@ private:
 
 	//Monster
 	std::vector<Monster*> m_monsters;
+
+	//Waves
+	std::vector<Wave*> m_waves;
 
 	//Background
 	sf::Sprite m_backgroundSprite;

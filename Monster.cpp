@@ -27,26 +27,30 @@ Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spr
 	m_sprite.setTexture(*texture);
 	m_sprite.setTextureRect(sf::IntRect(m_sprite_width * 2, 0, m_sprite_width, m_sprite_height));
 	m_sprite.setOrigin(m_sprite_width / 2.0f, m_sprite_height / 2.0f);
+	m_sprite.scale(0.5f, 0.5f);
 
 	//Head sprite
 	m_head_sprite.setTexture(*texture);
 	m_head_sprite.setOrigin(m_sprite_width / 2.0f, m_sprite_height / 2.0f);
 	m_head_animator = new Animator(&m_head_sprite, animationFile);
 	m_head_animator->SetAnimation("move");
+	m_head_sprite.scale(0.5f, 0.5f);
 
 	//Snail sprite
 	m_snail_sprite.setTexture(*texture);
 	m_snail_sprite.setTextureRect(sf::IntRect(m_sprite_width, 0, m_sprite_width, m_sprite_height));
 	m_snail_sprite.setOrigin(m_sprite_width / 2.0f, m_sprite_height / 2.0f);
 	m_snail_sprite.setColor(sf::Color(255, 255, 255, 0));
+	m_snail_sprite.scale(0.5f, 0.5f);
 
 	//Foam sprite
 	m_foam_sprite.setTexture(*texture);
 	m_foam_sprite.setTextureRect(sf::IntRect(m_sprite_width * 3, 0, m_sprite_width, m_sprite_height));
 	m_foam_sprite.setOrigin(m_sprite_width / 2.0f, m_sprite_height / 2.0f);
+	m_foam_sprite.scale(0.5f, 0.5f);
 
 	//Collider
-	m_collider = new Collider(-15, 0);
+	m_collider = new Collider(-20, 0);
 	m_collider->SetParent(this);
 	m_collider->SetWidthHeight(m_sprite_width / 4, m_sprite_height / 4);
 
@@ -103,11 +107,17 @@ void Monster::Draw(DrawManager* drawManager)
 		hp.setRadius(10);
 		drawManager->Draw(hp, sf::RenderStates::Default);
 	}
+
+	/*sf::RectangleShape shape;
+	shape.setFillColor(sf::Color(0, 255, 0, 125));
+	shape.setPosition(m_collider->GetArea().left, m_collider->GetArea().top);
+	shape.setSize(sf::Vector2f(m_collider->GetArea().width, m_collider->GetArea().height));
+	drawManager->Draw(shape, sf::RenderStates::Default);*/
 }
 
 void Monster::Update(float deltaTime)
 {
-	m_emitter->Update(deltaTime);
+	//m_emitter->Update(deltaTime);
 	m_emitter->SetPosition(sf::Vector2f(GetX() - 10, GetY()));
 	m_totalLifeTime += deltaTime;
 
@@ -239,6 +249,16 @@ void Monster::HandleBodyParts()
 		foam_color.a = foam_alpha;
 		m_foam_sprite.setColor(foam_color);
 	}
+
+	float scale = (800 - (800 - m_y - 200)) / 800;
+
+	if (scale > 1)
+		scale = 1;
+	else if (scale < 0.3f)
+		scale = 0.3f;
+	m_sprite.setScale(scale, scale);
+	m_head_sprite.setScale(scale, scale);
+	m_foam_sprite.setScale(scale, scale);
 }
 
 void Monster::Activate()
