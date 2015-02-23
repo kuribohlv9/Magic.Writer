@@ -9,7 +9,7 @@ class Collider;
 class GUI_Button : public GUI_Element
 {
 public:
-	GUI_Button(int x, int y, GUI_Element* parent, sf::Texture* texture, int textureX, int textureY, int buttonWidth, int buttonHeight);
+	GUI_Button(int x, int y, GUI_Element* parent, sf::Texture* texture, sf::IntRect sourceRectangle);
 	~GUI_Button();
 	void Update();
 	void Draw(DrawManager* drawManager);
@@ -25,8 +25,7 @@ private:
 	Collider* m_collider;
 	GUI_Label* m_label;
 	sf::Sprite m_sprite;
+	sf::IntRect m_buttonRectangle;
 	bool m_hovered;
 	bool m_pressed;
-	int m_buttonHeight;
-	int m_buttonWidth;
 };

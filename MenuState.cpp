@@ -9,28 +9,24 @@
 //GUI elements
 #include "GUI_Button.h"
 #include "GUI_Label.h"
-#include "GUI_Panel.h"
 
 MenuState::MenuState()
 {
 	m_textureManager = ServiceLocator<TextureManager>::GetService();
 	m_drawManager = ServiceLocator<DrawManager>::GetService();
-
 	m_nextState = STATE_INVALID;
 
-	sf::Texture* signTexture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");
-	sf::Texture* menuTexture = m_textureManager->LoadTexture("assets/sprites/spritesheet_menu.png");
-	sf::Font* font = m_textureManager->LoadFont("assets/fonts/font.ttf");
+	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");;
 
-	m_playButton = new GUI_Button(20, 20, nullptr, signTexture, 34, 13, 427, 202);
-	m_playButton->SetLabel(new GUI_Label(90, 30, m_playButton, font, "Play"));
+	m_poleSprite.setTexture(*texture);
+	m_poleSprite.setTextureRect(sf::IntRect(0, 219 * 2, 167, 775));
+	m_poleSprite.setPosition(ScreenWidth / 2, ScreenHeight - 775);
 
-	m_exitButton = new GUI_Button(20, 150, nullptr, signTexture, 924, 496, 342, 192);
-	m_exitButton->SetLabel(new GUI_Label(90, 30, m_exitButton, font, "Exit"));
+	m_playButton = new GUI_Button(ScreenWidth / 2 - 30, 300, nullptr, texture, sf::IntRect(0, 0, 431, 219));
+	m_exitButton = new GUI_Button(ScreenWidth / 2 - 110, 700, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
 
-	m_panel = new GUI_Panel(200, 200, nullptr, menuTexture);
-	m_panel->AddChild(m_playButton);
-	m_panel->AddChild(m_exitButton);
+	texture = m_textureManager->LoadTexture("assets/sprites/background.png");
+	m_backgroundSprite.setTexture(*texture);
 }
 MenuState::~MenuState()
 {
@@ -39,12 +35,8 @@ MenuState::~MenuState()
 }
 bool MenuState::Update(float deltaTime)
 {
-	m_panel->Update();
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-	{
-		m_panel->SetPosition(300, 100);
-	}
-
+	m_playButton->Update();
+	m_exitButton->Update();
 	if (m_playButton->IsPressed())
 	{
 		m_nextState = STATE_GAME;
@@ -59,7 +51,11 @@ bool MenuState::Update(float deltaTime)
 }
 void MenuState::Draw()
 {
-	m_panel->Draw(m_drawManager);
+	m_drawManager->Draw(m_backgroundSprite, sf::RenderStates::Default);
+	m_drawManager->Draw(m_poleSprite, sf::RenderStates::Default);
+
+	m_playButton->Draw(m_drawManager);
+	m_exitButton->Draw(m_drawManager);
 }
 
 void MenuState::Enter()

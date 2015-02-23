@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{67A984FA-67FC-46B8-AC08-E9B55F98A49E}</ProjectGuid>
+    <ProjectGuid>{72763EFA-5E5F-4868-BE40-8165116A6102}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MagicWriter</RootNamespace>
   </PropertyGroup>
@@ -97,7 +97,6 @@
     <ClInclude Include="GUI_Button.h" />
     <ClInclude Include="GUI_Element.h" />
     <ClInclude Include="GUI_Label.h" />
-    <ClInclude Include="GUI_Panel.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemManager.h" />
@@ -131,7 +130,6 @@
     <ClCompile Include="GUI_Button.cpp" />
     <ClCompile Include="GUI_Element.cpp" />
     <ClCompile Include="GUI_Label.cpp" />
-    <ClCompile Include="GUI_Panel.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemManager.cpp" />
