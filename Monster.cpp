@@ -117,7 +117,7 @@ void Monster::Draw(DrawManager* drawManager)
 
 void Monster::Update(float deltaTime)
 {
-	//m_emitter->Update(deltaTime);
+	m_emitter->Update(deltaTime);
 	m_emitter->SetPosition(sf::Vector2f(GetX() - 10, GetY()));
 	m_totalLifeTime += deltaTime;
 

@@ -57,6 +57,7 @@ private:
 
 	//Waves
 	std::vector<Wave*> m_waves;
+	float m_waveTimer;
 
 	//Background
 	sf::Sprite m_backgroundSprite;

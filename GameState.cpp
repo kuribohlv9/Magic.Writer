@@ -36,9 +36,9 @@ GameState::GameState()
 	m_waveManager = new WaveManager();
 
 	//Load background texture
-	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background_copy.png");
+	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background/background.png");
 	m_backgroundSprite.setTexture(*texture);
-	texture = m_textureManager->LoadTexture("assets/sprites/ice_background.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/background/ice_background.png");
 	m_ice_backgroundSprite.setTexture(*texture);
 
 	//Instantiate player
@@ -46,7 +46,7 @@ GameState::GameState()
 	m_player = new Player(texture);
 
 	//Instantiate thought bubbles
-	texture = m_textureManager->LoadTexture("assets/sprites/bubbles_spritesheet.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/background/bubbles_spritesheet.png");
 	for (int i = 0; i < 3; i++)
 	{
 		int yOffset = 0;
@@ -210,8 +210,24 @@ bool GameState::Update(float deltaTime)
 	}
 
 	//Update waves
+	m_waveTimer += deltaTime;
+	if (m_waveTimer >= 5)
+	{
+		for (int i = 0; i < m_waves.size(); i++)
+		{
+			if (!m_waves[i]->IsActive())
+			{
+				m_waves[i]->SetActive(true);
+				m_waveTimer = 0;
+				break;
+			}
+		}
+	}
 	for (int i = 0; i < m_waves.size(); i++)
 	{
+		if (!m_waves[i]->IsActive())
+			continue;
+
 		m_waves[i]->Update(deltaTime);
 	}
 
@@ -314,6 +330,14 @@ void GameState::Draw()
 		m_drawManager->Draw(m_ice_backgroundSprite, sf::RenderStates::Default);
 	}
 
+	//Draw waves
+	for (int i = 0; i < m_waves.size(); i++)
+	{
+		if (!m_waves[i]->IsActive())
+			continue;
+		m_waves[i]->Draw(m_drawManager);
+	}
+
 	//Draw monster
 	for (int i = 0; i < m_monsters.size(); i++)
 	{
@@ -326,11 +350,7 @@ void GameState::Draw()
 	//Draw player
 	m_player->Draw(m_drawManager);
 
-	//Draw waves
-	for (int i = 0; i < m_waves.size(); i++)
-	{
-		m_waves[i]->Draw(m_drawManager);
-	}
+	
 
 	//Draw bubbles
 	for (int i = 0; i < m_bubbles.size(); i++)

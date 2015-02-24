@@ -59,14 +59,16 @@ void GameObject::Move(float x, float y)
 {
 	m_x += x;
 	m_y += y;
-	m_collider->Refresh();
+	if (m_collider)
+		m_collider->Refresh();
 	m_sprite.setPosition(m_x, m_y);
 }
 void GameObject::SetPosition(float x, float y)
 {
 	m_x = x;
 	m_y = y;
-	m_collider->Refresh();
+	if (m_collider)
+		m_collider->Refresh();
 	m_sprite.setPosition(m_x, m_y);
 }
 void GameObject::SetActive(bool value)
