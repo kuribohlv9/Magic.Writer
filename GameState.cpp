@@ -253,6 +253,9 @@ bool GameState::Update(float deltaTime)
 	if (m_wordManager->GetCorrectKey())
 	{
 		m_score += 10;
+		
+		//Chanting animation
+		m_player->ChantingAnimation();
 	}
 
 	if (m_score != m_lastScore)

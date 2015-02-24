@@ -30,6 +30,7 @@ public:
 	void Knockdown();
 	bool IsStunned();
 	int GetCurrentLane();
+	void ChantingAnimation();
 
 private:
 	void HandleMovement();

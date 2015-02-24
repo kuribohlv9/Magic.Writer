@@ -34,6 +34,7 @@ Player::Player(sf::Texture* texture)
 	m_lane = 1;
 	ChangeLane(1);
 }
+
 Player::~Player()
 {
 	//Delete the newed animator
@@ -54,22 +55,6 @@ void Player::Update(float deltaTime)
 
 	switch (m_state)
 	{
-	case PLAYER_IDLE:
-		//Check for keyboard input, if true.... switch to chanting state
-		if (m_inputManager->GetInputChar() != ' ')
-		{
-			m_state = PLAYER_CHANTING;
-			m_animator->SetAnimation("chanting");
-		}
-		break;
-
-	case PLAYER_CHANTING:
-		if (m_inputManager->GetInputChar() != ' ')
-		{
-			m_animator->Update(1000);
-		}
-		break;
-
 	case PLAYER_HOLDING:
 		break;
 	case PLAYER_THROWING:
@@ -94,6 +79,7 @@ void Player::Update(float deltaTime)
 		break;
 	}	
 }
+
 void Player::Draw(DrawManager* drawManager)
 {
 	//Draw player sprite
@@ -152,6 +138,7 @@ void Player::SetItem(Item* item)
 		m_animator->SetAnimation("throwing");
 	}
 }
+
 Item* Player::GetItem()
 {
 	//Returns an item if the wizard is holding one, else it returns nullptr
@@ -170,6 +157,7 @@ void Player::HandleMovement()
 		ChangeLane(1);
 	}
 }
+
 void Player::Knockdown()
 {
 	if (m_state == PLAYER_KNOCKEDDOWN)
@@ -194,11 +182,27 @@ void Player::Knockdown()
 
 	ChangeLane(knockDirection);
 }
+
 bool Player::IsStunned()
 {
 	return (m_state == PLAYER_KNOCKEDDOWN);
 }
+
 int Player::GetCurrentLane()
 {
 	return m_lane;
+}
+
+void Player::ChantingAnimation()
+{
+	if (m_state == PLAYER_IDLE)
+	{
+			m_state = PLAYER_CHANTING;
+			m_animator->SetAnimation("chanting");
+	}
+	if (m_state == PLAYER_CHANTING)
+	{
+		m_animator->Update(1000);	
+	}
+
 }
