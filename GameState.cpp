@@ -118,12 +118,6 @@ GameState::GameState()
 }
 GameState::~GameState()
 {
-	m_drawManager = nullptr;
-	m_textureManager = nullptr;
-	m_inputManager = nullptr;
-	m_wordManager = nullptr;
-	m_itemManager = nullptr;
-
 	//Delete all bubbles
 	for (int i = 0; i < m_bubbles.size(); i++)
 	{
@@ -142,20 +136,40 @@ GameState::~GameState()
 	}
 	m_monsters.clear();
 
+	//Delete all waves
+	auto itr = m_waves.begin();
+	while (itr != m_waves.end())
+	{
+		delete *itr;
+		++itr;
+	}
+	m_waves.clear();
 
 	//Delete player
 	if (m_player)
 	{
 		delete m_player;
+		m_player = nullptr;
 	}
 
 	//Delete managers
 	if (m_wordManager)
+	{
 		delete m_wordManager;
+		m_wordManager = nullptr;
+	}
+		
 	if (m_itemManager)
+	{
 		delete m_itemManager;
+		m_itemManager = nullptr;
+	}
+		
 	if (m_waveManager)
+	{
 		delete m_waveManager;
+		m_waveManager = nullptr;
+	}	
 }
 
 bool GameState::Update(float deltaTime)

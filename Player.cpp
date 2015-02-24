@@ -41,6 +41,7 @@ Player::~Player()
 	if (m_animator)
 	{
 		delete m_animator;
+		m_animator = nullptr;
 	}
 
 	//Point item towards nullptr

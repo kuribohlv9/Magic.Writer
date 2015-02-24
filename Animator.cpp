@@ -20,7 +20,8 @@ Animator::~Animator()
 	auto it = m_animations.begin();
 	while (it != m_animations.end())
 	{
-		delete (it->second);
+		delete it->second;
+		it->second = nullptr;
 		++it;
 	}
 
@@ -102,9 +103,9 @@ void Animator::LoadAnimations(const std::string& filename)
 	stream >> frameCount;
 	stream >> looping;
 
+	
 	//Create a new animation
 	Animation* animation = new Animation(looping);
-
 
 	//Start a loop for reading each frame in the .txt file
 	while (!stream.eof())
@@ -139,6 +140,9 @@ void Animator::LoadAnimations(const std::string& filename)
 			animation = new Animation(looping);
 		}
 	}
+
+	//Delete spare animation(ugly)
+	delete animation;
 	//Close the file stream
 	stream.close();
 }

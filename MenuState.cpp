@@ -25,13 +25,22 @@ MenuState::MenuState()
 	m_playButton = new GUI_Button(ScreenWidth / 2 - 30, 300, nullptr, texture, sf::IntRect(0, 0, 431, 219));
 	m_exitButton = new GUI_Button(ScreenWidth / 2 - 110, 700, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
 
-	texture = m_textureManager->LoadTexture("assets/sprites/background.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/background/background.png");
 	m_backgroundSprite.setTexture(*texture);
 }
 MenuState::~MenuState()
 {
 	m_textureManager = nullptr;
 	m_drawManager = nullptr;
+	
+	if (m_playButton)
+	{
+		delete m_playButton;
+	}
+	if (m_exitButton)
+	{
+		delete m_exitButton;
+	}
 }
 bool MenuState::Update(float deltaTime)
 {
