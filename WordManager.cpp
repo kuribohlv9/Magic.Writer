@@ -212,6 +212,15 @@ void WordManager::SetNewWord(const std::string& newWord)
 	}
 }
 
+std::vector<bool> WordManager::GetActiveBubbles()
+{
+	std::vector<bool> results;
+
+	results.push_back(m_words_active[0]);
+	results.push_back(m_words_active[1]);
+	results.push_back(m_words_active[2]);
+	return results;
+}
 bool WordManager::GetCorrectKey()
 {
 	return m_correctKey;

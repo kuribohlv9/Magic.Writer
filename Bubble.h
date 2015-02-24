@@ -12,6 +12,7 @@ public:
 	void Draw(DrawManager* drawManager);
 	void Update(float deltaTime);
 
+	void SetAlpha(int alpha);
 	void SetItem(Item* item);
 	Item* GetItem();
 	sf::Vector2f GetPosition();

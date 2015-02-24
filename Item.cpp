@@ -70,4 +70,5 @@ void Item::Reset()
 	m_sprite.setRotation(m_rotation);
 
 	m_sprite.setScale(0.5, 0.5);
+	m_sprite.setColor(sf::Color::White);
 }

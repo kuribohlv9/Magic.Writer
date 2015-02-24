@@ -183,10 +183,16 @@ bool GameState::Update(float deltaTime)
 		m_activeItems[i]->Update(deltaTime);
 	}
 
+
+	//Update bubbles
 	for (int i = 0; i < m_bubbles.size(); i++)
 	{
 		m_bubbles[i]->Update(deltaTime);
 		m_wordManager->SetWordPosition(m_bubbles[i]->GetPosition(), i);
+
+		bool active = m_wordManager->GetActiveBubbles().at(i);
+		int alpha = (active) ? 255 : 80;
+		m_bubbles[i]->SetAlpha(alpha);
 	}
 
 	//Update player

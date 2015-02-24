@@ -20,6 +20,7 @@ public:
 	void SetWordPosition(sf::Vector2f position, int wordIndex);
 
 	bool GetCorrectKey();
+	std::vector<bool> GetActiveBubbles();
 
 private:
 	TextureManager* m_textureManager;

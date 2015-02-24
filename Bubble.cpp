@@ -28,14 +28,21 @@ Bubble::Bubble(float x, float y, sf::Texture* texture, Player* player)
 	m_lanePositions[4] = 1476;
 }
 
-
+void Bubble::SetAlpha(int alpha)
+{
+	m_sprite.setColor(sf::Color(255, 255, 255, alpha));
+	
+	if (m_item)
+	{
+		m_item->GetSprite()->setColor(sf::Color(255, 255, 255, alpha));
+	}
+}
 void Bubble::SetItem(Item* item)
 {
 	m_item = item;
 	m_item->SetPosition(m_sprite.getPosition().x, m_sprite.getPosition().y - 10);
 	
 	int x = (int)(item->GetProperty());
-
 	m_sprite.setTextureRect(sf::IntRect(x * m_width, 0, m_width, m_height));
 }
 Item* Bubble::GetItem()
@@ -66,14 +73,7 @@ void Bubble::Update(float deltaTime)
 }
 void Bubble::Draw(DrawManager* drawManager)
 {
-	int x = (int)(m_item->GetProperty());
-
-	
-	m_sprite.setTextureRect(sf::IntRect(x * m_width, 0, m_width, m_height));
 	drawManager->Draw(m_sprite, sf::RenderStates::Default);
 	if (m_item)
 		m_item->Draw(drawManager);
-
-	m_sprite.setTextureRect(sf::IntRect(0, m_height, m_width, m_height));
-	drawManager->Draw(m_sprite, sf::RenderStates::Default);
 }
