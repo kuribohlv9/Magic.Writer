@@ -310,6 +310,7 @@ void GameState::CheckCollision()
 				monster->Damage(item->GetProperty(), m_score);
 				item->SetActive(false);
 				item->SetInGame(false);
+				item->SetState(ITEM_HIT);
 
 				if (monster->IsActive() == false)
 				{
@@ -466,6 +467,7 @@ void GameState::ConvertWordToItem()
 		{
 			//Activate item
 			spawnedItem->SetActive(true);
+			spawnedItem->SetState(ITEM_FLYING);
 			m_activeItems.push_back(spawnedItem);
 			m_player->SetItem(nullptr);
 		}

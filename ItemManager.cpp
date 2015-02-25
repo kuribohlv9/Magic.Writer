@@ -9,10 +9,18 @@
 ItemManager::ItemManager()
 {
 	m_textureManager = ServiceLocator<TextureManager>::GetService();
-	AddItems("assets/items/item_alive.png", "assets/items/item_alive.txt", ITEM_ALIVE);
-	AddItems("assets/items/item_dead.png", "assets/items/item_dead.txt", ITEM_DEAD);
-	AddItems("assets/items/item_hot.png", "assets/items/item_hot.txt", ITEM_HOT);
-	AddItems("assets/items/item_cold.png", "assets/items/item_cold.txt", ITEM_COLD);
+
+	sf::Texture* particle = m_textureManager->LoadTexture("assets/sprites/items/particle_alive.png");
+	AddItems("assets/sprites/items/item_alive.png", "assets/sprites/items/item_alive.txt", ITEM_ALIVE, particle);
+
+	particle = m_textureManager->LoadTexture("assets/sprites/items/particle_dead.png");
+	AddItems("assets/sprites/items/item_dead.png", "assets/sprites/items/item_dead.txt", ITEM_DEAD, particle);
+
+	particle = m_textureManager->LoadTexture("assets/sprites/items/particle_hot.png");
+	AddItems("assets/sprites/items/item_hot.png", "assets/sprites/items/item_hot.txt", ITEM_HOT, particle);
+
+	particle = m_textureManager->LoadTexture("assets/sprites/items/particle_cold.png");
+	AddItems("assets/sprites/items/item_cold.png", "assets/sprites/items/item_cold.txt", ITEM_COLD, particle);
 }
 
 ItemManager::~ItemManager()
@@ -28,7 +36,7 @@ ItemManager::~ItemManager()
 	m_items.clear();
 }
 
-void ItemManager::AddItems(const std::string& spritesheetFilename, const std::string& textFilename, ItemProperty property)
+void ItemManager::AddItems(const std::string& spritesheetFilename, const std::string& textFilename, ItemProperty property, sf::Texture* particle)
 {
 	//Load spritesheet for items
 	sf::Texture* itemSpriteSheet = m_textureManager->LoadTexture(spritesheetFilename);
@@ -37,33 +45,40 @@ void ItemManager::AddItems(const std::string& spritesheetFilename, const std::st
 	std::ifstream stream;
 	stream.open(textFilename);
 
-	//Create a sourcerectangle (part of a texture)
-	int itemSize = 128;
-	sf::IntRect sourceRectangle = sf::IntRect(0, 0, itemSize, itemSize);
+	
 
-	//What row in the spritesheet we are on
-	int row = 0;
+	//Create a sourcerectangle (part of a texture)
+	Item* item = new Item(itemSpriteSheet, particle, property, "");
+
+	int frameCount = -1;
 	while (!stream.eof())
 	{
-		//Read item name from textfile
-		std::string itemName;
-		std::getline(stream, itemName);
-
-		if (itemName == "-")
+		if (frameCount < 0)
 		{
-			//Change spritesheet row
-			sourceRectangle.left = 0;
-			sourceRectangle.top += itemSize;
-			row++;
+			//Read item name from textfile
+			std::string itemName;
+			stream >> itemName;//std::getline(stream, itemName);
+			item->SetName(itemName);
 		}
-		else
-		{
-			Item* item = new Item(itemSpriteSheet, sourceRectangle, property, itemName);
-			m_items.push_back(item);
 
-			sourceRectangle.left += itemSize;
+		sf::IntRect sourceRectangle;
+		stream >> sourceRectangle.left;
+		stream >> sourceRectangle.top;
+		stream >> sourceRectangle.width;
+		stream >> sourceRectangle.height;
+		frameCount++;
+
+		item->SetSourceRectangle(frameCount, sourceRectangle);
+
+		if (frameCount >= 2)
+		{
+			frameCount = -1;
+			m_items.push_back(item);
+			item = new Item(itemSpriteSheet, particle, property, "");
 		}
 	}
+
+	delete item;
 	 
 	stream.close();
 }

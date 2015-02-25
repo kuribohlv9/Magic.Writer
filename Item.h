@@ -1,26 +1,42 @@
 #pragma once
 #include "GameObject.h"
 
+enum ItemState
+{
+	ITEM_HOLDING,
+	ITEM_FLYING,
+	ITEM_HIT
+};
+
+class ParticleEmitter;
+class DrawManager;
 class Item : public GameObject
 {
 public:
-	Item(sf::Texture* texture, sf::IntRect sourceRectangle, ItemProperty property, const std::string& name);
+	Item(sf::Texture* texture, sf::Texture* particle, ItemProperty property, const std::string& name);
+	~Item();
 
 	void Update(float deltaTime);
+	void Draw(DrawManager* drawManager);
 
 	std::string GetName();
 	ItemProperty GetProperty();
 
 	bool IsInGame();
 	void SetInGame(bool state);
+	void SetSourceRectangle(int index, sf::IntRect rectangle);
+	void SetName(const std::string& name);
 
 	void Reset();
+	void SetState(ItemState state);
 
 private:
+	ItemState m_state;
 	std::string m_name;
 	ItemProperty m_property;
+	sf::IntRect m_sourceRectangles[3];
+	ParticleEmitter* m_emitter;
 
 	bool m_inGame;
 	float m_speed;
-	float m_rotation;
 };
