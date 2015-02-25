@@ -5,4 +5,4 @@ pig
 fireant
 hippopotamus
 chick
-Kangaroo
+kangaroo

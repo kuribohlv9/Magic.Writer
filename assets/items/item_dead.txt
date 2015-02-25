@@ -5,4 +5,4 @@ tombstone
 dracula
 coffin
 cross
-Mummy
+mummy

@@ -7,6 +7,7 @@ class DrawManager;
 class TextureManager;
 class InputManager;
 class WaveManager;
+class ParticleEmitter;
 
 class Item;
 class Bubble;

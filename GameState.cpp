@@ -20,8 +20,7 @@
 #include "Bubble.h"
 #include "Utility.h"
 #include "Wave.h"
-
-#include <iostream>
+#include "ParticleEmitter.h"
 
 GameState::GameState()
 {
@@ -184,7 +183,6 @@ bool GameState::Update(float deltaTime)
 	m_waveManager->Update(deltaTime);
 	if (m_waveManager->CanSpawnMonster())
 	{
-		std::cout << "Spawn monster" << std::endl;
 		SpawnMonster();
 	}
 
