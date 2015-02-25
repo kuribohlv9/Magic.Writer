@@ -46,6 +46,7 @@ bool MenuState::Update(float deltaTime)
 {
 	m_playButton->Update();
 	m_exitButton->Update();
+
 	if (m_playButton->IsPressed())
 	{
 		m_nextState = STATE_GAME;

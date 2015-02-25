@@ -27,6 +27,8 @@ private:
 	//GUI elements
 	GUI_Button* m_playButton;
 	GUI_Button* m_exitButton;
+	GUI_Button* m_highscoreButton;
+	GUI_Button* m_helpButton;
 	sf::Sprite m_poleSprite;
 
 	sf::Sprite m_backgroundSprite;
