@@ -1,0 +1,28 @@
+Human_scream01			7_year_old_boy_screams
+Human_scream02			ah_lady_scream
+Human_scream03			male_scream_short
+Human_scream04			wilhelm_scream
+
+Crowd_cheering			small_exterior_crowd_applause_with_cheering
+
+Monster_hurt01			bear_growl_001
+Monster_hurt02			bear_growl_002
+Monster_hurt03			monster_scream
+Monster_hurt04
+Monster_defeated01		animal_lion_single_roar
+Monster_defeated02		horror_monster_scream_001
+Monster_defeated03		minotaur_die
+Monster_defeated04
+Monster_passive_sound01		monster_passionate_mating_vocalisations
+Monster_passive_sound02
+
+Ocean_wave01			Ocean_wave
+
+Wizard_walk_sound		footsteps_on_soft_foam_play_mat
+Wizard_spell_complete01		comedy_pop_finger_in_mouth_001
+Wizard_spell_complete02		comedy_pop_finger_in_mouth_002
+Wizard_hurt			solarplexis_hit
+
+Main_menu_sound			Zanzibar
+Main_gameplay_background_sound	Dubakupado
+
