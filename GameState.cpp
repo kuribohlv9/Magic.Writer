@@ -4,6 +4,7 @@
 
 //Manager
 #include "ServiceLocator.h"
+#include "AudioManager.h"
 #include "DrawManager.h"
 #include "TextureManager.h"
 #include "InputManager.h"
@@ -22,6 +23,7 @@
 #include "Wave.h"
 #include "ParticleEmitter.h"
 
+
 GameState::GameState()
 {
 	srand(time(NULL));
@@ -30,6 +32,7 @@ GameState::GameState()
 	m_textureManager = ServiceLocator<TextureManager>::GetService();
 	m_drawManager = ServiceLocator<DrawManager>::GetService();
 	m_inputManager = ServiceLocator<InputManager >::GetService();
+	m_audioManager = ServiceLocator<AudioManager>::GetService();
 	m_wordManager = new WordManager();
 	m_itemManager = new ItemManager();
 	m_waveManager = new WaveManager();

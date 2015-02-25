@@ -1,6 +1,7 @@
 #pragma once
 #include "State.h"
 
+class AudioManager;
 class ItemManager;
 class WordManager;
 class DrawManager;
@@ -40,6 +41,7 @@ private:
 	DrawManager* m_drawManager;
 	TextureManager* m_textureManager;
 	InputManager* m_inputManager;
+	AudioManager* m_audioManager;
 
 	WordManager* m_wordManager;
 	ItemManager* m_itemManager;
