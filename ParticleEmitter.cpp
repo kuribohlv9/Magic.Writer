@@ -35,12 +35,16 @@ ParticleEmitter::~ParticleEmitter()
 
 void ParticleEmitter::Update(float deltaTime)
 {
-	//Activate new particles
+	//Increase timer
 	m_timer += deltaTime;
 
+	//Check for timer tick
 	if (m_timer > m_spawnRate)
 	{
+		//Reset timer
 		m_timer = 0;
+
+		//Create a new particle
 		CreateParticle();
 	}
 
