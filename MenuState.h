@@ -25,11 +25,15 @@ private:
 	ScreenState m_nextState;
 
 	//GUI elements
+	std::vector<GUI_Button*> m_buttons;
 	GUI_Button* m_playButton;
 	GUI_Button* m_exitButton;
 	GUI_Button* m_highscoreButton;
 	GUI_Button* m_helpButton;
+	GUI_Button* m_helpExitButton;
 	sf::Sprite m_poleSprite;
+
+	bool m_helpScreen;
 
 	sf::Sprite m_backgroundSprite;
 };
