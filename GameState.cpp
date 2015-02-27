@@ -12,6 +12,7 @@
 #include "WordManager.h"
 #include "ItemManager.h"
 #include "WaveManager.h"
+#include "PowerUpManager.h"
 
 //Classes
 #include "Monster.h"
@@ -36,6 +37,7 @@ GameState::GameState()
 	m_wordManager = new WordManager();
 	m_itemManager = new ItemManager();
 	m_waveManager = new WaveManager();
+	m_powerUpManager = new PowerUpManager(&m_monsters, &m_activeItems);
 
 	//Load background texture
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background/background.png");
@@ -172,6 +174,12 @@ GameState::~GameState()
 		delete m_waveManager;
 		m_waveManager = nullptr;
 	}	
+
+	if (m_powerUpManager)
+	{
+		delete m_powerUpManager;
+		m_powerUpManager = nullptr;
+	}
 }
 
 bool GameState::Update(float deltaTime)
@@ -278,7 +286,8 @@ bool GameState::Update(float deltaTime)
 
 	m_lastScore = m_score;
 
-	HandleFreeze(deltaTime);
+	m_powerUpManager->Update(deltaTime);
+
 
 	if (m_life > 0)
 	{
@@ -308,7 +317,13 @@ void GameState::CheckCollision()
 			if (CollisionManager::Check(item->GetCollider(), monster->GetCollider()))
 			{
 				monster->Damage(item->GetProperty(), m_score);
-				item->SetActive(false);
+				if (m_powerUpManager->GetPierce())
+				{
+					item->SetActive(true);
+					m_powerUpManager->ActivatePierce(1);
+				}
+				else
+					item->SetActive(false);
 				item->SetInGame(false);
 				item->SetState(ITEM_HIT);
 
@@ -346,7 +361,7 @@ void GameState::CheckCollision()
 void GameState::Draw()
 {
 	//Draw background
-	if (!m_frozen)
+	if (!m_powerUpManager->GetFrozen())
 	{
 		m_drawManager->Draw(m_backgroundSprite, sf::RenderStates::Default);
 	}
@@ -472,49 +487,4 @@ void GameState::ConvertWordToItem()
 			m_player->SetItem(nullptr);
 		}
 	}
-}
-void GameState::HandleFreeze(float deltaTime)
-{
-	//Activate freeze powerup
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num3))
-	{
-		if (!m_frozen)
-		{
-			m_frozen = true;
-
-			//Freeze all monsters;
-			for (int i = 0; i < m_monsters.size(); i++)
-			{
-				if (!m_monsters[i]->IsActive())
-					continue;
-
-				m_monsters[i]->Freeze(true);
-			}
-
-			//Change background
-			
-		}
-	}
-
-	//Deactivate freeze powerup
-	if (m_frozen)
-	{
-		m_freezeTimer += deltaTime;
-
-		if (m_freezeTimer >= 1.5f)
-		{
-			m_freezeTimer = 0;
-			m_frozen = false;
-
-			//Unfreeze all monsters;
-			for (int i = 0; i < m_monsters.size(); i++)
-			{
-				if (!m_monsters[i]->IsActive())
-					continue;
-
-				m_monsters[i]->Freeze(false);
-			}
-		}
-	}
-	
 }

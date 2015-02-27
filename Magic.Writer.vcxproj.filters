@@ -91,6 +91,9 @@
     <ClCompile Include="Wave.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PowerUpManager.cpp">
+      <Filter>Source files\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -191,6 +194,9 @@
     </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUpManager.h">
+      <Filter>Header files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@ class DrawManager;
 class TextureManager;
 class InputManager;
 class WaveManager;
+class PowerUpManager;
 class ParticleEmitter;
 
 class Item;
@@ -34,7 +35,6 @@ private:
 	void ConvertWordToItem();
 	void CheckCollision();
 	void SpawnMonster();
-	void HandleFreeze(float deltaTime);
 
 private:
 	//Manager
@@ -46,6 +46,7 @@ private:
 	WordManager* m_wordManager;
 	ItemManager* m_itemManager;
 	WaveManager* m_waveManager;
+	PowerUpManager* m_powerUpManager;
 
 	//Item & word variables
 	std::vector<Bubble*> m_bubbles;

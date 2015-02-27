@@ -205,5 +205,4 @@ void Player::ChantingAnimation()
 	{
 		m_animator->Update(1000);	
 	}
-
 }
