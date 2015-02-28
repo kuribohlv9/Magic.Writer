@@ -14,11 +14,10 @@ Player::Player(sf::Texture* texture)
 	m_inputManager = ServiceLocator<InputManager>::GetService();
 	m_item = nullptr;
 	m_type = GAMEOBJECT_PLAYER;
-	m_state = PLAYER_IDLE;
 
 	//Animator
 	m_sprite.setTexture(*texture);
-	m_animator = new Animator(&m_sprite, "assets/sprites/wizard/wizard_animation.txt");
+	m_animator = new Animator(&m_sprite, "assets/sprites/wizard/wizard_animation2.txt");
 	m_animator->SetAnimation("idle");
 
 	//Set origin
@@ -33,6 +32,9 @@ Player::Player(sf::Texture* texture)
 	//Set start position
 	m_lane = 1;
 	ChangeLane(1);
+
+	m_state = PLAYER_IDLE;
+	m_animator->SetAnimation("idle");
 }
 
 Player::~Player()
@@ -56,8 +58,6 @@ void Player::Update(float deltaTime)
 
 	switch (m_state)
 	{
-	case PLAYER_HOLDING:
-		break;
 	case PLAYER_THROWING:
 		m_animator->Update(deltaTime);
 
@@ -71,12 +71,35 @@ void Player::Update(float deltaTime)
 		m_animator->Update(deltaTime);
 		if (m_animator->Complete())
 		{
-			m_state = PLAYER_IDLE;
-			m_animator->SetAnimation("idle");
+			if (m_item)
+			{
+				m_state = PLAYER_HOLDING;
+				m_animator->SetAnimation("holding");
+			}
+			else
+			{
+				m_state = PLAYER_IDLE;
+				m_animator->SetAnimation("idle");
+			}
 			m_sprite.setScale(1, 1);
 		}
 		break;
 	case PLAYER_JUMPING:
+		m_animator->Update(deltaTime);
+		if (m_animator->Complete())
+		{
+			if (m_item)
+			{
+				m_state = PLAYER_HOLDING;
+				m_animator->SetAnimation("holding");
+			}
+			else
+			{
+				m_state = PLAYER_IDLE;
+				m_animator->SetAnimation("idle");
+			}
+			m_sprite.setScale(1, 1);
+		}
 		break;
 	}	
 }
@@ -100,9 +123,15 @@ void Player::ChangeLane(int xDirection)
 
 	//Keep lane number within bounds (0 and 4)
 	if (m_lane < 0)
+	{
 		m_lane = 0;
+		return;
+	}
 	else if (m_lane > 4)
+	{
 		m_lane = 4;
+		return;
+	}
 
 	//Set player position
 	SetPosition(Lanes[m_lane], 750);
@@ -111,6 +140,13 @@ void Player::ChangeLane(int xDirection)
 	if (m_item)
 	{
 		m_item->SetPosition(m_x - 25, m_y - 60);
+	}
+
+	if (xDirection != 0)
+	{
+		m_state = PLAYER_JUMPING;
+		m_animator->SetAnimation("cll");
+		m_sprite.setScale(xDirection * -1, 1);
 	}
 }
 
@@ -130,7 +166,7 @@ void Player::SetItem(Item* item)
 
 		//Change state to holding and change animation
 		m_state = PLAYER_HOLDING;
-		m_animator->SetAnimation("idle");
+		m_animator->SetAnimation("holding");
 	}
 	else //If removed
 	{
@@ -164,8 +200,6 @@ void Player::Knockdown()
 	if (m_state == PLAYER_KNOCKEDDOWN)
 		return;
 	
-	m_state = PLAYER_KNOCKEDDOWN;
-	m_animator->SetAnimation("knockeddown");
 	int knockDirection = rand() % 2;
 
 	if (knockDirection == 0)
@@ -179,6 +213,8 @@ void Player::Knockdown()
 	{
 		knockDirection *= -1;
 	}
+	m_state = PLAYER_KNOCKEDDOWN;
+	m_animator->SetAnimation("cll");
 	m_sprite.setScale(knockDirection, 1);
 
 	ChangeLane(knockDirection);

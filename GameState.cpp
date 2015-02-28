@@ -46,7 +46,7 @@ GameState::GameState()
 	m_ice_backgroundSprite.setTexture(*texture);
 
 	//Instantiate player
-	texture = m_textureManager->LoadTexture("assets/sprites/wizard/spritesheet_wizard.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/wizard/wizard_spritesheet.png");
 	m_player = new Player(texture);
 
 	//Instantiate thought bubbles
