@@ -26,6 +26,11 @@ public:
 	void Activate();
 	bool Burst();
 
+	void SetSounds(
+		sf::SoundBuffer* hitBuffer,
+		sf::SoundBuffer* hitBufferTwo,
+		sf::SoundBuffer* hitBufferThree);
+
 private:
 	void HandleBodyParts();
 
@@ -33,6 +38,8 @@ private:
 	MonsterState m_state;
 	ItemProperty m_weakness;
 
+	sf::SoundBuffer* m_hitBuffers[3];
+	sf::Sound m_hitSound;
 	ParticleEmitter* m_emitter;
 	Animator* m_head_animator;
 	sf::Sprite m_head_sprite;

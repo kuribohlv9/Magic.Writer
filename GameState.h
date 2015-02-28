@@ -34,6 +34,9 @@ public:
 private:
 	void ConvertWordToItem();
 	void CheckCollision();
+
+	void InstantiateBubbles();
+	void InstantiateMonsters();
 	void SpawnMonster();
 
 private:
@@ -69,6 +72,7 @@ private:
 
 	//Player
 	Player* m_player;
+	sf::Sound m_conjureCompleteSound;
 
 	//test font
 	sf::Font* m_font;

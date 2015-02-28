@@ -19,7 +19,7 @@ enum PlayerState
 class Player : public GameObject
 {
 public:
-	Player(sf::Texture* texture);
+	Player(sf::Texture* texture, sf::SoundBuffer* changeLaneBuffer);
 	~Player();
 	void Update(float deltaTime);
 	void Draw(DrawManager* drawManager);
@@ -41,5 +41,6 @@ private:
 	InputManager* m_inputManager;
 	Item* m_item;
 	PlayerState m_state;
+	sf::Sound m_changeLaneSound;
 	int m_lane;
 };

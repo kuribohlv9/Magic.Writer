@@ -47,26 +47,18 @@ GameState::GameState()
 
 	//Instantiate player
 	texture = m_textureManager->LoadTexture("assets/sprites/wizard/wizard_spritesheet.png");
-	m_player = new Player(texture);
+	sf::SoundBuffer* buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_walk_sound.wav");
+	m_player = new Player(texture, buffer);
 
-	//Instantiate thought bubbles
-	texture = m_textureManager->LoadTexture("assets/sprites/background/bubbles_spritesheet.png");
-	for (int i = 0; i < 3; i++)
-	{
-		int yOffset = 0;
-		if (i == 1)
-			yOffset = 50;
-		Bubble* bubble = new Bubble(725 + i * 200, 910 + yOffset, texture, m_player);
+	//Load sound
+	buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_spell_complete01.wav");
+	m_conjureCompleteSound.setBuffer(*buffer);
+	m_conjureCompleteSound.setVolume(7);
 
-		Item* item = m_itemManager->GetItem();
-
-		bubble->SetItem(item);
-		m_wordManager->SetNewWord(item->GetName());
-
-		m_bubbles.push_back(bubble);
-	}
+	InstantiateBubbles();
+	InstantiateMonsters();
 	
-	//HUD
+	//TEMPORARY HUD
 	m_font = m_textureManager->LoadFont("assets/fonts/font.ttf");
 	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
 	
@@ -75,43 +67,12 @@ GameState::GameState()
 	m_scoreDisplay.setPosition(1750, 15);
 	m_scoreDisplay.setString("0");
 	m_scoreDisplay.setColor(sf::Color(255, 255, 255, 255));
-	//m_scoreDisplay.setColor(sf::Color(32, 58, 64, 255));
 
 	m_score = 0;
 	m_lastScore = 0;
 	m_life = 3;
 
-	sf::Texture* undeadTexture = m_textureManager->LoadTexture("assets/sprites/monster/undead_monster_spritesheet.png");
-	sf::Texture* lavaTexture = m_textureManager->LoadTexture("assets/sprites/monster/lava_monster_spritesheet.png");
-	sf::Texture* aliveTexture = m_textureManager->LoadTexture("assets/sprites/monster/alive_monster_spritesheet.png");
-	sf::Texture* iceTexture = m_textureManager->LoadTexture("assets/sprites/monster/ice_monster_spritesheet.png");
-
-	texture = m_textureManager->LoadTexture("assets/sprites/particle.png");
-	//Monster pool
-	for (int i = 0; i < 20; i++)
-	{
-		if (i < 5)
-		{
-			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 225, 238, 45, ITEM_ALIVE, texture);
-			m_monsters.push_back(undeadMonster);
-		}
-		else if (i > 4 && i < 10)
-		{
-			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 200, 227, 45, ITEM_COLD, texture);
-			m_monsters.push_back(lavaMonster);
-		}
-		else if (i > 9 && i < 15)
-		{
-			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 207, 207, 45, ITEM_DEAD, texture);
-			m_monsters.push_back(aliveMonster);
-		}
-		else if (i > 14)
-		{
-			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 226, 220, 45, ITEM_HOT, texture);
-			m_monsters.push_back(iceMonster);
-		}
-	}
-
+	//Instantiate waves
 	texture = m_textureManager->LoadTexture("assets/sprites/wave_spritesheet.png");
 	//Wave pool
 	for (int i = 0; i < 5; i++)
@@ -432,6 +393,66 @@ ScreenState GameState::NextState()
 	return STATE_MENU;
 }
 
+void GameState::InstantiateBubbles()
+{
+	//Instantiate thought bubbles
+	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background/bubbles_spritesheet.png");
+	for (int i = 0; i < 3; i++)
+	{
+		int yOffset = 0;
+		if (i == 1)
+			yOffset = 50;
+		Bubble* bubble = new Bubble(725 + i * 200, 910 + yOffset, texture, m_player);
+
+		Item* item = m_itemManager->GetItem();
+
+		bubble->SetItem(item);
+		m_wordManager->SetNewWord(item->GetName());
+
+		m_bubbles.push_back(bubble);
+	}
+}
+void GameState::InstantiateMonsters()
+{
+	sf::Texture* undeadTexture = m_textureManager->LoadTexture("assets/sprites/monster/undead_monster_spritesheet.png");
+	sf::Texture* lavaTexture = m_textureManager->LoadTexture("assets/sprites/monster/lava_monster_spritesheet.png");
+	sf::Texture* aliveTexture = m_textureManager->LoadTexture("assets/sprites/monster/alive_monster_spritesheet.png");
+	sf::Texture* iceTexture = m_textureManager->LoadTexture("assets/sprites/monster/ice_monster_spritesheet.png");
+
+	sf::Texture* particleTexture = m_textureManager->LoadTexture("assets/sprites/particle.png");
+
+	sf::SoundBuffer* monsterHitBuffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Monster_hurt01.wav");
+	sf::SoundBuffer* monsterHitBufferTwo = m_audioManager->LoadSoundFromFile("assets/audio/complete/Monster_hurt02.wav");
+	sf::SoundBuffer* monsterHitBufferThree = m_audioManager->LoadSoundFromFile("assets/audio/complete/Monster_hurt03.wav");
+	//Monster pool
+	for (int i = 0; i < 20; i++)
+	{
+		if (i < 5)
+		{
+			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 225, 238, 45, ITEM_ALIVE, particleTexture);
+			undeadMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
+			m_monsters.push_back(undeadMonster);
+		}
+		else if (i > 4 && i < 10)
+		{
+			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 200, 227, 45, ITEM_COLD, particleTexture);
+			lavaMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
+			m_monsters.push_back(lavaMonster);
+		}
+		else if (i > 9 && i < 15)
+		{
+			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 207, 207, 45, ITEM_DEAD, particleTexture);
+			aliveMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
+			m_monsters.push_back(aliveMonster);
+		}
+		else if (i > 14)
+		{
+			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 226, 220, 45, ITEM_HOT, particleTexture);
+			iceMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
+			m_monsters.push_back(iceMonster);
+		}
+	}
+}
 void GameState::SpawnMonster()
 {
 	while (true)
@@ -473,6 +494,8 @@ void GameState::ConvertWordToItem()
 			m_wordManager->SetNewWord(newItem->GetName());
 			m_bubbles[i]->SetItem(newItem);
 			m_score += 200;
+
+			m_conjureCompleteSound.play();
 			break;
 		}
 	}

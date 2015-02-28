@@ -8,7 +8,7 @@
 #include "DrawManager.h"
 #include "ServiceLocator.h"
 
-Player::Player(sf::Texture* texture)
+Player::Player(sf::Texture* texture, sf::SoundBuffer* changeLaneBuffer)
 {
 	//Variables
 	m_inputManager = ServiceLocator<InputManager>::GetService();
@@ -32,9 +32,12 @@ Player::Player(sf::Texture* texture)
 	//Set start position
 	m_lane = 1;
 	ChangeLane(1);
-
 	m_state = PLAYER_IDLE;
 	m_animator->SetAnimation("idle");
+
+	//Set sound
+	m_changeLaneSound.setBuffer(*changeLaneBuffer);
+	m_changeLaneSound.setVolume(10);
 }
 
 Player::~Player()
@@ -144,9 +147,15 @@ void Player::ChangeLane(int xDirection)
 
 	if (xDirection != 0)
 	{
+		//Set animation
 		m_state = PLAYER_JUMPING;
 		m_animator->SetAnimation("cll");
 		m_sprite.setScale(xDirection * -1, 1);
+
+		//Play sound
+		m_changeLaneSound.stop();
+		m_changeLaneSound.setPlayingOffset(sf::seconds(0.4f));
+		m_changeLaneSound.play();
 	}
 }
 

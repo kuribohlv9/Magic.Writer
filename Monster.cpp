@@ -184,7 +184,10 @@ bool Monster::Burst()
 }
 
 void Monster::Damage(ItemProperty property, int &score)
-{
+{ 
+	int randomSoundIndex = rand() % 3;
+	m_hitSound.setBuffer(*m_hitBuffers[randomSoundIndex]);
+	m_hitSound.play();
 	if (property == m_weakness)
 	{
 		m_health -= 2;
@@ -267,4 +270,13 @@ void Monster::Activate()
 	m_collider->SetWidthHeight(m_sprite_width / 4, m_sprite_height / 4);
 
 	SetActive(true);
+}
+
+void Monster::SetSounds(sf::SoundBuffer* hitBuffer, sf::SoundBuffer* hitBufferTwo, sf::SoundBuffer* hitBufferThree)
+{
+	m_hitBuffers[0] = hitBuffer;
+	m_hitBuffers[1] = hitBufferTwo;
+	m_hitBuffers[2] = hitBufferThree;
+
+	m_hitSound.setVolume(5);
 }
