@@ -9,6 +9,8 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <fstream>
+#include <algorithm>
 
 //SFLM includes
 #include "SFML\Main.hpp"

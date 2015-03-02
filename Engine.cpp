@@ -7,6 +7,7 @@
 #include "AudioManager.h"
 #include "StateManager.h"
 #include "WordManager.h"
+#include "HighscoreManager.h"
 #include "ServiceLocator.h"
 
 Engine::Engine()
@@ -17,6 +18,7 @@ Engine::Engine()
 	m_texture_manager = nullptr;
 	m_audio_manager = nullptr;
 	m_state_manager = nullptr;
+	m_highscore_manager = nullptr;
 }
 
 Engine::~Engine()
@@ -49,6 +51,11 @@ bool Engine::Initialize()
 	if (!m_audio_manager || !m_audio_manager->Initialize())
 		return false;
 	ServiceLocator<AudioManager>::SetService(m_audio_manager);
+
+	m_highscore_manager = new HighscoreManager();
+	if (!m_highscore_manager || !m_highscore_manager->Initialize())
+		return false;
+	ServiceLocator<HighscoreManager>::SetService(m_highscore_manager);
 
 	m_state_manager = new StateManager;
 	if (!m_state_manager || !m_state_manager->Initialize())
