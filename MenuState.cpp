@@ -105,6 +105,8 @@ void MenuState::Draw()
 	if (m_helpScreen)
 	{
 		m_helpExitButton->Draw(m_drawManager);
+
+		//Ugliness starts here
 		std::vector<int>* tempScore = ServiceLocator<HighscoreManager>::GetService()->GetHighscore();
 
 		sf::Font* font = m_textureManager->LoadFont("assets/fonts/font.ttf");
@@ -119,6 +121,7 @@ void MenuState::Draw()
 		scoreDisplay.setString(std::to_string((*tempScore)[i]));
 		scoreDisplay.setPosition(1750, 15 + i*100);
 		m_drawManager->Draw(scoreDisplay, sf::RenderStates::Default);
+		//And ends here
 		}
 	}
 }
