@@ -3,21 +3,20 @@
 #include "Particle.h"
 #include  "DrawManager.h"
 
-#include <iostream>
-
-ParticleEmitter::ParticleEmitter(int particleCount, float spawnRate, sf::Texture* particleTexture)
+ParticleEmitter::ParticleEmitter(sf::Texture* texture, int particleCount)
 {
-	m_spawnRate = spawnRate;
-	m_startVelocity = sf::Vector2f(0, -500);
-	m_acceleration = sf::Vector2f(0, -5);
+	SetStartAngle(0, 1);
+	SetForce(200, 200);
+	m_acceleration = sf::Vector2f(0, 0);
 	m_area = sf::IntRect(0, 0, 1, 1);
-	m_secondsToLive = 4;
-	m_particleTexture = particleTexture;
-	m_scaleParticle = false;
+	m_spawnRate = 1;
+	m_secondsToLive = 2;
+	m_scaleParticle = true;
+	m_active = true;
 
 	for (int i = 0; i < particleCount; i++)
 	{
-		Particle* p = new Particle(m_particleTexture, m_secondsToLive);
+		Particle* p = new Particle(texture);
 		m_particles.push_back(p);
 	}
 }
@@ -27,10 +26,9 @@ ParticleEmitter::~ParticleEmitter()
 
 	while (it != m_particles.end())
 	{
-		delete (*it);
+		delete *it;
 		++it;
 	}
-	m_particles.clear();
 }
 
 void ParticleEmitter::Update(float deltaTime)
@@ -39,16 +37,17 @@ void ParticleEmitter::Update(float deltaTime)
 	m_timer += deltaTime;
 
 	//Check for timer tick
-	if (m_timer > m_spawnRate)
+	if (m_timer > m_spawnRate && m_active)
 	{
 		//Reset timer
 		m_timer = 0;
 
 		//Create a new particle
-		CreateParticle();
+		ActivateParticle();
 	}
 
-	//Update all active particles
+
+	//Update active particles
 	for (int i = 0; i < m_particles.size(); i++)
 	{
 		if (!m_particles[i]->Active())
@@ -59,7 +58,6 @@ void ParticleEmitter::Update(float deltaTime)
 }
 void ParticleEmitter::Draw(DrawManager* drawManager)
 {
-	//Draw all active particles
 	for (int i = 0; i < m_particles.size(); i++)
 	{
 		if (!m_particles[i]->Active())
@@ -69,43 +67,80 @@ void ParticleEmitter::Draw(DrawManager* drawManager)
 	}
 }
 
-void ParticleEmitter::CreateParticle()
+void ParticleEmitter::ActivateParticle()
 {
 	for (int i = 0; i < m_particles.size(); i++)
 	{
 		if (!m_particles[i]->Active())
 		{
+			//Calculate a position
 			sf::Vector2f pos = sf::Vector2f(m_area.left, m_area.top);
 			pos.x += rand() % m_area.width;
 			pos.y += rand() % m_area.height;
-			m_particles[i]->Activate(pos, m_acceleration, m_startVelocity, m_secondsToLive, m_scaleParticle);
+
+
+			//Activate particle
+			m_particles[i]->Activate(pos, m_acceleration, m_startDirection, m_secondsToLive, m_scaleParticle);
 			break;
 		}
 	}
 }
-void ParticleEmitter::SetPosition(sf::Vector2f position)
+void ParticleEmitter::SetPosition(float x, float y)
 {
-	m_area.left = position.x - m_area.width;
-	m_area.top = position.y - m_area.height;
+	m_area.left = x - m_area.width;
+	m_area.top = y - m_area.height;
 }
-void ParticleEmitter::SetStartVelocity(sf::Vector2f velocity)
+void ParticleEmitter::SetStartAngle(int angleMin, int angleMax)
 {
-	m_startVelocity = velocity;
+	//Randomize a angle
+	if (angleMin == angleMax)
+		angleMax++;
+
+	int angle = angleMin + rand() % (angleMax - angleMin);
+	float radians = angle * (3.14 / 180);
+	//Calculate direction from angle
+	sf::Vector2f dir = sf::Vector2f(cos(radians), sin(radians));
+
+	//Normalize direction
+	float length = sqrt(dir.x * dir.x + dir.y * dir.y);
+	dir /= length;
+
+	dir *= m_force;
+
+	//Apply start direction
+	m_startDirection = dir;
 }
-void ParticleEmitter::SetAcceleration(sf::Vector2f acceleration)
+void ParticleEmitter::SetForce(int forceMin, int forceMax)
 {
-	m_acceleration = acceleration;
+	if (forceMin == forceMax)
+		forceMax++;
+	m_force = forceMin + rand() % (forceMax - forceMin);
 }
-void ParticleEmitter::SetLifeTime(float secondsToLive)
+void ParticleEmitter::SetAcceleration(float x, float y)
 {
-	m_secondsToLive = secondsToLive;
+	m_acceleration = sf::Vector2f(x, y);
+}
+void ParticleEmitter::SetLifeTime(float secondsMin, float secondsMax)
+{
+	int max = secondsMax * 10;
+	int rndInt = rand() % max;
+	float rnd = rndInt / 10;
+	m_secondsToLive = secondsMin + rnd;
 }
 void ParticleEmitter::SetSize(int width, int height)
 {
 	m_area.width = width;
 	m_area.height = height;
 }
-void ParticleEmitter::ScaleParticle(bool state)
+void ParticleEmitter::SetActive(bool state)
 {
-	m_scaleParticle = state;
+	m_active = state;
+}
+void ParticleEmitter::SetSpawnRate(float spawnRate)
+{
+	m_spawnRate = spawnRate;
+}
+bool ParticleEmitter::IsActive()
+{
+	return m_active;
 }

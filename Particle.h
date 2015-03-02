@@ -5,14 +5,14 @@ class DrawManager;
 class Particle
 {
 public:
-	Particle(sf::Texture* texture, float secondsToLive);
+	Particle(sf::Texture* texture);
 	~Particle();
 
 	void Update(float deltaTime);
 	void Draw(DrawManager* drawManager);
 
 	bool Active();
-	void Activate(sf::Vector2f position, sf::Vector2f acceleration, sf::Vector2f startVelocity, float secondsToLive, bool scaleParticle);
+	void Activate(sf::Vector2f position, sf::Vector2f acceleration, sf::Vector2f velocity, float secondsToLive, bool scaleParticle);
 
 private:
 	//Stores the current speed of which the particle is moving

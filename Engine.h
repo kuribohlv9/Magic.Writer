@@ -6,6 +6,7 @@ class TextureManager;
 class CollisionManager;
 class AudioManager;
 class HighscoreManager;
+class ParticleManager;
 
 class Engine
 {
@@ -30,4 +31,5 @@ private:
 	AudioManager* m_audio_manager;
 	StateManager* m_state_manager;
 	HighscoreManager* m_highscore_manager;
+	ParticleManager* m_particle_manager;
 };

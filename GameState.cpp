@@ -13,6 +13,7 @@
 #include "ItemManager.h"
 #include "WaveManager.h"
 #include "PowerUpManager.h"
+#include "ParticleManager.h"
 
 //Classes
 #include "Monster.h"
@@ -38,6 +39,7 @@ GameState::GameState()
 	m_itemManager = new ItemManager();
 	m_waveManager = new WaveManager();
 	m_powerUpManager = new PowerUpManager(&m_monsters, &m_activeItems);
+	m_particleManager = ServiceLocator<ParticleManager>::GetService();
 
 	//Load background texture
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background/background.png");
@@ -145,6 +147,7 @@ GameState::~GameState()
 
 bool GameState::Update(float deltaTime)
 {
+	m_particleManager->Update(deltaTime);
 	//Handle word input
 	if (m_player->GetItem() == nullptr && !m_player->IsStunned())
 	{
@@ -339,6 +342,9 @@ void GameState::Draw()
 		m_waves[i]->Draw(m_drawManager);
 	}
 
+	//Draw Particles
+	m_particleManager->Draw(m_drawManager);
+
 	//Draw monster
 	for (int i = 0; i < m_monsters.size(); i++)
 	{
@@ -504,8 +510,7 @@ void GameState::ConvertWordToItem()
 		if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Return))
 		{
 			//Activate item
-			spawnedItem->SetActive(true);
-			spawnedItem->SetState(ITEM_FLYING);
+			spawnedItem->Activate();
 			m_activeItems.push_back(spawnedItem);
 			m_player->SetItem(nullptr);
 		}

@@ -10,6 +10,7 @@ class InputManager;
 class WaveManager;
 class PowerUpManager;
 class ParticleEmitter;
+class ParticleManager;
 
 class Item;
 class Bubble;
@@ -50,6 +51,7 @@ private:
 	ItemManager* m_itemManager;
 	WaveManager* m_waveManager;
 	PowerUpManager* m_powerUpManager;
+	ParticleManager* m_particleManager;
 
 	//Item & word variables
 	std::vector<Bubble*> m_bubbles;
