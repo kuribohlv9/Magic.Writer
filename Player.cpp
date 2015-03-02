@@ -17,7 +17,7 @@ Player::Player(sf::Texture* texture, sf::SoundBuffer* changeLaneBuffer)
 
 	//Animator
 	m_sprite.setTexture(*texture);
-	m_animator = new Animator(&m_sprite, "assets/sprites/wizard/wizard_animation2.txt");
+	m_animator = new Animator(&m_sprite, "assets/sprites/wizard/wizard_animation.txt");
 	m_animator->SetAnimation("idle");
 
 	//Set origin
@@ -59,11 +59,12 @@ void Player::Update(float deltaTime)
 	if (!IsStunned())
 		HandleMovement();
 
+	if (m_state != PLAYER_CHANTING)
+		m_animator->Update(deltaTime);
+
 	switch (m_state)
 	{
 	case PLAYER_THROWING:
-		m_animator->Update(deltaTime);
-
 		if (m_animator->Complete())
 		{
 			m_state = PLAYER_IDLE;
@@ -71,7 +72,6 @@ void Player::Update(float deltaTime)
 		}
 		break;
 	case PLAYER_KNOCKEDDOWN:
-		m_animator->Update(deltaTime);
 		if (m_animator->Complete())
 		{
 			if (m_item)
@@ -88,7 +88,6 @@ void Player::Update(float deltaTime)
 		}
 		break;
 	case PLAYER_JUMPING:
-		m_animator->Update(deltaTime);
 		if (m_animator->Complete())
 		{
 			if (m_item)
