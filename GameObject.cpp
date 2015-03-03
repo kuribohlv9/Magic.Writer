@@ -43,6 +43,7 @@ Collider* GameObject::GetCollider()
 
 bool GameObject::IsActive()
 {
+	
 	return m_active;
 }
 

@@ -37,7 +37,7 @@ GameState::GameState()
 	m_wordManager = new WordManager();
 	m_itemManager = new ItemManager();
 	m_waveManager = new WaveManager();
-	m_powerUpManager = new PowerUpManager(&m_monsters, &m_activeItems);
+	
 
 	//Load background texture
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background/background.png");
@@ -48,6 +48,8 @@ GameState::GameState()
 	//Instantiate player
 	texture = m_textureManager->LoadTexture("assets/sprites/wizard/spritesheet_wizard.png");
 	m_player = new Player(texture);
+
+	m_powerUpManager = new PowerUpManager(&m_monsters, &m_activeItems, m_player);
 
 	//Instantiate thought bubbles
 	texture = m_textureManager->LoadTexture("assets/sprites/background/bubbles_spritesheet.png");
@@ -316,17 +318,22 @@ void GameState::CheckCollision()
 			//Collision check
 			if (CollisionManager::Check(item->GetCollider(), monster->GetCollider()))
 			{
-				monster->Damage(item->GetProperty(), m_score);
-				if (m_powerUpManager->GetPierce())
+
+				if (!m_powerUpManager->GetPierce())
 				{
-					item->SetActive(true);
-					m_powerUpManager->ActivatePierce(1);
+					monster->Damage(item->GetProperty(), m_score);
+
+					item->SetActive(false);
+					item->SetInGame(false);
+					item->SetState(ITEM_HIT);
 				}
 				else
-					item->SetActive(false);
-				item->SetInGame(false);
-				item->SetState(ITEM_HIT);
-
+				{
+					if (m_powerUpManager->AddItemToPierceList(monster))
+					{
+						monster->Damage(item->GetProperty(), m_score);
+					}
+				}
 				if (monster->IsActive() == false)
 				{
 					//Increase score
@@ -335,6 +342,7 @@ void GameState::CheckCollision()
 			}
 		}
 	}
+
 
 	
 	//Collision between monsters and player
