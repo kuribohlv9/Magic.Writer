@@ -16,13 +16,13 @@ bool AudioManager::Initialize()
 void AudioManager::Shutdown()
 {
 	//Deletes all loaded sounds
-	auto itrs = m_sounds.begin();
-	while (itrs != m_sounds.end())
+	auto itrs = m_buffers.begin();
+	while (itrs != m_buffers.end())
 	{
 		delete itrs->second;
 		++itrs;
 	}
-	m_sounds.clear();
+	m_buffers.clear();
 
 	auto itrm = m_musics.begin();
 	while (itrm != m_musics.end())
@@ -33,19 +33,18 @@ void AudioManager::Shutdown()
 	m_musics.clear();
 }
 
-sf::Sound* AudioManager::LoadSoundFromFile(const std::string& filename)
+sf::SoundBuffer* AudioManager::LoadSoundFromFile(const std::string& filename)
 {
-	auto it = m_sounds.find(filename);
+	auto it = m_buffers.find(filename);
 
-	if (it == m_sounds.end())
+	if (it == m_buffers.end())
 	{
-		sf::SoundBuffer buffer;
-		buffer.loadFromFile(filename);
+		sf::SoundBuffer* buffer = new sf::SoundBuffer();
+		buffer->loadFromFile(filename);
 
-		sf::Sound* sound = new sf::Sound(buffer);
-		m_sounds.insert(std::pair<std::string, sf::Sound*>(filename, sound));
+		m_buffers.insert(std::pair<std::string, sf::SoundBuffer*>(filename, buffer));
 
-		it = m_sounds.find(filename);
+		it = m_buffers.find(filename);
 	}
 
 	return it->second;

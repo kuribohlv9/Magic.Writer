@@ -105,11 +105,12 @@ void GUI_Button::Draw(DrawManager* drawManager)
 		}
 	}
 
-	sf::RectangleShape shape;
+	//Draw hitbox
+	/*sf::RectangleShape shape;
 	shape.setFillColor(sf::Color(0, 255, 0, 125));
 	shape.setPosition(m_collider->GetArea().left, m_collider->GetArea().top);
 	shape.setSize(sf::Vector2f(m_collider->GetArea().width, m_collider->GetArea().height));
-	drawManager->Draw(shape, sf::RenderStates::Default);
+	drawManager->Draw(shape, sf::RenderStates::Default);*/
 }
 GUI_Label* GUI_Button::GetLabel()
 {

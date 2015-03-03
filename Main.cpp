@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "Engine.h"
 #include "TextureManager.h"
-#include <vld.h>
 
 int main(int argc, char* argv[])
 {

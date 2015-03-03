@@ -10,6 +10,7 @@ class InputManager;
 class WaveManager;
 class PowerUpManager;
 class ParticleEmitter;
+class ParticleManager;
 
 class Item;
 class Bubble;
@@ -34,6 +35,9 @@ public:
 private:
 	void ConvertWordToItem();
 	void CheckCollision();
+
+	void InstantiateBubbles();
+	void InstantiateMonsters();
 	void SpawnMonster();
 
 private:
@@ -47,6 +51,7 @@ private:
 	ItemManager* m_itemManager;
 	WaveManager* m_waveManager;
 	PowerUpManager* m_powerUpManager;
+	ParticleManager* m_particleManager;
 
 	//Item & word variables
 	std::vector<Bubble*> m_bubbles;
@@ -69,12 +74,14 @@ private:
 
 	//Player
 	Player* m_player;
+	sf::Sound m_conjureCompleteSound;
 
 	//test font
 	sf::Font* m_font;
 
 	//Test HUD
 	sf::Sprite m_life_sprite;
+	sf::Sprite m_score_sign_sprite;
 	sf::Text m_scoreDisplay;
 	int m_score;
 	int m_lastScore;

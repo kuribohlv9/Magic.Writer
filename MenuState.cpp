@@ -5,6 +5,7 @@
 #include "ServiceLocator.h"
 #include "DrawManager.h"
 #include "TextureManager.h"
+#include "HighscoreManager.h"
 
 //GUI elements
 #include "GUI_Button.h"
@@ -76,6 +77,7 @@ bool MenuState::Update(float deltaTime)
 		else if (m_helpButton->IsPressed())
 		{
 			m_helpScreen = true;
+			ServiceLocator<HighscoreManager>::GetService()->WriteHighscore(111);
 		}
 		return true;
 	}
@@ -103,6 +105,24 @@ void MenuState::Draw()
 	if (m_helpScreen)
 	{
 		m_helpExitButton->Draw(m_drawManager);
+
+		//Ugliness starts here
+		std::vector<int>* tempScore = ServiceLocator<HighscoreManager>::GetService()->GetHighscore();
+
+		sf::Font* font = m_textureManager->LoadFont("assets/fonts/font.ttf");
+		
+		sf::Text scoreDisplay;
+		scoreDisplay.setFont(*font);
+		scoreDisplay.setScale(1.5f, 1.5f);
+		scoreDisplay.setColor(sf::Color(255, 255, 255, 255));
+
+		for (int i = 0; i < tempScore->size(); i++)
+		{
+		scoreDisplay.setString(std::to_string((*tempScore)[i]));
+		scoreDisplay.setPosition(1750, 15 + i*100);
+		m_drawManager->Draw(scoreDisplay, sf::RenderStates::Default);
+		//And ends here
+		}
 	}
 }
 
