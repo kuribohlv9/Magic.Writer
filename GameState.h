@@ -81,6 +81,7 @@ private:
 
 	//Test HUD
 	sf::Sprite m_life_sprite;
+	sf::Sprite m_score_sign_sprite;
 	sf::Text m_scoreDisplay;
 	int m_score;
 	int m_lastScore;

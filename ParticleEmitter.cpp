@@ -11,6 +11,7 @@ ParticleEmitter::ParticleEmitter(sf::Texture* texture, int particleCount)
 	m_area = sf::IntRect(0, 0, 1, 1);
 	m_spawnRate = 1;
 	m_secondsToLive = 2;
+	m_rotationVelocity = 0;
 	m_scaleParticle = true;
 	m_active = true;
 
@@ -80,7 +81,13 @@ void ParticleEmitter::ActivateParticle()
 
 
 			//Activate particle
-			m_particles[i]->Activate(pos, m_acceleration, m_startDirection, m_secondsToLive, m_scaleParticle);
+			m_particles[i]->Activate(
+				pos,
+				m_acceleration,
+				m_startDirection,
+				m_secondsToLive,
+				m_scaleParticle,
+				m_rotationVelocity);
 			break;
 		}
 	}
@@ -139,6 +146,10 @@ void ParticleEmitter::SetActive(bool state)
 void ParticleEmitter::SetSpawnRate(float spawnRate)
 {
 	m_spawnRate = spawnRate;
+}
+void ParticleEmitter::SetRotationVelocity(float velocity)
+{
+	m_rotationVelocity = velocity;
 }
 bool ParticleEmitter::IsActive()
 {

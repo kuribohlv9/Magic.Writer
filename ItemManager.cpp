@@ -10,11 +10,16 @@ ItemManager::ItemManager()
 {
 	m_textureManager = ServiceLocator<TextureManager>::GetService();
 
-	sf::Texture* particle = m_textureManager->LoadTexture("assets/sprites/items/particle.png");
-
+	sf::Texture* particle = m_textureManager->LoadTexture("assets/sprites/items/particle_alive.png");
 	AddItems("assets/sprites/items/item_alive.png", "assets/sprites/items/item_alive.txt", ITEM_ALIVE, particle);
+
+	particle = m_textureManager->LoadTexture("assets/sprites/items/particle_dead.png");
 	AddItems("assets/sprites/items/item_dead.png", "assets/sprites/items/item_dead.txt", ITEM_DEAD, particle);
+
+	particle = m_textureManager->LoadTexture("assets/sprites/items/particle_hot.png");
 	AddItems("assets/sprites/items/item_hot.png", "assets/sprites/items/item_hot.txt", ITEM_HOT, particle);
+
+	particle = m_textureManager->LoadTexture("assets/sprites/items/particle_cold.png");
 	AddItems("assets/sprites/items/item_cold.png", "assets/sprites/items/item_cold.txt", ITEM_COLD, particle);
 }
 

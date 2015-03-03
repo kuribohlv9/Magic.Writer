@@ -62,13 +62,15 @@ GameState::GameState()
 	
 	//TEMPORARY HUD
 	m_font = m_textureManager->LoadFont("assets/fonts/font.ttf");
+	m_score_sign_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/sign_score.png"));
+	m_score_sign_sprite.setPosition(ScreenWidth - 400, 0);
 	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
 	
 	m_scoreDisplay.setFont(*m_font);
 	m_scoreDisplay.setScale(1.5f, 1.5f);
-	m_scoreDisplay.setPosition(1750, 15);
+	m_scoreDisplay.setPosition(1660, 155);
 	m_scoreDisplay.setString("0");
-	m_scoreDisplay.setColor(sf::Color(255, 255, 255, 255));
+	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
 
 	m_score = 0;
 	m_lastScore = 0;
@@ -383,6 +385,7 @@ void GameState::Draw()
 		m_life_sprite.setPosition(15.0f + 100.0f * i, 15);
 		m_drawManager->Draw(m_life_sprite, sf::RenderStates::Default);
 	}
+	m_drawManager->Draw(m_score_sign_sprite, sf::RenderStates::Default);
 
 	m_drawManager->Draw(m_scoreDisplay, sf::RenderStates::Default);
 }

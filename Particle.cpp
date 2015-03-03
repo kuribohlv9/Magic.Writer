@@ -22,6 +22,10 @@ void Particle::Update(float deltaTime)
 	m_velocity += m_acceleration;
 	m_sprite.move(m_velocity * deltaTime);
 
+
+	//Rotate particle
+	m_sprite.rotate(m_rotationVelocity);
+
 	m_timer += deltaTime;
 	if (m_timer >= 1 / 60)
 	{
@@ -56,7 +60,7 @@ bool Particle::Active()
 {
 	return m_active;
 }
-void Particle::Activate(sf::Vector2f position, sf::Vector2f acceleration, sf::Vector2f velocity, float secondsToLive, bool scaleParticle)
+void Particle::Activate(sf::Vector2f position, sf::Vector2f acceleration, sf::Vector2f velocity, float secondsToLive, bool scaleParticle, float rotationVelocity)
 {
 	m_sprite.setPosition(position);
 	m_acceleration = acceleration;
@@ -67,4 +71,10 @@ void Particle::Activate(sf::Vector2f position, sf::Vector2f acceleration, sf::Ve
 	m_sprite.setColor(sf::Color::White);
 	m_sprite.setScale(1, 1);
 	m_active = true;
+
+	m_rotationVelocity = rotationVelocity;
+	if (m_rotationVelocity != 0)
+	{
+		m_sprite.setRotation(rand() % 360);
+	}
 }

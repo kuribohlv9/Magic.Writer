@@ -11,7 +11,6 @@
 #include <tchar.h>
 #include <fstream>
 #include <algorithm>
-#include <vld.h>
 
 //SFLM includes
 #include "SFML\Main.hpp"
