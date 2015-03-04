@@ -53,20 +53,6 @@ GameState::GameState()
 
 	m_powerUpManager = new PowerUpManager(&m_monsters, &m_activeItems, m_player);
 
-	//Instantiate thought bubbles
-	texture = m_textureManager->LoadTexture("assets/sprites/background/bubbles_spritesheet.png");
-	for (int i = 0; i < 3; i++)
-	{
-		int yOffset = 0;
-		if (i == 1)
-			yOffset = 50;
-		Bubble* bubble = new Bubble(725 + i * 200, 910 + yOffset, texture, m_player);
-
-		Item* item = m_itemManager->GetItem();
-
-		bubble->SetItem(item);
-		m_wordManager->SetNewWord(item->GetName());
-
 	//Load sound
 	buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_spell_complete01.wav");
 	m_conjureCompleteSound.setBuffer(*buffer);
