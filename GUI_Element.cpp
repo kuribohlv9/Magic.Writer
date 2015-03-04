@@ -22,7 +22,7 @@ int GUI_Element::GetY()
 {
 	return m_y;
 }
-void GUI_Element::SetPosition(int x, int y)
+void GUI_Element::SetPosition(float x, float y)
 {
 	m_localX = x;
 	m_localY = y;

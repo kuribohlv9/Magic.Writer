@@ -7,7 +7,7 @@
 #include "InputManager.h"
 #include "ServiceLocator.h"
 
-GUI_Button::GUI_Button(int x, int y, GUI_Element* parent, sf::Texture* texture, sf::IntRect sourceRectangle)
+GUI_Button::GUI_Button(float x, float y, GUI_Element* parent, sf::Texture* texture, sf::IntRect sourceRectangle)
 {
 	if (parent)
 	{
@@ -29,7 +29,7 @@ GUI_Button::GUI_Button(int x, int y, GUI_Element* parent, sf::Texture* texture, 
 	m_sprite.setTexture(*texture);
 	m_sprite.setTextureRect(sourceRectangle);
 	m_sprite.setPosition(m_x, m_y);
-	m_sprite.setOrigin(m_buttonRectangle.width / 2, m_buttonRectangle.height / 2);
+	m_sprite.setOrigin(static_cast<float>(m_buttonRectangle.width / 2), static_cast<float>(m_buttonRectangle.height / 2));
 
 	m_collider = new Collider(0, 0);
 	m_collider->SetWidthHeight(m_buttonRectangle.width, m_buttonRectangle.height);
