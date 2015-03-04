@@ -16,11 +16,16 @@ WordManager::WordManager()
 	m_text.setFont(*font);
 	m_text.setCharacterSize(25);
 
-	//Get word count
-	m_words[0] = "";
-	m_words[1] = "";
-	m_words[2] = "";
-	m_wordCount = sizeof(m_words) / sizeof(m_words[0]);
+	//Create words
+	for (int i = 0; i < 3; i++)
+	{
+		Word w;
+		w.text = "";
+		w.position = sf::Vector2f(0, 0);
+		w.active = true;
+
+		m_structs.push_back(w);
+	}
 
 	//Reset all words
 	Reset();
@@ -28,10 +33,9 @@ WordManager::WordManager()
 
 void WordManager::Update(float deltaTime)
 {
-	//Check if three words exist
-	for (int i = 0; i < m_wordCount; i++)
+	for (int i = 0; i < m_structs.size(); i++)
 	{
-		if (m_words[i] == "")
+		if (m_structs[i].text == "")
 		{
 			return;
 		}
@@ -51,55 +55,34 @@ void WordManager::Update(float deltaTime)
 void WordManager::Draw(DrawManager* drawManager)
 {
 	//Loop through each word
-	for (int i = 0; i < m_wordCount; i++)
+	for (int i = 0; i < m_structs.size(); i++)
 	{
-		//Set a position for the word
-		sf::Vector2f position = m_wordPositions[i];
-		position.x -= 40;
-		position.y += 20;
+		std::string word = m_structs[i].text;
+		m_text.setString(word);
+		m_text.setColor(sf::Color(137, 177, 185, 255)); // Light
+		m_text.setPosition(m_structs[i].position);
 
-		//Get the current word and it's active state
-		std::string word = m_words[i];
-		bool active = m_words_active[i];
+		int wordWidth = m_text.getGlobalBounds().width;
+		m_text.move(-wordWidth / 2 + 5, 20);
 
-		//Apply the position and color to m_text
-		m_text.setPosition(position);
-		m_text.setColor(sf::Color(137, 177, 185, 255)); //Light blue
-
-		//Check if the current word is active
-		if (active)
+		if (m_structs[i].active)
 		{
-			//For each active word we loop through each character in the word
-			for (int j = 0; j < word.size(); j++)
+			m_text.setColor(sf::Color(30, 58, 64, 255)); // Dark
+			drawManager->Draw(m_text, sf::RenderStates::Default);
+			if (m_userInput.size() > 0)
 			{
-				//We set the characters position and color
-				sf::Vector2f localPosition = sf::Vector2f(position.x + j * 15, position.y);
-				sf::Color color = sf::Color(30, 58, 64, 255); //Dark blue
+				int user = m_userInput.size();
+				int wordSize = word.size();
+				std::string subWord = word;
 
-				//Gets the current character
-				char currentChar = word[j];
-
-				//Apply the character to m_text
-				m_text.setString(currentChar);
-
-				//Check if the current characters index is less than the users word input. If so apply a green color
-				if (j < m_userInput.size())
-				{
-					color = sf::Color(88, 153, 11, 255); //Green
-				}
-
-				//Apply position and color
-				m_text.setColor(color);
-				m_text.setPosition(localPosition);
-
-				//Draw the current character
+				subWord.erase(m_userInput.size(), wordSize - user);
+				m_text.setColor(sf::Color(88, 153, 11, 255)); // Green
+				m_text.setString(subWord);
 				drawManager->Draw(m_text, sf::RenderStates::Default);
 			}
 		}
 		else
 		{
-			//If the word is not active, apply the word to m_text and draw it onto the screen
-			m_text.setString(word);
 			drawManager->Draw(m_text, sf::RenderStates::Default);
 		}
 	}
@@ -110,11 +93,11 @@ void WordManager::CheckWords()
 	bool charFits = false;
 
 	//Loop through all words
-	for (int i = 0; i < m_wordCount; i++)
+	for (int i = 0; i < m_structs.size(); i++)
 	{
 		//Get the current word and it's active state
-		std::string word = m_words[i];
-		bool active = m_words_active[i];
+		std::string word = m_structs[i].text;
+		bool active = m_structs[i].active;
 
 
 		//If the word is active and the current character fits the words length
@@ -123,7 +106,7 @@ void WordManager::CheckWords()
 			//Checks if the key does not match the word, set the word to inactive
 			if (word[m_userInput.size()] != m_userChar)
 			{
-				m_words_active[i] = false;
+				m_structs[i].active = false;
 			}
 			else
 			{
@@ -142,10 +125,10 @@ void WordManager::CheckWords()
 
 
 	//Loop through the words again
-	for (int i = 0; i < m_wordCount; i++)
+	for (int i = 0; i < m_structs.size(); i++)
 	{
 		//Get the current word
-		std::string word = m_words[i];
+		std::string word = m_structs[i].text;
 
 		//If the users word 
 		if (m_userInput.size() >= word.size())
@@ -158,7 +141,7 @@ void WordManager::CheckWords()
 		//If the cutword matches the users input the word is activated again
 		if (cutWord == m_userInput)
 		{
-			m_words_active[i] = true;
+			m_structs[i].active = true;
 		}
 	}
 }
@@ -166,9 +149,9 @@ void WordManager::CheckWords()
 void WordManager::Reset()
 {
 	//Sets all words to active
-	for (int i = 0; i < m_wordCount; i++)
+	for (int i = 0; i < m_structs.size(); i++)
 	{
-		m_words_active[i] = true;
+		m_structs[i].active = true;
 	}
 
 	//Reset the userinput and character
@@ -177,7 +160,7 @@ void WordManager::Reset()
 }
 void WordManager::SetWordPosition(sf::Vector2f position, int wordIndex)
 {
-	m_wordPositions[wordIndex] = position;
+	m_structs[wordIndex].position = position;
 }
 
 std::string WordManager::GetFinishedWord()
@@ -185,12 +168,12 @@ std::string WordManager::GetFinishedWord()
 	std::string finishedWord = "";
 
 	//Find any word that matches the user input and return the word. Set the word slot to empty string.
-	for (int i = 0; i < m_wordCount; i++)
+	for (int i = 0; i < m_structs.size(); i++)
 	{
-		if (m_words[i] == m_userInput)
+		if (m_structs[i].text == m_userInput)
 		{
-			finishedWord = m_words[i];
-			m_words[i] = "";
+			finishedWord = m_structs[i].text;
+			m_structs[i].text = "";
 			Reset();
 			m_correctKey = false;
 			return finishedWord;
@@ -202,11 +185,11 @@ std::string WordManager::GetFinishedWord()
 void WordManager::SetNewWord(const std::string& newWord)
 {
 	//Apply the newWord to empty word slot
-	for (int i = 0; i < m_wordCount; i++)
+	for (int i = 0; i < m_structs.size(); i++)
 	{
-		if (m_words[i].size() == 0)
+		if (m_structs[i].text.size() == 0)
 		{
-			m_words[i] = newWord;
+			m_structs[i].text = newWord;
 			break;
 		}
 	}
@@ -216,9 +199,9 @@ std::vector<bool> WordManager::GetActiveBubbles()
 {
 	std::vector<bool> results;
 
-	results.push_back(m_words_active[0]);
-	results.push_back(m_words_active[1]);
-	results.push_back(m_words_active[2]);
+	results.push_back(m_structs[0].active);
+	results.push_back(m_structs[1].active);
+	results.push_back(m_structs[2].active);
 	return results;
 }
 bool WordManager::GetCorrectKey()

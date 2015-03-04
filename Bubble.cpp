@@ -40,8 +40,7 @@ void Bubble::SetAlpha(int alpha)
 void Bubble::SetItem(Item* item)
 {
 	m_item = item;
-	m_item->SetPosition(m_sprite.getPosition().x, m_sprite.getPosition().y - 10);
-	
+
 	int x = (int)(item->GetProperty());
 	m_sprite.setTextureRect(sf::IntRect(x * m_width, 0, m_width, m_height));
 }
@@ -68,7 +67,7 @@ void Bubble::Update(float deltaTime)
 	//Set item position
 	if (m_item)
 	{
-		m_item->SetPosition(m_sprite.getPosition().x, m_sprite.getPosition().y);
+		m_item->SetPosition(pos.x, pos.y - 15);
 	}
 }
 void Bubble::Draw(DrawManager* drawManager)

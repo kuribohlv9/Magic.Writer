@@ -141,7 +141,7 @@ void Player::ChangeLane(int xDirection)
 	//Set possible item position
 	if (m_item)
 	{
-		m_item->SetPosition(m_x - 25, m_y - 60);
+		m_item->SetPosition(m_x - 25, m_y - 170);
 	}
 
 	if (xDirection != 0 && m_state != PLAYER_KNOCKEDDOWN)
