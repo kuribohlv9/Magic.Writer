@@ -86,4 +86,6 @@ private:
 	int m_score;
 	int m_lastScore;
 	unsigned int m_life;
+
+	float m_speed;
 };

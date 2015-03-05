@@ -76,6 +76,7 @@ GameState::GameState()
 	m_score = 0;
 	m_lastScore = 0;
 	m_life = 3;
+	m_speed = 800;
 
 	//Instantiate waves
 	texture = m_textureManager->LoadTexture("assets/sprites/wave_spritesheet.png");
@@ -173,6 +174,28 @@ bool GameState::Update(float deltaTime)
 		m_activeItems[i]->Update(deltaTime);
 	}
 
+	//Item movement
+	for (int i = 0; i < m_activeItems.size(); i++)
+	{
+		if (!m_activeItems.at(i)->IsActive())
+			continue;
+
+			if (m_powerUpManager->BounceItem() == nullptr)
+				m_activeItems.at(i)->Move(0, -m_speed * deltaTime);
+			else
+			{
+				if (m_powerUpManager->NextBounceTarget() == nullptr)
+					m_powerUpManager->BounceItem()->Move(0, -m_speed * deltaTime);
+				else
+				{
+					sf::Vector2f itemDir = m_powerUpManager->ItemDirection();
+
+					itemDir *= m_speed * deltaTime;
+					m_powerUpManager->BounceItem()->Move(itemDir.x, itemDir.y);
+				}
+			
+			}
+	}
 
 	//Update bubbles
 	for (int i = 0; i < m_bubbles.size(); i++)
@@ -283,8 +306,32 @@ void GameState::CheckCollision()
 			//Collision check
 			if (CollisionManager::Check(item->GetCollider(), monster->GetCollider()))
 			{
-
-				if (!m_powerUpManager->GetPierce())
+				if (m_powerUpManager->GetPierce())
+				{
+					if (m_powerUpManager->AddItemToPierceList(monster))
+					{
+						monster->Damage(item->GetProperty(), m_score);
+					}
+				}
+				else if (m_powerUpManager->BounceItem() == item)
+				{
+					Monster* targetMonster = m_powerUpManager->NextBounceTarget();
+					if (targetMonster == monster)
+					{
+						monster->Damage(item->GetProperty(), m_score);
+						m_powerUpManager->NextBounce(monster);
+						m_powerUpManager->AddLaneToBounceList(monster->GetX());
+					}
+					else if (targetMonster == nullptr)
+					{
+						monster->Damage(item->GetProperty(), m_score);
+						m_powerUpManager->NextBounce(monster);
+						m_powerUpManager->AddLaneToBounceList(monster->GetX());
+					}
+				
+					//If sats som kollar ifall det är första gången bounceitem träffar monster, om true gör damage.
+				}
+				else
 				{
 					monster->Damage(item->GetProperty(), m_score);
 
@@ -292,13 +339,7 @@ void GameState::CheckCollision()
 					item->SetInGame(false);
 					item->SetState(ITEM_HIT);
 				}
-				else
-				{
-					if (m_powerUpManager->AddItemToPierceList(monster))
-					{
-						monster->Damage(item->GetProperty(), m_score);
-					}
-				}
+
 				if (monster->IsActive() == false)
 				{
 					//Increase score
