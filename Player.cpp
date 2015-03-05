@@ -7,8 +7,10 @@
 #include "InputManager.h"
 #include "DrawManager.h"
 #include "ServiceLocator.h"
+#include "ParticleManager.h"
+#include "ParticleEmitter.h"
 
-Player::Player(sf::Texture* texture, sf::SoundBuffer* changeLaneBuffer)
+Player::Player(sf::Texture* texture, sf::Texture* particle, sf::SoundBuffer* changeLaneBuffer)
 {
 	//Variables
 	m_inputManager = ServiceLocator<InputManager>::GetService();
@@ -38,6 +40,13 @@ Player::Player(sf::Texture* texture, sf::SoundBuffer* changeLaneBuffer)
 	//Set sound
 	m_changeLaneSound.setBuffer(*changeLaneBuffer);
 	m_changeLaneSound.setVolume(10);
+
+	//Set emitter
+	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particle, 200);
+	m_emitter->SetSpawnRate(0);
+	m_emitter->SetLifeTime(2, 2);
+	m_emitter->SetSize(60, 1);
+	m_emitter->SetAcceleration(0, 2);
 }
 
 Player::~Player()
@@ -55,6 +64,14 @@ Player::~Player()
 
 void Player::Update(float deltaTime)
 {
+	if (rand() % 2 == 0)
+		m_emitter->SetStartAngle(300, 320);
+	else
+		m_emitter->SetStartAngle(220, 240);
+
+	m_emitter->SetForce(50, 50);
+	m_emitter->SetPosition(GetX() + 10, GetY() - 120);
+
 	//Handle movement between lanes
 	if (!IsStunned())
 		HandleMovement();
@@ -141,7 +158,7 @@ void Player::ChangeLane(int xDirection)
 	//Set possible item position
 	if (m_item)
 	{
-		m_item->SetPosition(m_x - 25, m_y - 60);
+		m_item->SetPosition(m_x - 25, m_y - 170);
 	}
 
 	if (xDirection != 0 && m_state != PLAYER_KNOCKEDDOWN)
@@ -182,6 +199,8 @@ void Player::SetItem(Item* item)
 		m_state = PLAYER_THROWING;
 		m_animator->SetAnimation("throwing");
 	}
+
+	m_emitter->SetActive((item != nullptr));
 }
 
 Item* Player::GetItem()

@@ -12,7 +12,7 @@ public:
 	int GetY();
 	bool IsVisible();
 	void SetVisible(bool state);
-	void SetPosition(int x, int y);
+	void SetPosition(float x, float y);
 
 	virtual void SetParent(GUI_Element* parent);
 	virtual void Refresh();
@@ -20,10 +20,10 @@ public:
 	virtual void Update();
 
 protected:
-	int m_x;
-	int m_y;
-	int m_localX;
-	int m_localY;
+	float m_x;
+	float m_y;
+	float m_localX;
+	float m_localY;
 	bool m_visible;
 
 	GUI_Element* m_parent;

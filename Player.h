@@ -5,6 +5,7 @@ class Animator;
 class DrawManager;
 class InputManager;
 class Item;
+class ParticleEmitter;
 
 enum PlayerState
 {
@@ -19,7 +20,7 @@ enum PlayerState
 class Player : public GameObject
 {
 public:
-	Player(sf::Texture* texture, sf::SoundBuffer* changeLaneBuffer);
+	Player(sf::Texture* texture, sf::Texture* particle, sf::SoundBuffer* changeLaneBuffer);
 	~Player();
 	void Update(float deltaTime);
 	void Draw(DrawManager* drawManager);
@@ -37,6 +38,7 @@ private:
 	void ChangeLane(int xDirection);
 
 private:
+	ParticleEmitter* m_emitter;
 	Animator* m_animator;
 	InputManager* m_inputManager;
 	Item* m_item;

@@ -30,6 +30,6 @@ private:
 	CollisionManager* m_collision_manager;
 	AudioManager* m_audio_manager;
 	StateManager* m_state_manager;
-	HighscoreManager* m_highscore_manager;
+	HighscoreManager* m_scores_manager;
 	ParticleManager* m_particle_manager;
 };

@@ -62,7 +62,9 @@ bool Item::IsInGame()
 void Item::SetInGame(bool state)
 {
 	if (state)
+	{
 		Reset();
+	}
 	else
 	{
 		m_emitter->SetActive(false);
@@ -73,7 +75,7 @@ void Item::SetInGame(bool state)
 
 void Item::Reset()
 {
-	m_sprite.setScale(0.5, 0.5);
+	m_sprite.setScale(0.7f, 0.7f);
 	m_sprite.setColor(sf::Color::White);
 
 	SetState(ITEM_HOLDING);

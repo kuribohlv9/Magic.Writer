@@ -2,7 +2,7 @@
 #include "GUI_Label.h"
 #include "DrawManager.h"
 
-GUI_Label::GUI_Label(int x, int y, GUI_Element* parent, sf::Font* font, std::string text)
+GUI_Label::GUI_Label(float x, float y, GUI_Element* parent, sf::Font* font, std::string text)
 {
 	if (parent)
 	{

@@ -1,6 +1,7 @@
 #pragma once
 #include "State.h"
 
+class HighscoreManager;
 class DrawManager;
 class TextureManager;
 class GUI_Button;
@@ -20,6 +21,7 @@ public:
 	ScreenState NextState();
 
 private:
+	HighscoreManager* m_highscoreManager;
 	DrawManager* m_drawManager;
 	TextureManager* m_textureManager;
 	ScreenState m_nextState;
@@ -34,6 +36,7 @@ private:
 	sf::Sprite m_poleSprite;
 
 	bool m_helpScreen;
+	bool m_showHighscore;
 
 	sf::Sprite m_backgroundSprite;
 };

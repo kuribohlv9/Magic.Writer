@@ -19,7 +19,7 @@ Engine::Engine()
 	m_texture_manager = nullptr;
 	m_audio_manager = nullptr;
 	m_state_manager = nullptr;
-	m_highscore_manager = nullptr;
+	m_scores_manager = nullptr;
 	m_particle_manager = nullptr;
 }
 
@@ -54,10 +54,10 @@ bool Engine::Initialize()
 		return false;
 	ServiceLocator<AudioManager>::SetService(m_audio_manager);
 
-	m_highscore_manager = new HighscoreManager();
-	if (!m_highscore_manager || !m_highscore_manager->Initialize())
+	m_scores_manager = new HighscoreManager();
+	if (!m_scores_manager || !m_scores_manager->Initialize())
 		return false;
-	ServiceLocator<HighscoreManager>::SetService(m_highscore_manager);
+	ServiceLocator<HighscoreManager>::SetService(m_scores_manager);
 
 	m_particle_manager = new ParticleManager();
 	if (!m_particle_manager)
