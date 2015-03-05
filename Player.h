@@ -45,4 +45,6 @@ private:
 	PlayerState m_state;
 	sf::Sound m_changeLaneSound;
 	int m_lane;
+
+	float m_targetX;
 };

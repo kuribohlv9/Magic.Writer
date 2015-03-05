@@ -32,9 +32,11 @@ Player::Player(sf::Texture* texture, sf::Texture* particle, sf::SoundBuffer* cha
 	m_collider->SetWidthHeight(textureRect.width / 2, textureRect.height - 100);
 
 	//Set start position
+	m_state = PLAYER_IDLE;
 	m_lane = 1;
 	ChangeLane(1);
-	m_state = PLAYER_IDLE;
+	SetPosition(Lanes[2], 780);
+	m_targetX = Lanes[2];
 	m_animator->SetAnimation("idle");
 
 	//Set sound
@@ -48,7 +50,6 @@ Player::Player(sf::Texture* texture, sf::Texture* particle, sf::SoundBuffer* cha
 	m_emitter->SetSize(60, 1);
 	m_emitter->SetAcceleration(0, 2);
 }
-
 Player::~Player()
 {
 	//Delete the newed animator
@@ -120,9 +121,15 @@ void Player::Update(float deltaTime)
 			m_sprite.setScale(1, 1);
 		}
 		break;
-	}	
-}
+	}
 
+
+	//Move player
+	float distance = abs(GetX() - m_targetX);
+	int dir = (GetX() < m_targetX) ? 1 : -1;
+
+	Move(distance * deltaTime * dir * 7, 0);
+}
 void Player::Draw(DrawManager* drawManager)
 {
 	//Draw player sprite
@@ -152,8 +159,8 @@ void Player::ChangeLane(int xDirection)
 		return;
 	}
 
-	//Set player position
-	SetPosition(Lanes[m_lane], 780);
+	//Set target position
+	m_targetX = Lanes[m_lane];
 
 	//Set possible item position
 	if (m_item)
@@ -202,7 +209,6 @@ void Player::SetItem(Item* item)
 
 	m_emitter->SetActive((item != nullptr));
 }
-
 Item* Player::GetItem()
 {
 	//Returns an item if the wizard is holding one, else it returns nullptr
@@ -246,7 +252,6 @@ void Player::Knockdown()
 
 	ChangeLane(knockDirection);
 }
-
 bool Player::IsStunned()
 {
 	return (m_state == PLAYER_KNOCKEDDOWN);

@@ -63,7 +63,7 @@ void Bubble::Update(float deltaTime)
 	float distance = abs(pos.x - targetX);
 	int dir = (pos.x < targetX) ? 1 : -1;
 
-	m_sprite.move(distance * 2 * dir * deltaTime, 0);
+	m_sprite.move(distance * 3 * dir * deltaTime, 0);
 
 	pos.y += 0.25f * cos(m_lifeTime * 3.0f);
 
