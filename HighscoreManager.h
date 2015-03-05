@@ -4,9 +4,13 @@ class DrawManager;
 
 struct ScoreEntry
 {
+	//Stores the users name
 	std::string name;
+
+	//Stores the users score
 	int score;
 
+	//Returns a string that connects the name and score as one string
 	std::string GetText()
 	{
 		return (name + " " + std::to_string(score));

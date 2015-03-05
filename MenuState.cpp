@@ -15,9 +15,13 @@ MenuState::MenuState()
 {
 	m_textureManager = ServiceLocator<TextureManager>::GetService();
 	m_drawManager = ServiceLocator<DrawManager>::GetService();
+	m_highscoreManager = ServiceLocator<HighscoreManager>::GetService();
 	m_nextState = STATE_INVALID;
 
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");
+	sf::Font* font = m_textureManager->LoadFont("assets/fonts/font.ttf");
+	m_highscoreManager->SetFont(font);
+	m_highscoreManager->SetPosition(300, 100);
 
 	m_poleSprite.setTexture(*texture);
 	m_poleSprite.setTextureRect(sf::IntRect(0, 219 * 2, 167, 775));

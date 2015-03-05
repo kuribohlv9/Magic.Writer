@@ -13,6 +13,7 @@ PowerUpManager::PowerUpManager(std::vector<Monster*>* monster, std::vector<Item*
 	m_item = item;
 	m_monster = monster;
 	m_player = player;
+	m_nextBounceTarget = nullptr;
 
 	m_frozen = false;
 	m_pierce = false;
@@ -61,11 +62,17 @@ void PowerUpManager::Update(float deltaTime)
 			m_monsterPierceList.clear();
 		}
 	}
+	if (m_bounceCurrentItem != nullptr)
+	{
+		if (!m_bounceCurrentItem->IsActive() && m_player->GetItem() != m_bounceCurrentItem)
+			m_bounceCurrentItem = nullptr;
+	}
 }
 
 void PowerUpManager::ActivateBounce()
 {
-	
+	if (m_player != nullptr)
+		m_bounceCurrentItem = m_player->GetItem();
 }
 
 void PowerUpManager::ActivateFreeze()
@@ -143,4 +150,88 @@ bool PowerUpManager::AddItemToPierceList(Monster* monster)
 		}
 	}
 	return false;
+}
+
+bool PowerUpManager::GetBounce()
+{
+	if (m_bounceCurrentItem != nullptr)
+	{
+		if (m_bounceCurrentItem->IsActive())
+			return true;
+	}
+	return false;
+}
+
+void PowerUpManager::NextBounce(Monster* monster)
+{
+	if (m_bounceCurrentItem != nullptr)
+	{
+		bool foundNewTarget = false;
+
+		for (int i = 0; i < m_monster->size(); i++)
+		{
+			if (!m_monster->at(i)->IsActive())
+				continue;
+
+			for (int j = 0; j < 5; j++)
+			{
+				if (m_monster->at(i)->GetX() != monster->GetX())
+				{
+					for (int k = 0; k < m_LaneBounceList.size(); k++)
+					{
+						if (m_LaneBounceList.at(i) == m_monster->at(i)->GetX());
+					}
+					m_nextBounceTarget = m_monster->at(i);
+					foundNewTarget = true;
+					break;
+				}
+			}
+
+			if (foundNewTarget)
+			{
+				break;
+			}
+		}
+	}
+}
+
+Item* PowerUpManager::BounceItem()
+{
+	if (m_bounceCurrentItem != nullptr)
+		return m_bounceCurrentItem;
+	return nullptr;
+}
+
+Monster* PowerUpManager::NextBounceTarget()
+{
+	if (m_nextBounceTarget != nullptr)
+		return m_nextBounceTarget;
+	return nullptr;
+}
+
+sf::Vector2f PowerUpManager::ItemDirection()
+{	
+	if (m_bounceCurrentItem != nullptr)
+		m_itemPos = sf::Vector2f(m_bounceCurrentItem->GetX(), m_bounceCurrentItem->GetY());
+
+	if (m_nextBounceTarget != nullptr)
+		m_monsterPos = sf::Vector2f(m_nextBounceTarget->GetX(), m_nextBounceTarget->GetY());
+
+	sf::Vector2f m_itemDir = m_monsterPos - m_itemPos;
+	
+	float length = sqrt(m_itemDir.x * m_itemDir.x + m_itemDir.y * m_itemDir.y);
+
+	m_itemDir /= length;
+	
+	return m_itemDir;
+}
+
+void PowerUpManager::AddLaneToBounceList(int x)
+{
+	for (int i = 0; i < m_LaneBounceList.size(); i++)
+	{
+		if (m_LaneBounceList.at(i) == x)
+			continue;
+		m_LaneBounceList.push_back(x);
+	}
 }

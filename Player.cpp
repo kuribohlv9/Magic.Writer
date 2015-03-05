@@ -7,8 +7,10 @@
 #include "InputManager.h"
 #include "DrawManager.h"
 #include "ServiceLocator.h"
+#include "ParticleManager.h"
+#include "ParticleEmitter.h"
 
-Player::Player(sf::Texture* texture, sf::SoundBuffer* changeLaneBuffer)
+Player::Player(sf::Texture* texture, sf::Texture* particle, sf::SoundBuffer* changeLaneBuffer)
 {
 	//Variables
 	m_inputManager = ServiceLocator<InputManager>::GetService();
@@ -30,16 +32,24 @@ Player::Player(sf::Texture* texture, sf::SoundBuffer* changeLaneBuffer)
 	m_collider->SetWidthHeight(textureRect.width / 2, textureRect.height - 100);
 
 	//Set start position
+	m_state = PLAYER_IDLE;
 	m_lane = 1;
 	ChangeLane(1);
-	m_state = PLAYER_IDLE;
+	SetPosition(Lanes[2], 780);
+	m_targetX = Lanes[2];
 	m_animator->SetAnimation("idle");
 
 	//Set sound
 	m_changeLaneSound.setBuffer(*changeLaneBuffer);
 	m_changeLaneSound.setVolume(10);
-}
 
+	//Set emitter
+	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particle, 200);
+	m_emitter->SetSpawnRate(0);
+	m_emitter->SetLifeTime(2, 2);
+	m_emitter->SetSize(60, 1);
+	m_emitter->SetAcceleration(0, 2);
+}
 Player::~Player()
 {
 	//Delete the newed animator
@@ -55,6 +65,14 @@ Player::~Player()
 
 void Player::Update(float deltaTime)
 {
+	if (rand() % 2 == 0)
+		m_emitter->SetStartAngle(300, 320);
+	else
+		m_emitter->SetStartAngle(220, 240);
+
+	m_emitter->SetForce(50, 50);
+	m_emitter->SetPosition(GetX() + 10, GetY() - 120);
+
 	//Handle movement between lanes
 	if (!IsStunned())
 		HandleMovement();
@@ -103,9 +121,15 @@ void Player::Update(float deltaTime)
 			m_sprite.setScale(1, 1);
 		}
 		break;
-	}	
-}
+	}
 
+
+	//Move player
+	float distance = abs(GetX() - m_targetX);
+	int dir = (GetX() < m_targetX) ? 1 : -1;
+
+	Move(distance * deltaTime * dir * 7, 0);
+}
 void Player::Draw(DrawManager* drawManager)
 {
 	//Draw player sprite
@@ -135,8 +159,8 @@ void Player::ChangeLane(int xDirection)
 		return;
 	}
 
-	//Set player position
-	SetPosition(Lanes[m_lane], 780);
+	//Set target position
+	m_targetX = Lanes[m_lane];
 
 	//Set possible item position
 	if (m_item)
@@ -182,8 +206,9 @@ void Player::SetItem(Item* item)
 		m_state = PLAYER_THROWING;
 		m_animator->SetAnimation("throwing");
 	}
-}
 
+	m_emitter->SetActive((item != nullptr));
+}
 Item* Player::GetItem()
 {
 	//Returns an item if the wizard is holding one, else it returns nullptr
@@ -227,7 +252,6 @@ void Player::Knockdown()
 
 	ChangeLane(knockDirection);
 }
-
 bool Player::IsStunned()
 {
 	return (m_state == PLAYER_KNOCKEDDOWN);

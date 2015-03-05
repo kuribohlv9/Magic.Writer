@@ -46,6 +46,9 @@ private:
 	void InstantiateBubbles();
 	void InstantiateMonsters();
 	void SpawnMonster();
+	
+	bool PlayMode(float deltaTime);
+	bool VictoryMode(float deltaTime);
 
 	bool IsMonsters();
 
@@ -99,6 +102,8 @@ private:
 	int m_score;
 	int m_lastScore;
 	unsigned int m_life;
+
+	float m_speed;
 
 	//Victory and Losing screens
 	sf::RectangleShape m_victory_window;

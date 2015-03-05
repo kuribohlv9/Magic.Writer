@@ -32,9 +32,6 @@ Item::~Item()
 }
 void Item::Update(float deltaTime)
 {
-	//Move upwards
-	Move(0, -m_speed * deltaTime);
-
 	m_emitter->SetPosition(GetX(), GetY());
 	m_emitter->SetStartAngle(80, 100);
 
