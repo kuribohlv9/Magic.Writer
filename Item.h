@@ -27,6 +27,7 @@ public:
 	void SetSourceRectangle(int index, sf::IntRect rectangle);
 	void SetName(const std::string& name);
 
+	void Activate();
 	void Reset();
 	void SetState(ItemState state);
 

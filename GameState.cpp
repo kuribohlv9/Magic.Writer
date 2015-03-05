@@ -13,6 +13,7 @@
 #include "ItemManager.h"
 #include "WaveManager.h"
 #include "PowerUpManager.h"
+#include "ParticleManager.h"
 
 //Classes
 #include "Monster.h"
@@ -38,7 +39,7 @@ GameState::GameState()
 	m_wordManager = new WordManager();
 	m_itemManager = new ItemManager();
 	m_waveManager = new WaveManager();
-	m_powerUpManager = new PowerUpManager(&m_monsters, &m_activeItems);
+	m_particleManager = ServiceLocator<ParticleManager>::GetService();
 
 	//Load background texture
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background/background.png");
@@ -51,6 +52,8 @@ GameState::GameState()
 	sf::SoundBuffer* buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_walk_sound.wav");
 	m_player = new Player(texture, buffer);
 
+	m_powerUpManager = new PowerUpManager(&m_monsters, &m_activeItems, m_player);
+
 	//Load sound
 	buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_spell_complete01.wav");
 	m_conjureCompleteSound.setBuffer(*buffer);
@@ -61,13 +64,15 @@ GameState::GameState()
 	
 	//TEMPORARY HUD
 	m_font = m_textureManager->LoadFont("assets/fonts/font.ttf");
+	m_score_sign_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/sign_score.png"));
+	m_score_sign_sprite.setPosition(ScreenWidth - 400, 0);
 	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
 	
 	m_scoreDisplay.setFont(*m_font);
 	m_scoreDisplay.setScale(1.5f, 1.5f);
-	m_scoreDisplay.setPosition(1750, 15);
+	m_scoreDisplay.setPosition(1660, 155);
 	m_scoreDisplay.setString("0");
-	m_scoreDisplay.setColor(sf::Color(255, 255, 255, 255));
+	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
 
 	m_score = 0;
 	m_lastScore = 0;
@@ -164,6 +169,7 @@ bool GameState::Update(float deltaTime)
 
 	case MODE_PLAYING:
 	{
+		m_particleManager->Update(deltaTime);
 		//Handle word input
 		if (m_player->GetItem() == nullptr && !m_player->IsStunned())
 		{
@@ -324,16 +330,21 @@ void GameState::CheckCollision()
 				//Collision check
 				if (CollisionManager::Check(item->GetCollider(), monster->GetCollider()))
 				{
-					monster->Damage(item->GetProperty(), m_score);
-					if (m_powerUpManager->GetPierce())
+					if (!m_powerUpManager->GetPierce())
 					{
-						item->SetActive(true);
-						m_powerUpManager->ActivatePierce(1);
+						monster->Damage(item->GetProperty(), m_score);
+
+						item->SetActive(false);
+						item->SetInGame(false);
+						item->SetState(ITEM_HIT);
 					}
 					else
-						item->SetActive(false);
-					item->SetInGame(false);
-					item->SetState(ITEM_HIT);
+					{
+						if (m_powerUpManager->AddItemToPierceList(monster))
+						{
+							monster->Damage(item->GetProperty(), m_score);
+						}
+					}
 
 					if (monster->IsActive() == false)
 					{
@@ -345,14 +356,18 @@ void GameState::CheckCollision()
 		}
 
 
-		//Collision between monsters and player
-		for (int i = 0; i < m_monsters.size(); i++)
+
+	//Collision between monsters and player
+	for (int i = 0; i < m_monsters.size(); i++)
+	{
+		if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
 		{
 			if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
 			{
 				m_player->Knockdown();
 			}
 		}
+	}
 
 		//Cleanup
 
@@ -387,6 +402,9 @@ void GameState::Draw()
 			continue;
 		m_waves[i]->Draw(m_drawManager);
 	}
+
+	//Draw Particles
+	m_particleManager->Draw(m_drawManager);
 
 	//Draw monster
 	for (int i = 0; i < m_monsters.size(); i++)
@@ -426,6 +444,8 @@ void GameState::Draw()
 		m_life_sprite.setPosition(15.0f + 100.0f * i, 15);
 		m_drawManager->Draw(m_life_sprite, sf::RenderStates::Default);
 	}
+
+	m_drawManager->Draw(m_score_sign_sprite, sf::RenderStates::Default);
 	m_drawManager->Draw(m_scoreDisplay, sf::RenderStates::Default);
 
 	//Draw Victory and Losing screen
@@ -566,8 +586,7 @@ void GameState::ConvertWordToItem()
 		if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Return))
 		{
 			//Activate item
-			spawnedItem->SetActive(true);
-			spawnedItem->SetState(ITEM_FLYING);
+			spawnedItem->Activate();
 			m_activeItems.push_back(spawnedItem);
 			m_player->SetItem(nullptr);
 		}

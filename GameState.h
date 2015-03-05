@@ -10,6 +10,7 @@ class InputManager;
 class WaveManager;
 class PowerUpManager;
 class ParticleEmitter;
+class ParticleManager;
 class Item;
 class Bubble;
 class Monster;
@@ -63,6 +64,7 @@ private:
 	ItemManager* m_itemManager;
 	WaveManager* m_waveManager;
 	PowerUpManager* m_powerUpManager;
+	ParticleManager* m_particleManager;
 
 	//Item & word variables
 	std::vector<Bubble*> m_bubbles;
@@ -92,6 +94,7 @@ private:
 
 	//Test HUD
 	sf::Sprite m_life_sprite;
+	sf::Sprite m_score_sign_sprite;
 	sf::Text m_scoreDisplay;
 	int m_score;
 	int m_lastScore;

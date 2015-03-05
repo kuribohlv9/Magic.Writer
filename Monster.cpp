@@ -5,6 +5,8 @@
 #include "Collider.h"
 #include <time.h>
 #include "ParticleEmitter.h"
+#include "ParticleManager.h"
+#include "ServiceLocator.h"
 
 Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, ItemProperty weakness, sf::Texture* particleTexture)
 {
@@ -52,12 +54,14 @@ Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spr
 
 	m_weakness = weakness;
 
-	//Emitter test
-	m_emitter = new ParticleEmitter(100, 0.1f, particleTexture);
-	m_emitter->SetSize(30, 1);
-	m_emitter->SetAcceleration(sf::Vector2f(0, -0.5f));
-	m_emitter->SetStartVelocity(sf::Vector2f(0, -50));
-	m_emitter->SetLifeTime(3);
+	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particleTexture, 50);
+	m_emitter->SetLifeTime(1.5f, 1.5f);
+	m_emitter->SetSpawnRate(0.1f);
+	m_emitter->SetPosition(-100, -100);
+	m_emitter->SetForce(50, 50);
+	m_emitter->SetAcceleration(0, -1);
+	m_emitter->SetStartAngle(270, 270);
+	m_emitter->SetSize(20, 1);
 }
 Monster::~Monster()
 {
@@ -66,17 +70,10 @@ Monster::~Monster()
 		delete m_head_animator;
 		m_head_animator = nullptr;
 	}
-
-	if (m_emitter)
-	{
-		delete m_emitter;
-		m_emitter = nullptr;
-	}
 }
 
 void Monster::Draw(DrawManager* drawManager)
 {
-	m_emitter->Draw(drawManager);
 	if (m_frozen)
 	{
 		drawManager->Draw(m_sprite, sf::RenderStates::Default);
@@ -113,8 +110,8 @@ void Monster::Draw(DrawManager* drawManager)
 
 void Monster::Update(float deltaTime)
 {
-	m_emitter->Update(deltaTime);
-	m_emitter->SetPosition(sf::Vector2f(GetX() - 10, GetY()));
+	m_emitter->SetPosition(GetX() - 20, GetY());
+
 	m_totalLifeTime += deltaTime;
 
 	if (!m_frozen)
@@ -176,6 +173,7 @@ bool Monster::Burst()
 	if (!m_activeBurst)
 	{
 		m_activeBurst = true;
+		m_emitter->SetActive(false);
 		m_collider->SetWidthHeight(0, 0);
 		m_speed = 400;
 		return true;
@@ -208,6 +206,7 @@ void Monster::Damage(ItemProperty property, int &score)
 	{
 		m_state = MONSTER_DEATH;
 		m_head_animator->SetAnimation("death");
+		m_emitter->SetActive(false);
 	}
 }
 
@@ -270,6 +269,7 @@ void Monster::Activate()
 	m_collider->SetWidthHeight(m_sprite_width / 4, m_sprite_height / 4);
 
 	SetActive(true);
+	m_emitter->SetActive(true);
 }
 
 void Monster::SetSounds(sf::SoundBuffer* hitBuffer, sf::SoundBuffer* hitBufferTwo, sf::SoundBuffer* hitBufferThree)

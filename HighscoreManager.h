@@ -1,4 +1,18 @@
 #pragma once
+
+class DrawManager;
+
+struct ScoreEntry
+{
+	std::string name;
+	int score;
+
+	std::string GetText()
+	{
+		return (name + " " + std::to_string(score));
+	}
+};
+
 class HighscoreManager
 {
 public:
@@ -7,15 +21,22 @@ public:
 
 	bool Initialize();
 
-	//Used in function to sort the highscorelist
-	
+	void Draw(DrawManager* drawManager);
 
-	void WriteHighscore(int score);
-	void ReadHighscore();
-	std::vector<int>* GetHighscore();
+	void SetPosition(float x, float y);
+	void SetFont(sf::Font* font);
+	void WriteHighscore(ScoreEntry score);
 
 private:
-	std::vector<int>* m_highscore;
-	//mysortpls derp;
+	void ReadHighscore();
+
+private:
+	std::vector<ScoreEntry> m_entries;
+	std::string m_highscore_filename;
+
+	int m_maxEntries;
+	ScoreEntry m_lastEntry;
+	sf::Vector2f m_position;
+	sf::Text m_text;
 };
 

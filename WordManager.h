@@ -4,6 +4,13 @@ class DrawManager;
 class TextureManager;
 class InputManager;
 
+struct Word
+{
+	std::string text;
+	bool active;
+	sf::Vector2f position;
+};
+
 class WordManager
 {
 public:
@@ -40,10 +47,6 @@ private:
 	char m_userChar;
 
 	//The current words text and active states
-	std::string m_words[3];
-	bool m_words_active[3];
-	int m_wordCount;
+	std::vector<Word> m_structs;
 	bool m_correctKey;
-
-	sf::Vector2f m_wordPositions[3];
 };

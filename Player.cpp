@@ -136,21 +136,21 @@ void Player::ChangeLane(int xDirection)
 	}
 
 	//Set player position
-	SetPosition(Lanes[m_lane], 750);
+	SetPosition(Lanes[m_lane], 780);
 
 	//Set possible item position
 	if (m_item)
 	{
-		m_item->SetPosition(m_x - 25, m_y - 60);
+		m_item->SetPosition(m_x - 25, m_y - 170);
 	}
 
-	if (xDirection != 0)
+	if (xDirection != 0 && m_state != PLAYER_KNOCKEDDOWN)
 	{
 		//Set animation
 		m_state = PLAYER_JUMPING;
 		m_animator->SetAnimation("cll");
 		m_sprite.setScale(xDirection * -1, 1);
-
+		
 		//Play sound
 		m_changeLaneSound.stop();
 		m_changeLaneSound.setPlayingOffset(sf::seconds(0.4f));
@@ -222,8 +222,8 @@ void Player::Knockdown()
 		knockDirection *= -1;
 	}
 	m_state = PLAYER_KNOCKEDDOWN;
-	m_animator->SetAnimation("cll");
-	m_sprite.setScale(knockDirection, 1);
+	m_animator->SetAnimation("knockback");
+	m_sprite.setScale(knockDirection * 0.9f, 0.9f);
 
 	ChangeLane(knockDirection);
 }

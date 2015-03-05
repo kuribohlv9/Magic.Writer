@@ -3,14 +3,16 @@
 #include "PowerUpManager.h"
 #include "InputManager.h"
 #include "Item.h"
+#include "Player.h"
 #include "Monster.h"
 
-PowerUpManager::PowerUpManager(std::vector<Monster*>* monster, std::vector<Item*>* item)
+PowerUpManager::PowerUpManager(std::vector<Monster*>* monster, std::vector<Item*>* item, Player* player)
 {
 	m_inputManager = ServiceLocator<InputManager >::GetService();
 
 	m_item = item;
 	m_monster = monster;
+	m_player = player;
 
 	m_frozen = false;
 	m_pierce = false;
@@ -28,10 +30,18 @@ void PowerUpManager::Update(float deltaTime)
 		ActivateBounce();
 
 	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num2))
-		ActivatePierce(0);
+	{
+
+		ActivatePierce();
+	}
 
 	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num3))
 		ActivateFreeze();
+
+	if (m_pierce)
+	{
+		
+	}
 
 	if (m_frozen)
 	{
@@ -43,7 +53,14 @@ void PowerUpManager::Update(float deltaTime)
 			RemoveFreeze();
 		}
 	}
-	
+	if (m_pierceCurrentItem != nullptr)
+	{
+		if (!m_pierceCurrentItem->IsActive() && m_player->GetItem() != m_pierceCurrentItem)
+		{
+			m_pierceCurrentItem = nullptr;
+			m_monsterPierceList.clear();
+		}
+	}
 }
 
 void PowerUpManager::ActivateBounce()
@@ -83,20 +100,47 @@ void PowerUpManager::RemoveFreeze()
 	
 }
 
-void PowerUpManager::ActivatePierce(int pierce)
+void PowerUpManager::ActivatePierce()
 {
-	if (pierce == 0)
-		m_pierce = true;
-	else if (pierce == 1)
-		m_pierce = false;
+	if (m_player->GetItem() != nullptr)
+		m_pierceCurrentItem = m_player->GetItem();
+	
 }
 
 bool PowerUpManager::GetPierce()
 {
-	return m_pierce;
+	if (m_pierceCurrentItem != nullptr)
+	{
+		if (m_pierceCurrentItem->IsActive())
+			return true;
+	}
+	return false;
 }
 
 bool PowerUpManager::GetFrozen()
 {
 	return m_frozen;
+}
+
+bool PowerUpManager::AddItemToPierceList(Monster* monster)
+{
+	bool isInPool = false;
+	if (monster != nullptr)
+	{
+		for (int i = 0; i < m_monsterPierceList.size(); i++)
+		{
+			if (m_monsterPierceList[i] == monster)
+			{
+				isInPool = true;
+				break;
+			}
+		}
+
+		if (!isInPool)
+		{
+			m_monsterPierceList.push_back(monster);
+			return true;
+		}
+	}
+	return false;
 }

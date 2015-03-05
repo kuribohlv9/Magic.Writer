@@ -6,7 +6,7 @@ class DrawManager;
 class GUI_Label : public GUI_Element
 {
 public:
-	GUI_Label(int x, int y, GUI_Element* parent, sf::Font* font, std::string text);
+	GUI_Label(float x, float y, GUI_Element* parent, sf::Font* font, std::string text);
 
 	sf::Text* GetText();
 	void Draw(DrawManager* drawManager);
