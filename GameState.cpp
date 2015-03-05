@@ -92,7 +92,7 @@ GameState::GameState()
 	//Victory and Losing screen
 	m_victory_window.setPosition(300, 200);
 	m_victory_window.setSize(sf::Vector2f(ScreenWidth - 600, ScreenHeight - 400));
-	texture = m_textureManager->LoadTexture("assets/sprites/particle_test.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/items/particle_dead.png");
 	m_next_wave_button = new GUI_Button(350, ScreenHeight-250, nullptr, texture, sf::IntRect(0,0,50,50));
 	m_next_wave_button->Refresh();
 	m_back_to_menu_button = new GUI_Button(1300, ScreenHeight - 250, nullptr, texture, sf::IntRect(50, 0, 50, 50));
@@ -355,19 +355,17 @@ void GameState::CheckCollision()
 			}
 		}
 
-
-
-	//Collision between monsters and player
-	for (int i = 0; i < m_monsters.size(); i++)
-	{
-		if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
+		//Collision between monsters and player
+		for (int i = 0; i < m_monsters.size(); i++)
 		{
 			if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
 			{
-				m_player->Knockdown();
+				if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
+				{
+					m_player->Knockdown();
+				}
 			}
 		}
-	}
 
 		//Cleanup
 
@@ -380,7 +378,6 @@ void GameState::CheckCollision()
 			}
 		}
 	}
-
 }
 
 void GameState::Draw()
@@ -451,9 +448,6 @@ void GameState::Draw()
 	//Draw Victory and Losing screen
 	if (m_status == MODE_VICTORY)
 	{
-		//sf::RectangleShape derp;
-		
-
 		m_drawManager->Draw(m_victory_window, sf::RenderStates::Default);
 		m_next_wave_button->Draw(m_drawManager);
 		m_back_to_menu_button->Draw(m_drawManager);

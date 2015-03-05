@@ -24,16 +24,16 @@ MenuState::MenuState()
 	m_poleSprite.setPosition(ScreenWidth / 2, ScreenHeight - 775);
 
 
-	m_playButton = new GUI_Button(m_poleSprite.getPosition().x - 30, m_poleSprite.getPosition().y - 5, nullptr, texture, sf::IntRect(0, 0, 431, 219));
+	m_playButton = new GUI_Button(m_poleSprite.getPosition().x + 180, m_poleSprite.getPosition().y + 100, nullptr, texture, sf::IntRect(0, 0, 431, 219));
 	m_buttons.push_back(m_playButton);
-	m_highscoreButton = new GUI_Button(m_poleSprite.getPosition().x - 90, m_poleSprite.getPosition().y + 215, nullptr, texture, sf::IntRect(431, 0, 431, 219));
+	m_highscoreButton = new GUI_Button(m_poleSprite.getPosition().x + 130, m_poleSprite.getPosition().y + 320, nullptr, texture, sf::IntRect(431, 0, 431, 219));
 	m_buttons.push_back(m_highscoreButton);
-	m_exitButton = new GUI_Button(m_poleSprite.getPosition().x - 120, m_poleSprite.getPosition().y + 435, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
+	m_exitButton = new GUI_Button(m_poleSprite.getPosition().x + 90, m_poleSprite.getPosition().y + 550, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
 	m_buttons.push_back(m_exitButton);
-	m_helpButton = new GUI_Button(m_poleSprite.getPosition().x - 500, m_poleSprite.getPosition().y + 435, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
+	m_helpButton = new GUI_Button(m_poleSprite.getPosition().x - 300, m_poleSprite.getPosition().y + 550, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
 	m_buttons.push_back(m_helpButton);
-	m_helpExitButton = new GUI_Button(m_poleSprite.getPosition().x - 900, m_poleSprite.getPosition().y + 435, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
-	//m_buttons.push_back(m_helpExitButton);
+	m_helpExitButton = new GUI_Button(m_poleSprite.getPosition().x - 650, m_poleSprite.getPosition().y + 550, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
+	m_buttons.push_back(m_helpExitButton);
 
 	texture = m_textureManager->LoadTexture("assets/sprites/background/background.png");
 	m_backgroundSprite.setTexture(*texture);
@@ -68,6 +68,10 @@ bool MenuState::Update(float deltaTime)
 		{
 			m_nextState = STATE_GAME;
 			return false;
+		}
+		else if (m_highscoreButton->IsPressed())
+		{
+			m_showHighscore = !m_showHighscore;
 		}
 		else if (m_exitButton->IsPressed())
 		{
