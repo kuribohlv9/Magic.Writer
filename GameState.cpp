@@ -47,9 +47,10 @@ GameState::GameState()
 	m_ice_backgroundSprite.setTexture(*texture);
 
 	//Instantiate player
+	sf::Texture* particleTexture = m_textureManager->LoadTexture("assets/sprites/wizard/particle.png");
 	texture = m_textureManager->LoadTexture("assets/sprites/wizard/wizard_spritesheet.png");
 	sf::SoundBuffer* buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_walk_sound.wav");
-	m_player = new Player(texture, buffer);
+	m_player = new Player(texture, particleTexture, buffer);
 
 	m_powerUpManager = new PowerUpManager(&m_monsters, &m_activeItems, m_player);
 
@@ -351,8 +352,7 @@ void GameState::Draw()
 		m_waves[i]->Draw(m_drawManager);
 	}
 
-	//Draw Particles
-	m_particleManager->Draw(m_drawManager);
+	
 
 	//Draw monster
 	for (int i = 0; i < m_monsters.size(); i++)
@@ -365,8 +365,6 @@ void GameState::Draw()
 
 	//Draw player
 	m_player->Draw(m_drawManager);
-
-	
 
 	//Draw bubbles
 	for (int i = 0; i < m_bubbles.size(); i++)
@@ -385,6 +383,8 @@ void GameState::Draw()
 			m_activeItems[i]->Draw(m_drawManager);
 		}
 	}
+	//Draw Particles
+	m_particleManager->Draw(m_drawManager);
 
 	//Draw HUD
 	for (int i = 0; i < m_life; i++)

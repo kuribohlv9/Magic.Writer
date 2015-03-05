@@ -21,11 +21,12 @@ Bubble::Bubble(float x, float y, sf::Texture* texture, Player* player)
 
 	m_lifeTime += 75 + x * 100;
 
-	m_lanePositions[0] = 444;
-	m_lanePositions[1] = 774;
+
+	m_lanePositions[0] = 354;
+	m_lanePositions[1] = 684;
 	m_lanePositions[2] = 960;
-	m_lanePositions[3] = 1146;
-	m_lanePositions[4] = 1476;
+	m_lanePositions[3] = 1256;
+	m_lanePositions[4] = 1586;
 }
 
 void Bubble::SetAlpha(int alpha)
@@ -58,11 +59,15 @@ void Bubble::Update(float deltaTime)
 	m_lifeTime += deltaTime;
 
 	sf::Vector2f pos = m_sprite.getPosition();
+	int targetX = m_lanePositions[m_player->GetCurrentLane()] + m_playerOffset;
+	float distance = abs(pos.x - targetX);
+	int dir = (pos.x < targetX) ? 1 : -1;
 
-	pos.x = m_lanePositions[m_player->GetCurrentLane()] + m_playerOffset;
+	m_sprite.move(distance * 2 * dir * deltaTime, 0);
+
 	pos.y += 0.25f * cos(m_lifeTime * 3.0f);
 
-	m_sprite.setPosition(pos);
+	m_sprite.setPosition(m_sprite.getPosition().x, pos.y);
 
 	//Set item position
 	if (m_item)
