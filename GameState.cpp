@@ -197,45 +197,47 @@ void GameState::CheckCollision()
 				Monster* monster = m_monsters[j];
 				if (!monster->IsActive())
 					continue;
-
-				if (m_powerUpManager->GetPierce())
+				if (CollisionManager::Check(monster->GetCollider(), item->GetCollider()))
 				{
-					if (m_powerUpManager->AddItemToPierceList(monster))
+					if (m_powerUpManager->GetPierce())
+					{
+						if (m_powerUpManager->AddItemToPierceList(monster))
+						{
+							monster->Damage(item->GetProperty(), m_score);
+						}
+					}
+					else if (m_powerUpManager->BounceItem() == item)
+					{
+						Monster* targetMonster = m_powerUpManager->NextBounceTarget();
+						if (targetMonster == monster)
+						{
+							monster->Damage(item->GetProperty(), m_score);
+							m_powerUpManager->NextBounce(monster);
+							m_powerUpManager->AddLaneToBounceList(monster->GetX());
+						}
+						else if (targetMonster == nullptr)
+						{
+							monster->Damage(item->GetProperty(), m_score);
+							m_powerUpManager->NextBounce(monster);
+							m_powerUpManager->AddLaneToBounceList(monster->GetX());
+						}
+
+						//If sats som kollar ifall det är första gången bounceitem träffar monster, om true gör damage.
+					}
+					else
 					{
 						monster->Damage(item->GetProperty(), m_score);
-					}
-				}
-				else if (m_powerUpManager->BounceItem() == item)
-				{
-					Monster* targetMonster = m_powerUpManager->NextBounceTarget();
-					if (targetMonster == monster)
-					{
-						monster->Damage(item->GetProperty(), m_score);
-						m_powerUpManager->NextBounce(monster);
-						m_powerUpManager->AddLaneToBounceList(monster->GetX());
-					}
-					else if (targetMonster == nullptr)
-					{
-						monster->Damage(item->GetProperty(), m_score);
-						m_powerUpManager->NextBounce(monster);
-						m_powerUpManager->AddLaneToBounceList(monster->GetX());
-					}
-				
-					//If sats som kollar ifall det är första gången bounceitem träffar monster, om true gör damage.
-				}
-				else
-				{
-					monster->Damage(item->GetProperty(), m_score);
 
-					item->SetActive(false);
-					item->SetInGame(false);
-					item->SetState(ITEM_HIT);
-				}
+						item->SetActive(false);
+						item->SetInGame(false);
+						item->SetState(ITEM_HIT);
+					}
 
-				if (monster->IsActive() == false)
-				{
-					//Increase score
-					m_score += 100;
+					if (monster->IsActive() == false)
+					{
+						//Increase score
+						m_score += 100;
+					}
 				}
 			}
 		}
@@ -247,10 +249,7 @@ void GameState::CheckCollision()
 		{
 			if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
 			{
-				if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
-				{
-					m_player->Knockdown();
-				}
+				m_player->Knockdown();
 			}
 		}
 
