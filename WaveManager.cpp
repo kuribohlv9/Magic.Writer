@@ -22,27 +22,30 @@ void WaveManager::Update(float deltaTime)
 		//Get the current wave
 		std::vector<float>* currentWave = &m_waves[0];
 
-		if (currentWave->size() > 0)
+		if (currentWave->size() > m_monster_number)
 		{
-			m_spawnTime = currentWave->at(0);
-			currentWave->erase(currentWave->begin());
+			m_spawnTime = currentWave->at(m_monster_number);
+			//currentWave->erase(currentWave->begin());
 			m_spawnMonster = true;
 			m_timer = 0;
+			m_monster_number++;
 		}
-		
-		if (currentWave->size() == 0)
+		else if (currentWave->size() == m_monster_number)
 		{
 			//Remove finished wave
-			m_waves.erase(m_waves.begin());
+			//m_waves.erase(m_waves.begin());
 
-			if (m_waves.size() <= 0)
+			/*if (m_waves.size() <= 0)
 			{
 				m_active = false;
 				return;
-			}
+			}*/
 
-			m_spawnTime = currentWave->at(0);
-			m_timer = 0;
+			//m_spawnTime = currentWave->at(0);
+			//m_timer = 0;
+
+			m_monster_number = 0;
+			m_active = false;
 		}
 	}
 
@@ -56,6 +59,10 @@ bool WaveManager::CanSpawnMonster()
 	}
 
 	return false;
+}
+void WaveManager::Reset()
+{
+	m_monster_number = 0;
 }
 void WaveManager::LoadWave(const std::string& filename)
 {
@@ -89,4 +96,14 @@ void WaveManager::LoadWave(const std::string& filename)
 
 	//Add the last wave
 	m_waves.push_back(waveTimes);
+}
+
+void WaveManager::SetActive(bool state)
+{
+	m_active = state;
+}
+
+bool WaveManager::IsActive()
+{
+	return m_active;
 }
