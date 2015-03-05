@@ -46,6 +46,9 @@ private:
 	void InstantiateBubbles();
 	void InstantiateMonsters();
 	void SpawnMonster();
+	
+	bool PlayMode(float deltaTime);
+	bool VictoryMode(float deltaTime);
 
 	bool IsMonsters();
 
