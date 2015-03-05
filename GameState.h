@@ -10,12 +10,19 @@ class InputManager;
 class WaveManager;
 class PowerUpManager;
 class ParticleEmitter;
-
 class Item;
 class Bubble;
 class Monster;
 class Player;
 class Wave;
+class GUI_Button;
+
+enum mode {
+	MODE_UNKNOWN,
+	MODE_PLAYING,
+	MODE_DEFEAT,
+	MODE_VICTORY
+};
 
 class GameState : public State
 {
@@ -39,13 +46,19 @@ private:
 	void InstantiateMonsters();
 	void SpawnMonster();
 
+	bool IsMonsters();
+
 private:
+	//Test
+	mode m_status;
+	ScreenState m_next_state;
+	int m_wave_level;
+
 	//Manager
 	DrawManager* m_drawManager;
 	TextureManager* m_textureManager;
 	InputManager* m_inputManager;
 	AudioManager* m_audioManager;
-
 	WordManager* m_wordManager;
 	ItemManager* m_itemManager;
 	WaveManager* m_waveManager;
@@ -83,4 +96,9 @@ private:
 	int m_score;
 	int m_lastScore;
 	unsigned int m_life;
+
+	//Victory and Losing screens
+	sf::RectangleShape m_victory_window;
+	GUI_Button* m_back_to_menu_button;
+	GUI_Button* m_next_wave_button;
 };

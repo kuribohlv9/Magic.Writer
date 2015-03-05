@@ -257,7 +257,7 @@ void Monster::Activate()
 	m_speed = m_originalSpeed;
 	m_health = 3;
 
-
+	//Set color
 	m_foam_sprite.setColor(sf::Color(255, 255, 255, 255));
 	m_snail_sprite.setColor(sf::Color(255, 255, 255, 0));
 

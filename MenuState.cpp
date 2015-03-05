@@ -17,7 +17,7 @@ MenuState::MenuState()
 	m_drawManager = ServiceLocator<DrawManager>::GetService();
 	m_nextState = STATE_INVALID;
 
-	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");;
+	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");
 
 	m_poleSprite.setTexture(*texture);
 	m_poleSprite.setTextureRect(sf::IntRect(0, 219 * 2, 167, 775));
