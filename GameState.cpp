@@ -13,6 +13,7 @@
 #include "ItemManager.h"
 #include "WaveManager.h"
 #include "PowerUpManager.h"
+#include "ParticleManager.h"
 
 //Classes
 #include "Monster.h"
@@ -23,6 +24,7 @@
 #include "Utility.h"
 #include "Wave.h"
 #include "ParticleEmitter.h"
+#include "GUI_Button.h"
 
 
 GameState::GameState()
@@ -37,7 +39,7 @@ GameState::GameState()
 	m_wordManager = new WordManager();
 	m_itemManager = new ItemManager();
 	m_waveManager = new WaveManager();
-	m_powerUpManager = new PowerUpManager(&m_monsters, &m_activeItems);
+	m_particleManager = ServiceLocator<ParticleManager>::GetService();
 
 	//Load background texture
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background/background.png");
@@ -46,9 +48,12 @@ GameState::GameState()
 	m_ice_backgroundSprite.setTexture(*texture);
 
 	//Instantiate player
+	sf::Texture* particleTexture = m_textureManager->LoadTexture("assets/sprites/wizard/particle.png");
 	texture = m_textureManager->LoadTexture("assets/sprites/wizard/wizard_spritesheet.png");
 	sf::SoundBuffer* buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_walk_sound.wav");
-	m_player = new Player(texture, buffer);
+	m_player = new Player(texture, particleTexture, buffer);
+
+	m_powerUpManager = new PowerUpManager(&m_monsters, &m_activeItems, m_player);
 
 	//Load sound
 	buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_spell_complete01.wav");
@@ -60,26 +65,42 @@ GameState::GameState()
 	
 	//TEMPORARY HUD
 	m_font = m_textureManager->LoadFont("assets/fonts/font.ttf");
+	m_score_sign_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/sign_score.png"));
+	m_score_sign_sprite.setPosition(ScreenWidth - 400, 0);
 	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
 	
 	m_scoreDisplay.setFont(*m_font);
 	m_scoreDisplay.setScale(1.5f, 1.5f);
-	m_scoreDisplay.setPosition(1750, 15);
+	m_scoreDisplay.setPosition(1660, 155);
 	m_scoreDisplay.setString("0");
-	m_scoreDisplay.setColor(sf::Color(255, 255, 255, 255));
+	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
 
 	m_score = 0;
 	m_lastScore = 0;
 	m_life = 3;
+	m_speed = 800;
+	m_wave_level = 1;
 
 	//Instantiate waves
 	texture = m_textureManager->LoadTexture("assets/sprites/wave_spritesheet.png");
+
 	//Wave pool
 	for (int i = 0; i < 5; i++)
 	{
 		Wave* wave = new Wave(texture);
 		m_waves.push_back(wave);
 	}
+
+	//Victory and Losing screen
+	m_victory_window.setPosition(300, 200);
+	m_victory_window.setSize(sf::Vector2f(ScreenWidth - 600, ScreenHeight - 400));
+	texture = m_textureManager->LoadTexture("assets/sprites/particle_test.png");
+	m_next_wave_button = new GUI_Button(350, ScreenHeight-250, nullptr, texture, sf::IntRect(0,0,50,50));
+	m_next_wave_button->Refresh();
+	m_back_to_menu_button = new GUI_Button(1300, ScreenHeight - 250, nullptr, texture, sf::IntRect(50, 0, 50, 50));
+	m_back_to_menu_button->Refresh();
+	m_next_state = STATE_MENU;
+	m_status = MODE_PLAYING;
 }
 GameState::~GameState()
 {
@@ -145,178 +166,105 @@ GameState::~GameState()
 
 bool GameState::Update(float deltaTime)
 {
-	//Handle word input
-	if (m_player->GetItem() == nullptr && !m_player->IsStunned())
+	switch (m_status)
 	{
-		m_wordManager->Update(deltaTime);
-	}
+		case MODE_PLAYING:
+			return PlayMode(deltaTime);
 
-	//Update wave manager
-	m_waveManager->Update(deltaTime);
-	if (m_waveManager->CanSpawnMonster())
-	{
-		SpawnMonster();
-	}
+		case MODE_VICTORY:
+			return VictoryMode(deltaTime);
 
-	//Update active items
-	for (int i = 0; i < m_activeItems.size(); i++)
-	{
-		if (!m_activeItems[i]->IsActive())
-			continue;
+		case MODE_DEFEAT:
+			return true;
 
-		m_activeItems[i]->Update(deltaTime);
-	}
-
-
-	//Update bubbles
-	for (int i = 0; i < m_bubbles.size(); i++)
-	{
-		m_bubbles[i]->Update(deltaTime);
-		m_wordManager->SetWordPosition(m_bubbles[i]->GetPosition(), i);
-
-		bool active = m_wordManager->GetActiveBubbles().at(i);
-		int alpha = (active) ? 255 : 80;
-		m_bubbles[i]->SetAlpha(alpha);
-	}
-
-	//Update player
-	m_player->Update(deltaTime);
-
-	//Update monsters
-	for (int i = 0; i < m_monsters.size(); i++)
-	{
-		if (!m_monsters[i]->IsActive())
-			continue;
-
-		m_monsters[i]->Update(deltaTime);
-		//Activate burst
-		if (m_monsters[i]->GetY() >= 775 && m_monsters[i]->Burst())
-		{
-			if (m_life > 0)
-			{
-				m_life -= 1;
-			}
-		}
-	}
-
-	//Update waves
-	m_waveTimer += deltaTime;
-	if (m_waveTimer >= 5)
-	{
-		for (int i = 0; i < m_waves.size(); i++)
-		{
-			if (!m_waves[i]->IsActive())
-			{
-				m_waves[i]->SetActive(true);
-				m_waveTimer = 0;
-				break;
-			}
-		}
-	}
-	for (int i = 0; i < m_waves.size(); i++)
-	{
-		if (!m_waves[i]->IsActive())
-			continue;
-
-		m_waves[i]->Update(deltaTime);
-	}
-
-	//Increase score if player enters correct key
-	if (m_wordManager->GetCorrectKey())
-	{
-		m_score += 10;
-	}
-
-	//Convert written words into item
-	ConvertWordToItem();
-
-	//Check collision
-	CheckCollision();
-	
-	//Increase score if player enters correct key
-	if (m_wordManager->GetCorrectKey())
-	{
-		m_score += 10;
-		
-		//Chanting animation
-		m_player->ChantingAnimation();
-	}
-
-	if (m_score != m_lastScore)
-		m_scoreDisplay.setString(std::to_string(m_score));
-
-	m_lastScore = m_score;
-
-	m_powerUpManager->Update(deltaTime);
-
-
-	if (m_life > 0)
-	{
-		return true;
-	}
-	else
-	{
-		//return false;
+		default:
+			return true;
 	}
 }
 void GameState::CheckCollision()
 {
-	//Collision between items and monsters
-	for (int i = 0; i < m_activeItems.size(); i++)
+	if (m_status == MODE_PLAYING)
 	{
-		Item* item = m_activeItems[i];
-		if (!item->IsActive())
-			continue;
-
-		for (int j = 0; j < m_monsters.size(); j++)
+		//Collision between items and monsters
+		for (int i = 0; i < m_activeItems.size(); i++)
 		{
-			Monster* monster = m_monsters[j];
-			if (!monster->IsActive())
+			Item* item = m_activeItems[i];
+			if (!item->IsActive())
 				continue;
 
-			//Collision check
-			if (CollisionManager::Check(item->GetCollider(), monster->GetCollider()))
+			for (int j = 0; j < m_monsters.size(); j++)
 			{
-				monster->Damage(item->GetProperty(), m_score);
-				if (m_powerUpManager->GetPierce())
+				Monster* monster = m_monsters[j];
+				if (!monster->IsActive())
+					continue;
+				if (CollisionManager::Check(monster->GetCollider(), item->GetCollider()))
 				{
-					item->SetActive(true);
-					m_powerUpManager->ActivatePierce(1);
-				}
-				else
-					item->SetActive(false);
-				item->SetInGame(false);
-				item->SetState(ITEM_HIT);
+					if (m_powerUpManager->GetPierce())
+					{
+						if (m_powerUpManager->AddItemToPierceList(monster))
+						{
+							monster->Damage(item->GetProperty(), m_score);
+						}
+					}
+					else if (m_powerUpManager->BounceItem() == item)
+					{
+						Monster* targetMonster = m_powerUpManager->NextBounceTarget();
+						if (targetMonster == monster)
+						{
+							monster->Damage(item->GetProperty(), m_score);
+							m_powerUpManager->NextBounce(monster);
+							m_powerUpManager->AddLaneToBounceList(monster->GetX());
+						}
+						else if (targetMonster == nullptr)
+						{
+							monster->Damage(item->GetProperty(), m_score);
+							m_powerUpManager->NextBounce(monster);
+							m_powerUpManager->AddLaneToBounceList(monster->GetX());
+						}
 
-				if (monster->IsActive() == false)
-				{
-					//Increase score
-					m_score += 100;
+						//If sats som kollar ifall det är första gången bounceitem träffar monster, om true gör damage.
+					}
+					else
+					{
+						monster->Damage(item->GetProperty(), m_score);
+
+						item->SetActive(false);
+						item->SetInGame(false);
+						item->SetState(ITEM_HIT);
+					}
+
+					if (monster->IsActive() == false)
+					{
+						//Increase score
+						m_score += 100;
+					}
 				}
+			}
+		}
+
+
+
+		//Collision between monsters and player
+		for (int i = 0; i < m_monsters.size(); i++)
+		{
+			if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
+			{
+				m_player->Knockdown();
+			}
+		}
+
+		//Cleanup
+
+		//Remove active items
+		for (int i = 0; i < m_activeItems.size(); i++)
+		{
+			if (!m_activeItems[i]->IsActive())
+			{
+				m_activeItems.erase(m_activeItems.begin() + i);
 			}
 		}
 	}
 
-	
-	//Collision between monsters and player
-	for (int i = 0; i < m_monsters.size(); i++)
-	{
-		if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
-		{
-			m_player->Knockdown();
-		}
-	}
-
-	//Cleanup
-
-	//Remove active items
-	for (int i = 0; i < m_activeItems.size(); i++)
-	{
-		if (!m_activeItems[i]->IsActive())
-		{
-			m_activeItems.erase(m_activeItems.begin() + i);
-		}
-	}
 }
 
 void GameState::Draw()
@@ -339,6 +287,8 @@ void GameState::Draw()
 		m_waves[i]->Draw(m_drawManager);
 	}
 
+	
+
 	//Draw monster
 	for (int i = 0; i < m_monsters.size(); i++)
 	{
@@ -350,8 +300,6 @@ void GameState::Draw()
 
 	//Draw player
 	m_player->Draw(m_drawManager);
-
-	
 
 	//Draw bubbles
 	for (int i = 0; i < m_bubbles.size(); i++)
@@ -370,6 +318,8 @@ void GameState::Draw()
 			m_activeItems[i]->Draw(m_drawManager);
 		}
 	}
+	//Draw Particles
+	m_particleManager->Draw(m_drawManager);
 
 	//Draw HUD
 	for (int i = 0; i < m_life; i++)
@@ -378,19 +328,34 @@ void GameState::Draw()
 		m_drawManager->Draw(m_life_sprite, sf::RenderStates::Default);
 	}
 
+	m_drawManager->Draw(m_score_sign_sprite, sf::RenderStates::Default);
 	m_drawManager->Draw(m_scoreDisplay, sf::RenderStates::Default);
+
+	//Draw Victory and Losing screen
+	if (m_status == MODE_VICTORY)
+	{
+		//sf::RectangleShape derp;
+		
+
+		m_drawManager->Draw(m_victory_window, sf::RenderStates::Default);
+		m_next_wave_button->Draw(m_drawManager);
+		m_back_to_menu_button->Draw(m_drawManager);
+	}
+	else if (m_status == MODE_DEFEAT)
+	{
+	}
 }
 void GameState::Enter()
 {
-
+	m_status = MODE_PLAYING;
 }
 void GameState::Exit()
 {
-
+	m_status = MODE_UNKNOWN;
 }
 ScreenState GameState::NextState()
 {
-	return STATE_MENU;
+	return m_next_state;
 }
 
 void GameState::InstantiateBubbles()
@@ -504,10 +469,179 @@ void GameState::ConvertWordToItem()
 		if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Return))
 		{
 			//Activate item
-			spawnedItem->SetActive(true);
-			spawnedItem->SetState(ITEM_FLYING);
+			spawnedItem->Activate();
 			m_activeItems.push_back(spawnedItem);
 			m_player->SetItem(nullptr);
 		}
 	}
+}
+
+bool GameState::IsMonsters()
+{
+	//Check if there is any active monsters and return the result
+	for (int i = 0; i < m_monsters.size(); i++)
+	{
+		if (m_monsters[i]->IsActive())
+			return true;
+	}
+
+	return false;
+}
+
+bool GameState::PlayMode(float deltaTime)
+{
+	m_particleManager->Update(deltaTime);
+	//Handle word input
+	if (m_player->GetItem() == nullptr && !m_player->IsStunned())
+	{
+		m_wordManager->Update(deltaTime);
+	}
+
+	//Update wave manager
+	m_waveManager->Update(deltaTime);
+	if (m_waveManager->CanSpawnMonster())
+	{
+		SpawnMonster();
+	}
+
+	//Update active items
+	for (int i = 0; i < m_activeItems.size(); i++)
+	{
+		if (!m_activeItems[i]->IsActive())
+			continue;
+
+		m_activeItems[i]->Update(deltaTime);
+	}
+
+	
+	//Item movement
+	for (int i = 0; i < m_activeItems.size(); i++)
+	{
+		if (!m_activeItems.at(i)->IsActive())
+			continue;
+
+			if (m_powerUpManager->BounceItem() == nullptr)
+				m_activeItems.at(i)->Move(0, -m_speed * deltaTime);
+			else
+			{
+				if (m_powerUpManager->NextBounceTarget() == nullptr)
+					m_powerUpManager->BounceItem()->Move(0, -m_speed * deltaTime);
+				else
+				{
+					sf::Vector2f itemDir = m_powerUpManager->ItemDirection();
+
+					itemDir *= m_speed * deltaTime;
+					m_powerUpManager->BounceItem()->Move(itemDir.x, itemDir.y);
+				}
+			
+			}
+	}
+
+
+	//Update bubbles
+	for (int i = 0; i < m_bubbles.size(); i++)
+	{
+		m_bubbles[i]->Update(deltaTime);
+		m_wordManager->SetWordPosition(m_bubbles[i]->GetPosition(), i);
+
+		bool active = m_wordManager->GetActiveBubbles().at(i);
+		int alpha = (active) ? 255 : 80;
+		m_bubbles[i]->SetAlpha(alpha);
+	}
+
+	//Update player
+	m_player->Update(deltaTime);
+
+	//Update monsters
+	for (int i = 0; i < m_monsters.size(); i++)
+	{
+		if (!m_monsters[i]->IsActive())
+			continue;
+
+		m_monsters[i]->Update(deltaTime);
+
+		//Activate burst
+		if (m_monsters[i]->GetY() >= 775 && m_monsters[i]->Burst())
+		{
+			if (m_life > 0)
+			{
+				m_life -= 1;
+
+				if (m_life == 0)
+				{
+
+				}
+			}
+		}
+	}
+
+	//Update waves
+	m_waveTimer += deltaTime;
+	if (m_waveTimer >= 5)
+	{
+		for (int i = 0; i < m_waves.size(); i++)
+		{
+			if (!m_waves[i]->IsActive())
+			{
+				m_waves[i]->SetActive(true);
+				m_waveTimer = 0;
+				break;
+			}
+		}
+	}
+	for (int i = 0; i < m_waves.size(); i++)
+	{
+		if (!m_waves[i]->IsActive())
+			continue;
+
+		m_waves[i]->Update(deltaTime);
+	}
+
+	//Convert written words into item
+	ConvertWordToItem();
+
+	//Check collision
+	CheckCollision();
+
+	//Increase score if player enters correct key
+	if (m_wordManager->GetCorrectKey())
+	{
+		m_score += 10;
+
+		//Chanting animation
+		m_player->ChantingAnimation();
+	}
+
+	if (m_score != m_lastScore)
+		m_scoreDisplay.setString(std::to_string(m_score));
+
+	m_lastScore = m_score;
+
+	m_powerUpManager->Update(deltaTime);
+
+
+	if (m_life <= 0)
+	{
+
+	}
+	else if (!m_waveManager->IsActive() && !IsMonsters())
+	{
+		m_status = MODE_VICTORY;
+	}
+
+	return true;
+}
+bool GameState::VictoryMode(float deltaTime)
+{
+	m_next_wave_button->Update();
+	m_back_to_menu_button->Update();
+
+	if (m_next_wave_button->IsPressed())
+	{
+	}
+	else if (m_back_to_menu_button->IsPressed())
+	{
+		return false;
+	}
+	return true;
 }

@@ -6,33 +6,35 @@ class DrawManager;
 class ParticleEmitter
 {
 public:
-	ParticleEmitter(int particleCount, float spawnRate, sf::Texture* particleTexture);
+	ParticleEmitter(sf::Texture* texture, int particleCount);
 	~ParticleEmitter();
 
 	void Update(float deltaTime);
 	void Draw(DrawManager* drawManager);
 
-
-	void CreateParticle();
-	void SetPosition(sf::Vector2f position);
-	void SetStartVelocity(sf::Vector2f velocity);
-	void SetAcceleration(sf::Vector2f acceleration);
-	void SetLifeTime(float secondsToLive);
+	void SetPosition(float x, float y);
+	void SetStartAngle(int angleMin, int angleMax);
+	void SetAcceleration(float x, float y);
+	void SetLifeTime(float secondsMin, float secondsMax);
 	void SetSize(int width, int height);
-	void ScaleParticle(bool state);
+	void SetActive(bool state);
+	void SetSpawnRate(float spawnRate);
+	void SetForce(int forceMin, int forceMax);
+	void SetRotationVelocity(float velocity);
+	bool IsActive();
+private:
+	void ActivateParticle();
 
 private:
+	//Holds all particles
+	std::vector<Particle*> m_particles;
+
 	//Contains an area which a particle is randomly created within
 	sf::IntRect m_area;
-
-	//Stores all the created particles
-	std::vector<Particle*> m_particles;
 	//What velocity to activate a particle in
-	sf::Vector2f m_startVelocity;
+	sf::Vector2f m_startDirection;
 	//What acceleration to give an activated particle
 	sf::Vector2f m_acceleration;
-	//What texture the particle should have
-	sf::Texture* m_particleTexture;
 	//Stores the particles lifetime
 	float m_secondsToLive;
 	//A boolean if the particle should be scaled or not
@@ -41,5 +43,10 @@ private:
 	float m_spawnRate;
 	//A timer used to activate particles
 	float m_timer;
+
+	float m_rotationVelocity;
+
+	bool m_active;
+	float m_force;
 };
 

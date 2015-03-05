@@ -3,21 +3,32 @@
 class InputManager;
 class Monster;
 class Item;
+class Player;
 
 class PowerUpManager
 {
 public:
-	PowerUpManager(std::vector<Monster*>* monster, std::vector<Item*>* item);
+	PowerUpManager(std::vector<Monster*>* monster, std::vector<Item*>* item, Player* player);
 	~PowerUpManager();
 
 	void Update(float deltaTime);
 
 	void ActivateFreeze();
 	void ActivateBounce();
-	void ActivatePierce(int pierce);
+	void ActivatePierce();
 
 	bool GetFrozen();
 	bool GetPierce();
+	bool GetBounce();
+
+	Item* BounceItem();
+	Monster* NextBounceTarget();
+
+	void NextBounce(Monster* monster);
+	bool AddItemToPierceList(Monster* monster);
+	void AddLaneToBounceList(int x);
+
+	sf::Vector2f ItemDirection();
 
 	void RemoveFreeze();
 
@@ -30,6 +41,17 @@ private:
 
 private:
 	InputManager* m_inputManager;
+	Item* m_pierceCurrentItem;
+	Item* m_bounceCurrentItem;
+	Monster* m_nextBounceTarget;
+	Player* m_player;
+
+	std::vector<Monster*> m_monsterPierceList;
 	std::vector<Monster*>* m_monster;
 	std::vector<Item*>* m_item;
+	std::vector<int> m_LaneBounceList;
+
+	sf::Vector2f m_monsterPos;
+	sf::Vector2f m_itemPos;
+	sf::Vector2f m_itemDir;
 };
