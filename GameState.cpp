@@ -242,11 +242,6 @@ void GameState::CheckCollision()
 			}
 		}
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> origin/master
 		//Collision between monsters and player
 		for (int i = 0; i < m_monsters.size(); i++)
 		{
