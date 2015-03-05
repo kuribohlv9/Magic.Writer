@@ -94,7 +94,7 @@ GameState::GameState()
 	//Victory and Losing screen
 	m_victory_window.setPosition(300, 200);
 	m_victory_window.setSize(sf::Vector2f(ScreenWidth - 600, ScreenHeight - 400));
-	texture = m_textureManager->LoadTexture("assets/sprites/particle_test.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/bubble.png");
 	m_next_wave_button = new GUI_Button(350, ScreenHeight-250, nullptr, texture, sf::IntRect(0,0,50,50));
 	m_next_wave_button->Refresh();
 	m_back_to_menu_button = new GUI_Button(1300, ScreenHeight - 250, nullptr, texture, sf::IntRect(50, 0, 50, 50));
