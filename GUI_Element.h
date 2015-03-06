@@ -8,8 +8,8 @@ public:
 	GUI_Element();
 	virtual ~GUI_Element();
 
-	int GetX();
-	int GetY();
+	float GetX();
+	float GetY();
 	bool IsVisible();
 	void SetVisible(bool state);
 	void SetPosition(float x, float y);

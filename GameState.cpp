@@ -71,7 +71,7 @@ GameState::GameState()
 	
 	m_scoreDisplay.setFont(*m_font);
 	m_scoreDisplay.setScale(1.5f, 1.5f);
-	m_scoreDisplay.setPosition(1660, 155);
+	m_scoreDisplay.setPosition(1600, 90);
 	m_scoreDisplay.setString("0");
 	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
 
@@ -213,13 +213,13 @@ void GameState::CheckCollision()
 						{
 							monster->Damage(item->GetProperty(), m_score);
 							m_powerUpManager->NextBounce(monster);
-							m_powerUpManager->AddLaneToBounceList(monster->GetX());
+							m_powerUpManager->AddLaneToBounceList(static_cast<int>(monster->GetX()));
 						}
 						else if (targetMonster == nullptr)
 						{
 							monster->Damage(item->GetProperty(), m_score);
 							m_powerUpManager->NextBounce(monster);
-							m_powerUpManager->AddLaneToBounceList(monster->GetX());
+							m_powerUpManager->AddLaneToBounceList(static_cast<int>(monster->GetX()));
 						}
 
 						//If sats som kollar ifall det är första gången bounceitem träffar monster, om true gör damage.
@@ -247,10 +247,7 @@ void GameState::CheckCollision()
 		{
 			if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
 			{
-				if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
-				{
-					m_player->Knockdown();
-				}
+				m_player->Knockdown();
 			}
 		}
 
@@ -279,6 +276,9 @@ void GameState::Draw()
 		m_drawManager->Draw(m_ice_backgroundSprite, sf::RenderStates::Default);
 	}
 
+	//Draw Particles
+	m_particleManager->Draw(m_drawManager);
+
 	//Draw waves
 	for (int i = 0; i < m_waves.size(); i++)
 	{
@@ -286,8 +286,6 @@ void GameState::Draw()
 			continue;
 		m_waves[i]->Draw(m_drawManager);
 	}
-
-	
 
 	//Draw monster
 	for (int i = 0; i < m_monsters.size(); i++)
@@ -318,8 +316,6 @@ void GameState::Draw()
 			m_activeItems[i]->Draw(m_drawManager);
 		}
 	}
-	//Draw Particles
-	m_particleManager->Draw(m_drawManager);
 
 	//Draw HUD
 	for (int i = 0; i < m_life; i++)
@@ -364,7 +360,7 @@ void GameState::InstantiateBubbles()
 		int yOffset = 0;
 		if (i == 1)
 			yOffset = 50;
-		Bubble* bubble = new Bubble(725 + i * 200, 910 + yOffset, texture, m_player);
+		Bubble* bubble = new Bubble(725.0f + i * 200.0f, 910.0f + yOffset, texture, m_player);
 
 		Item* item = m_itemManager->GetItem();
 

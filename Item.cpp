@@ -84,7 +84,7 @@ void Item::SetSourceRectangle(int index, sf::IntRect rectangle)
 {
 	m_sourceRectangles[index] = rectangle;
 	m_sprite.setTextureRect(rectangle);
-	m_sprite.setOrigin(rectangle.width / 2, rectangle.height / 2);
+	m_sprite.setOrigin(rectangle.width / 2.0f, rectangle.height / 2.0f);
 	m_collider->SetParent(this);
 	m_collider->SetWidthHeight((int)(rectangle.width * 0.4f), (int)(rectangle.height * 0.4f));
 }

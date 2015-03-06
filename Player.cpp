@@ -36,7 +36,7 @@ Player::Player(sf::Texture* texture, sf::Texture* particle, sf::SoundBuffer* cha
 	m_lane = 1;
 	ChangeLane(1);
 	SetPosition(Lanes[2], 780);
-	m_targetX = Lanes[2];
+	m_targetX = static_cast<float>(Lanes[2]);
 	m_animator->SetAnimation("idle");
 
 	//Set sound
@@ -129,6 +129,12 @@ void Player::Update(float deltaTime)
 	int dir = (GetX() < m_targetX) ? 1 : -1;
 
 	Move(distance * deltaTime * dir * 7, 0);
+
+	//Set possible item position
+	if (m_item)
+	{
+		m_item->SetPosition(m_x - 25, m_y - 170);
+	}
 }
 void Player::Draw(DrawManager* drawManager)
 {
@@ -160,20 +166,14 @@ void Player::ChangeLane(int xDirection)
 	}
 
 	//Set target position
-	m_targetX = Lanes[m_lane];
-
-	//Set possible item position
-	if (m_item)
-	{
-		m_item->SetPosition(m_x - 25, m_y - 170);
-	}
+	m_targetX = static_cast<float>(Lanes[m_lane]);
 
 	if (xDirection != 0 && m_state != PLAYER_KNOCKEDDOWN)
 	{
 		//Set animation
 		m_state = PLAYER_JUMPING;
 		m_animator->SetAnimation("cll");
-		m_sprite.setScale(xDirection * -1, 1);
+		m_sprite.setScale(static_cast<float>(xDirection * -1), 1.0f);
 		
 		//Play sound
 		m_changeLaneSound.stop();

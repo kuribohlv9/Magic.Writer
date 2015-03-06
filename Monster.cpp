@@ -11,7 +11,6 @@
 Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, ItemProperty weakness, sf::Texture* particleTexture)
 {
 	m_active = false;
-	srand(time(NULL));
 
 	//Variables
 	m_type = GAMEOBJECT_MONSTERS;
@@ -223,13 +222,13 @@ void Monster::HandleBodyParts()
 	{
 		sf::Color snail_color = m_snail_sprite.getColor();
 
-		int snail_alpha = snail_color.a;
+		float snail_alpha = snail_color.a;
 		snail_alpha += 1.5f;
 
 		if (snail_alpha > 255)
 			snail_alpha = 255;
 
-		snail_color.a = snail_alpha;
+		snail_color.a = static_cast<sf::Uint8>(snail_alpha);
 		m_snail_sprite.setColor(snail_color);
 	}
 
@@ -263,7 +262,7 @@ void Monster::Activate()
 
 	//Randomize start position
 	int randomLane = rand() % 5;
-	SetPosition(Lanes[randomLane], -m_sprite_height);
+	SetPosition(Lanes[randomLane], static_cast<float>(-m_sprite_height));
 
 	//Reset collider
 	m_collider->SetWidthHeight(m_sprite_width / 4, m_sprite_height / 4);

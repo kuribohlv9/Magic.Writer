@@ -14,11 +14,11 @@ GUI_Element::~GUI_Element()
 {
 	m_parent = nullptr;
 }
-int GUI_Element::GetX()
+float GUI_Element::GetX()
 {
 	return m_x;
 }
-int GUI_Element::GetY()
+float GUI_Element::GetY()
 {
 	return m_y;
 }

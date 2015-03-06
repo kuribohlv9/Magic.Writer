@@ -75,7 +75,7 @@ void ParticleEmitter::ActivateParticle()
 		if (!m_particles[i]->Active())
 		{
 			//Calculate a position
-			sf::Vector2f pos = sf::Vector2f(m_area.left, m_area.top);
+			sf::Vector2f pos = sf::Vector2f(static_cast<float>(m_area.left), static_cast<float>(m_area.top));
 			pos.x += rand() % m_area.width;
 			pos.y += rand() % m_area.height;
 
@@ -94,8 +94,8 @@ void ParticleEmitter::ActivateParticle()
 }
 void ParticleEmitter::SetPosition(float x, float y)
 {
-	m_area.left = x - m_area.width;
-	m_area.top = y - m_area.height;
+	m_area.left = static_cast<int>(x) - m_area.width;
+	m_area.top = static_cast<int>(y) - m_area.height;
 }
 void ParticleEmitter::SetStartAngle(int angleMin, int angleMax)
 {
@@ -104,7 +104,7 @@ void ParticleEmitter::SetStartAngle(int angleMin, int angleMax)
 		angleMax++;
 
 	int angle = angleMin + rand() % (angleMax - angleMin);
-	float radians = angle * (3.14 / 180);
+	float radians = angle * (3.14f / 180.0f);
 	//Calculate direction from angle
 	sf::Vector2f dir = sf::Vector2f(cos(radians), sin(radians));
 
@@ -121,7 +121,7 @@ void ParticleEmitter::SetForce(int forceMin, int forceMax)
 {
 	if (forceMin == forceMax)
 		forceMax++;
-	m_force = forceMin + rand() % (forceMax - forceMin);
+	m_force = static_cast<float>(forceMin + rand() % (forceMax - forceMin));
 }
 void ParticleEmitter::SetAcceleration(float x, float y)
 {
@@ -129,9 +129,9 @@ void ParticleEmitter::SetAcceleration(float x, float y)
 }
 void ParticleEmitter::SetLifeTime(float secondsMin, float secondsMax)
 {
-	int max = secondsMax * 10;
+	int max = static_cast<int>(secondsMax * 10);
 	int rndInt = rand() % max;
-	float rnd = rndInt / 10;
+	float rnd = rndInt / 10.0f;
 	m_secondsToLive = secondsMin + rnd;
 }
 void ParticleEmitter::SetSize(int width, int height)

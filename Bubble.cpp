@@ -72,7 +72,7 @@ void Bubble::Update(float deltaTime)
 	//Set item position
 	if (m_item)
 	{
-		m_item->SetPosition(pos.x, pos.y - 15);
+		m_item->SetPosition(m_sprite.getPosition().x, pos.y - 15);
 	}
 }
 void Bubble::Draw(DrawManager* drawManager)

@@ -33,7 +33,7 @@ WordManager::WordManager()
 
 void WordManager::Update(float deltaTime)
 {
-	for (int i = 0; i < m_structs.size(); i++)
+	for (size_t i = 0; i < m_structs.size(); i++)
 	{
 		if (m_structs[i].text == "")
 		{
@@ -55,15 +55,15 @@ void WordManager::Update(float deltaTime)
 void WordManager::Draw(DrawManager* drawManager)
 {
 	//Loop through each word
-	for (int i = 0; i < m_structs.size(); i++)
+	for (size_t i = 0; i < m_structs.size(); i++)
 	{
 		std::string word = m_structs[i].text;
 		m_text.setString(word);
 		m_text.setColor(sf::Color(137, 177, 185, 255)); // Light
 		m_text.setPosition(m_structs[i].position);
 
-		int wordWidth = m_text.getGlobalBounds().width;
-		m_text.move(-wordWidth / 2 + 5, 20);
+		int wordWidth = (int)m_text.getGlobalBounds().width;
+		m_text.move(-wordWidth / 2.0f + 5.0f, 20.0f);
 
 		if (m_structs[i].active)
 		{
@@ -93,7 +93,7 @@ void WordManager::CheckWords()
 	bool charFits = false;
 
 	//Loop through all words
-	for (int i = 0; i < m_structs.size(); i++)
+	for (size_t i = 0; i < m_structs.size(); i++)
 	{
 		//Get the current word and it's active state
 		std::string word = m_structs[i].text;
@@ -125,7 +125,7 @@ void WordManager::CheckWords()
 
 
 	//Loop through the words again
-	for (int i = 0; i < m_structs.size(); i++)
+	for (size_t i = 0; i < m_structs.size(); i++)
 	{
 		//Get the current word
 		std::string word = m_structs[i].text;
@@ -149,7 +149,7 @@ void WordManager::CheckWords()
 void WordManager::Reset()
 {
 	//Sets all words to active
-	for (int i = 0; i < m_structs.size(); i++)
+	for (size_t i = 0; i < m_structs.size(); i++)
 	{
 		m_structs[i].active = true;
 	}
@@ -168,7 +168,7 @@ std::string WordManager::GetFinishedWord()
 	std::string finishedWord = "";
 
 	//Find any word that matches the user input and return the word. Set the word slot to empty string.
-	for (int i = 0; i < m_structs.size(); i++)
+	for (size_t i = 0; i < m_structs.size(); i++)
 	{
 		if (m_structs[i].text == m_userInput)
 		{
@@ -185,7 +185,7 @@ std::string WordManager::GetFinishedWord()
 void WordManager::SetNewWord(const std::string& newWord)
 {
 	//Apply the newWord to empty word slot
-	for (int i = 0; i < m_structs.size(); i++)
+	for (size_t i = 0; i < m_structs.size(); i++)
 	{
 		if (m_structs[i].text.size() == 0)
 		{
