@@ -5,6 +5,7 @@
 #include "GameState.h"
 #include "MenuState.h"
 #include "LosingState.h"
+#include "TestState.h"
 
 
 StateManager::StateManager()
@@ -27,6 +28,7 @@ bool StateManager::Initialize()
 	AddState(STATE_GAME, new GameState());
 	AddState(STATE_MENU, new MenuState());
 	AddState(STATE_LOSING, new LosingState());
+	AddState(STATE_TEST, new TestState());
 
 	SetActiveState(STATE_GAME);
 	return true;

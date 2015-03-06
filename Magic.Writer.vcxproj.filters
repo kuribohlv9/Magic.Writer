@@ -97,6 +97,9 @@
     <ClCompile Include="ParticleManager.cpp">
       <Filter>Source Files\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="TestState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -203,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="ParticleEmitter.h">
       <Filter>Header Files\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="TestState.h">
+      <Filter>Header Files\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

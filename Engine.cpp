@@ -131,7 +131,7 @@ void Engine::Run()
 			m_running = false;
 		}
 
-		m_window.clear(sf::Color(50, 50, 50, 255));
+		m_window.clear(sf::Color(0, 0, 0, 255));
 		m_state_manager->Draw();
 		m_window.display();
 	}
