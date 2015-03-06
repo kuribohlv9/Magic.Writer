@@ -45,8 +45,9 @@ Player::Player(sf::Texture* texture, sf::Texture* particle, sf::SoundBuffer* cha
 
 	//Set emitter
 	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particle, 200);
+	m_emitter->SetActive(false);
 	m_emitter->SetSpawnRate(0);
-	m_emitter->SetLifeTime(2, 2);
+	m_emitter->SetLifeTime(1, 1);
 	m_emitter->SetSize(60, 1);
 	m_emitter->SetAcceleration(0, 2);
 }

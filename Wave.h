@@ -13,6 +13,8 @@ public:
 	void Update(float deltaTime);
 	void Draw(DrawManager* drawManager);
 
+	void Activate();
+
 private:
 	Animator* m_animator;
 	float m_speed;

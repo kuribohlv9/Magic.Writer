@@ -70,8 +70,8 @@ GameState::GameState()
 	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
 	
 	m_scoreDisplay.setFont(*m_font);
-	m_scoreDisplay.setScale(1.5f, 1.5f);
-	m_scoreDisplay.setPosition(1600, 90);
+	m_scoreDisplay.setCharacterSize(40);
+	m_scoreDisplay.setPosition(1620, 90);
 	m_scoreDisplay.setString("0");
 	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
 
@@ -570,22 +570,20 @@ bool GameState::PlayMode(float deltaTime)
 
 	//Update waves
 	m_waveTimer += deltaTime;
-	if (m_waveTimer >= 5)
-	{
-		for (int i = 0; i < m_waves.size(); i++)
-		{
-			if (!m_waves[i]->IsActive())
-			{
-				m_waves[i]->SetActive(true);
-				m_waveTimer = 0;
-				break;
-			}
-		}
-	}
 	for (int i = 0; i < m_waves.size(); i++)
 	{
 		if (!m_waves[i]->IsActive())
-			continue;
+		{
+			if (m_waveTimer >= 6)
+			{
+				m_waves[i]->Activate();
+				m_waveTimer = 0;
+			}
+			else
+			{
+				continue;
+			}
+		}
 
 		m_waves[i]->Update(deltaTime);
 	}

@@ -2,6 +2,7 @@
 #include "Wave.h"
 #include "DrawManager.h"
 #include "Animator.h"
+#include <iostream>
 
 Wave::Wave(sf::Texture* texture)
 {
@@ -9,13 +10,10 @@ Wave::Wave(sf::Texture* texture)
 	m_speed = 50;
 	SetActive(false);
 
-
 	m_animator = new Animator(&m_sprite, "assets/sprites/wave_spritesheet.txt");
 	m_animator->SetAnimation("wave_animation");
-	m_sprite.setScale(0.5f, 0.5f);
 	m_sprite.setOrigin(m_sprite.getTextureRect().width / 2, m_sprite.getTextureRect().height / 2);
-
-	SetPosition(rand() % ScreenWidth, -50);
+	SetPosition(ScreenWidth / 2, 0);
 }
 Wave::~Wave()
 {
@@ -36,15 +34,29 @@ void Wave::Update(float deltaTime)
 		SetActive(false);
 	}
 
-	float scale = (800 - (800 - m_y - 200)) / 800;
+	float distance = abs(GetY() - 800.0f);
+	float scaleFactor = distance / 800.0f;
+	std::cout << GetX() << std::endl;
+	m_sprite.setScale(1.8f - scaleFactor, 1.0f);
 
-	if (scale > 1)
-		scale = 1;
-	else if (scale < 0.4f)
-		scale = 0.4f;
-	m_sprite.setScale(scale, scale);
+
+	float alphaDistance = abs(GetY() - 650.0f);
+	float alpha = 255 * (alphaDistance / 650.0f);
+	m_sprite.setColor(sf::Color(255, 255, 255, alpha));
+
+	if (GetY() >= 650.0f)
+		SetActive(false);
+
 }
 void Wave::Draw(DrawManager* drawManager)
 {
 	drawManager->Draw(m_sprite, sf::RenderStates::Default);
+}
+
+void Wave::Activate()
+{
+	m_sprite.setColor(sf::Color(255, 255, 255, 125));
+	m_sprite.setScale(1, 1);
+	SetPosition(GetX(), -100);
+	SetActive(true);
 }

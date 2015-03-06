@@ -8,7 +8,7 @@ Particle::Particle(sf::Texture* texture)
 	m_velocity = sf::Vector2f(0, 0);
 	m_acceleration = sf::Vector2f(0, 0);
 	m_sprite.setTexture(*texture);
-	m_sprite.setOrigin(texture->getSize().x / 2, texture->getSize().y / 2);
+	m_sprite.setOrigin(texture->getSize().x / 2.0f, texture->getSize().y / 2.0f);
 	m_secondsToLive = 0;
 	m_active = false;
 }
@@ -33,7 +33,7 @@ void Particle::Update(float deltaTime)
 		m_timer = 0;
 
 		//Decrease life
-		m_life -= (255 / m_secondsToLive) / 60;
+		m_life -= (int)((255 / m_secondsToLive) / 60);
 
 		//Fade particle to 0 alpha
 		sf::Color c = m_sprite.getColor();
@@ -75,6 +75,6 @@ void Particle::Activate(sf::Vector2f position, sf::Vector2f acceleration, sf::Ve
 	m_rotationVelocity = rotationVelocity;
 	if (m_rotationVelocity != 0)
 	{
-		m_sprite.setRotation(rand() % 360);
+		m_sprite.setRotation(static_cast<float>(rand() % 360));
 	}
 }

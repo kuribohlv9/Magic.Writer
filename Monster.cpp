@@ -54,11 +54,11 @@ Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spr
 	m_weakness = weakness;
 
 	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particleTexture, 50);
-	m_emitter->SetLifeTime(1.5f, 1.5f);
+	m_emitter->SetLifeTime(0.7f, 0.7f);
 	m_emitter->SetSpawnRate(0.1f);
 	m_emitter->SetPosition(-100, -100);
-	m_emitter->SetForce(50, 50);
-	m_emitter->SetAcceleration(0, -1);
+	m_emitter->SetForce(150, 150);
+	m_emitter->SetAcceleration(0, 0);
 	m_emitter->SetStartAngle(270, 270);
 	m_emitter->SetSize(20, 1);
 }
