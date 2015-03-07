@@ -104,7 +104,10 @@ bool StateManager::ChangeState(ScreenState screenState)
 void StateManager::SetActiveState(ScreenState screenState)
 {
 	//Change activestate to a new state
+	if (m_activeState)
+		m_activeState->Exit();
 	m_activeState = m_states[screenState];
+	m_activeState->Enter();
 }
 void StateManager::AddState(ScreenState screenState, State* state)
 {

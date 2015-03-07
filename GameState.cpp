@@ -341,6 +341,7 @@ void GameState::Draw()
 void GameState::Enter()
 {
 	m_status = MODE_PLAYING;
+	m_waveManager->SetActiveWave(0);
 }
 void GameState::Exit()
 {
@@ -610,8 +611,8 @@ bool GameState::PlayMode(float deltaTime)
 
 	m_powerUpManager->Update(deltaTime);
 
-
-	if (m_life <= 0)
+	//Check win and lose condition
+	if (m_life <= 0 && false)
 	{
 
 	}
@@ -629,6 +630,10 @@ bool GameState::VictoryMode(float deltaTime)
 
 	if (m_next_wave_button->IsPressed())
 	{
+		//increase wave level and start the next wave
+		m_wave_level++;
+		m_waveManager->SetActiveWave(m_wave_level);
+		m_status = MODE_PLAYING;
 	}
 	else if (m_back_to_menu_button->IsPressed())
 	{

@@ -12,12 +12,14 @@ public:
 	void Reset();
 	void SetActive(bool state);
 	bool IsActive();
+	void SetActiveWave(int level);
 
 private:
 	void LoadWave(const std::string& filename);
 
 private:
 	std::vector<std::vector<float>> m_waves;
+	std::vector<float> m_active_wave;
 	int m_waveTime;
 	int m_monster_number;
 	float m_timer;

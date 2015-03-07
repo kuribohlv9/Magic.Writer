@@ -19,18 +19,15 @@ void WaveManager::Update(float deltaTime)
 
 	if (m_timer >= m_spawnTime)
 	{
-		//Get the current wave
-		std::vector<float>* currentWave = &m_waves[0];
-
-		if (currentWave->size() > m_monster_number)
+		if (m_active_wave.size() > m_monster_number)
 		{
-			m_spawnTime = currentWave->at(m_monster_number);
+			m_spawnTime = m_active_wave.at(m_monster_number);
 			//currentWave->erase(currentWave->begin());
 			m_spawnMonster = true;
 			m_timer = 0;
 			m_monster_number++;
 		}
-		else if (currentWave->size() == m_monster_number)
+		else if (m_active_wave.size() == m_monster_number)
 		{
 			//Remove finished wave
 			//m_waves.erase(m_waves.begin());
@@ -45,6 +42,7 @@ void WaveManager::Update(float deltaTime)
 			//m_timer = 0;
 
 			m_monster_number = 0;
+			m_timer = 0;
 			m_active = false;
 		}
 	}
@@ -106,4 +104,10 @@ void WaveManager::SetActive(bool state)
 bool WaveManager::IsActive()
 {
 	return m_active;
+}
+void WaveManager::SetActiveWave(int level)
+{
+	//Set the active wave to 0 for now
+	m_active_wave = m_waves[0];
+	m_active = true;
 }
