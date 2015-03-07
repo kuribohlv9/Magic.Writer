@@ -92,12 +92,14 @@ GameState::GameState()
 	}
 
 	//Victory and Losing screen
+	texture = m_textureManager->LoadTexture("assets/sprites/magic writer victory screen.png");
 	m_victory_window.setPosition(300, 200);
-	m_victory_window.setSize(sf::Vector2f(ScreenWidth - 600, ScreenHeight - 400));
-	texture = m_textureManager->LoadTexture("assets/sprites/items/particle_dead.png");
-	m_next_wave_button = new GUI_Button(350, ScreenHeight-250, nullptr, texture, sf::IntRect(0,0,50,50));
+	m_victory_window.setTexture(*texture);
+	m_victory_window.setTextureRect(sf::IntRect(0, 0, 1320, 680));
+	texture = m_textureManager->LoadTexture("assets/sprites/magic writer victory screen buttons.png");
+	m_next_wave_button = new GUI_Button(475, ScreenHeight-275, nullptr, texture, sf::IntRect(0,0,250,100));
 	m_next_wave_button->Refresh();
-	m_back_to_menu_button = new GUI_Button(1300, ScreenHeight - 250, nullptr, texture, sf::IntRect(50, 0, 50, 50));
+	m_back_to_menu_button = new GUI_Button(1445, ScreenHeight - 275, nullptr, texture, sf::IntRect(250, 0, 250, 100));
 	m_back_to_menu_button->Refresh();
 	m_next_state = STATE_MENU;
 	m_status = MODE_PLAYING;
@@ -175,7 +177,7 @@ bool GameState::Update(float deltaTime)
 			return VictoryMode(deltaTime);
 
 		case MODE_DEFEAT:
-			return true;
+			return DefeatMode(deltaTime);
 
 		default:
 			return true;
@@ -336,6 +338,8 @@ void GameState::Draw()
 	}
 	else if (m_status == MODE_DEFEAT)
 	{
+		m_drawManager->Draw(m_victory_window, sf::RenderStates::Default);
+		m_back_to_menu_button->Draw(m_drawManager);
 	}
 }
 void GameState::Enter()
@@ -346,6 +350,15 @@ void GameState::Enter()
 void GameState::Exit()
 {
 	m_status = MODE_UNKNOWN;
+
+	auto itr = m_monsters.begin();
+	while (itr != m_monsters.end())
+	{
+		if ((*itr)->IsActive())
+			(*itr)->SetActive(false);
+		itr++;
+	}
+	m_life = 3;
 }
 ScreenState GameState::NextState()
 {
@@ -420,7 +433,7 @@ void GameState::SpawnMonster()
 		Monster* monster = m_monsters[randomMonster];
 		if (!monster->IsActive())
 		{
-			monster->Activate();
+			monster->Activate(35 + 5*m_wave_level, 2+1*m_wave_level/2);
 			break;
 		}
 	}
@@ -612,9 +625,9 @@ bool GameState::PlayMode(float deltaTime)
 	m_powerUpManager->Update(deltaTime);
 
 	//Check win and lose condition
-	if (m_life <= 0 && false)
+	if (m_life <= 0)
 	{
-
+		m_status = MODE_DEFEAT;
 	}
 	else if (!m_waveManager->IsActive() && !IsMonsters())
 	{
@@ -636,6 +649,17 @@ bool GameState::VictoryMode(float deltaTime)
 		m_status = MODE_PLAYING;
 	}
 	else if (m_back_to_menu_button->IsPressed())
+	{
+		return false;
+	}
+	return true;
+}
+
+bool GameState::DefeatMode(float deltaTime)
+{
+	m_back_to_menu_button->Update();
+
+	if (m_back_to_menu_button->IsPressed())
 	{
 		return false;
 	}

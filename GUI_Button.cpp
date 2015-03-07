@@ -125,8 +125,8 @@ void GUI_Button::Refresh()
 {
 	if (m_parent)
 	{
-		m_x = m_parent->GetX() + m_localX;
-		m_y = m_parent->GetY() + m_localY;
+		m_x = m_parent->GetX();
+		m_y = m_parent->GetY();
 	}
 	m_collider->SetPosition(m_x, m_y);
 	m_sprite.setPosition(m_x, m_y);

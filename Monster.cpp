@@ -248,12 +248,13 @@ void Monster::HandleBodyParts()
 	}
 }
 
-void Monster::Activate()
+void Monster::Activate(int speed, int health)
 {
 	//Activation and reset function
 	m_frozen = false;
-	m_speed = m_originalSpeed;
-	m_health = 3;
+	m_speed = speed;
+	m_health = health;
+	m_state = MONSTER_MOVE;
 
 	//Set color
 	m_foam_sprite.setColor(sf::Color(255, 255, 255, 255));

@@ -23,7 +23,7 @@ public:
 	void Update(float deltaTime);
 	void Freeze(bool state);
 	void Damage(ItemProperty property, int &score);
-	void Activate();
+	void Activate(int speed, int health);
 	bool Burst();
 
 	void SetSounds(

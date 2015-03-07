@@ -49,6 +49,7 @@ private:
 	
 	bool PlayMode(float deltaTime);
 	bool VictoryMode(float deltaTime);
+	bool DefeatMode(float deltaTime);
 
 	bool IsMonsters();
 
@@ -106,7 +107,7 @@ private:
 	float m_speed;
 
 	//Victory and Losing screens
-	sf::RectangleShape m_victory_window;
+	sf::Sprite m_victory_window;
 	GUI_Button* m_back_to_menu_button;
 	GUI_Button* m_next_wave_button;
 };
