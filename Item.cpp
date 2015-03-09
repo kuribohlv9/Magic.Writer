@@ -26,7 +26,7 @@ Item::Item(sf::Texture* texture, sf::Texture* particle, ItemProperty property, c
 	m_emitter->SetLifeTime(0.3f, 0.3f);
 	m_emitter->SetForce(0, 0);
 	m_emitter->SetAcceleration(0, -10);
-	//m_emitter->SetRotationVelocity(5);
+	m_emitter->SetRotationVelocity(5);
 }
 Item::~Item()
 {

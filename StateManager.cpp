@@ -30,7 +30,7 @@ bool StateManager::Initialize()
 	AddState(STATE_LOSING, new LosingState());
 	AddState(STATE_TEST, new TestState());
 
-	SetActiveState(STATE_GAME);
+	SetActiveState(STATE_MENU);
 	return true;
 }
 void StateManager::Shutdown()
