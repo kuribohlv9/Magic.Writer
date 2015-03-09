@@ -193,6 +193,7 @@ bool PowerUpManager::NextBounce(Monster* monster)
 				break;
 			}
 		}
+		return foundNewTarget;
 	}
 }
 
