@@ -159,10 +159,11 @@ bool PowerUpManager::GetBounce()
 		if (m_bounceCurrentItem->IsActive())
 			return true;
 	}
+	
 	return false;
 }
 
-void PowerUpManager::NextBounce(Monster* monster)
+bool PowerUpManager::NextBounce(Monster* monster)
 {
 	if (m_bounceCurrentItem != nullptr)
 	{
