@@ -188,6 +188,11 @@ bool PowerUpManager::NextBounce(Monster* monster)
 				}
 			}
 
+
+
+
+
+
 			if (foundNewTarget)
 			{
 				break;
