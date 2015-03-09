@@ -24,7 +24,7 @@ public:
 	Item* BounceItem();
 	Monster* NextBounceTarget();
 
-	void NextBounce(Monster* monster);
+	bool NextBounce(Monster* monster);
 	bool AddItemToPierceList(Monster* monster);
 	void AddLaneToBounceList(int x);
 

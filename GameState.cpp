@@ -214,17 +214,23 @@ void GameState::CheckCollision()
 						if (targetMonster == monster)
 						{
 							monster->Damage(item->GetProperty(), m_score);
-							m_powerUpManager->NextBounce(monster);
-							m_powerUpManager->AddLaneToBounceList(static_cast<int>(monster->GetX()));
+							if (!m_powerUpManager->NextBounce(monster))
+							{
+								item->SetActive(false);
+								item->SetInGame(false);
+								item->SetState(ITEM_HIT);
+							}
 						}
 						else if (targetMonster == nullptr)
 						{
 							monster->Damage(item->GetProperty(), m_score);
-							m_powerUpManager->NextBounce(monster);
-							m_powerUpManager->AddLaneToBounceList(static_cast<int>(monster->GetX()));
+							if (!m_powerUpManager->NextBounce(monster))
+							{
+								item->SetActive(false);
+								item->SetInGame(false);
+								item->SetState(ITEM_HIT);
+							}
 						}
-
-						//If sats som kollar ifall det är första gången bounceitem träffar monster, om true gör damage.
 					}
 					else
 					{
