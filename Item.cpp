@@ -18,23 +18,25 @@ Item::Item(sf::Texture* texture, sf::Texture* particle, ItemProperty property, c
 	m_sprite.setTexture(*texture);
 	m_collider = new Collider(0, 0);
 
-	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particle, 50);
+	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particle, 100);
 	m_emitter->SetActive(false);
 	m_emitter->SetPosition(-100, -100);
 	m_emitter->SetStartAngle(90, 90);
-	m_emitter->SetSpawnRate(0.01f);
-	m_emitter->SetSize(10, 1);
-	m_emitter->SetLifeTime(0.7f, 0.7f);
-	m_emitter->SetRotationVelocity(5);
-	m_emitter->SetAcceleration(0, -3);
+	m_emitter->SetSize(50, 1);
+	m_emitter->SetLifeTime(0.3f, 0.3f);
+	m_emitter->SetForce(0, 0);
+	m_emitter->SetAcceleration(0, -10);
+	//m_emitter->SetRotationVelocity(5);
 }
 Item::~Item()
 {
 }
 void Item::Update(float deltaTime)
 {
-	m_emitter->SetPosition(GetX(), GetY());
+	m_emitter->SetPosition(GetX() + 20, GetY());
 	m_emitter->SetStartAngle(80, 100);
+	int r = rand() % 10;
+	m_emitter->SetSpawnRate((float)(r / 100));
 
 	//Deactivate above screen
 	if (m_y <= -400)

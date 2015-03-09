@@ -268,6 +268,8 @@ void Monster::Activate(int speed, int health)
 	//Reset collider
 	m_collider->SetWidthHeight(m_sprite_width / 4, m_sprite_height / 4);
 
+	//Set animation
+	m_head_animator->SetAnimation("move");
 	SetActive(true);
 	m_emitter->SetActive(true);
 }

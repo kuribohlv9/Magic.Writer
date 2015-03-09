@@ -19,7 +19,7 @@ ItemManager::ItemManager()
 	particle = m_textureManager->LoadTexture("assets/sprites/items/particle_hot.png");
 	AddItems("assets/sprites/items/item_hot.png", "assets/sprites/items/item_hot.txt", ITEM_HOT, particle);
 
-	particle = m_textureManager->LoadTexture("assets/sprites/items/particle_cold2.png");
+	particle = m_textureManager->LoadTexture("assets/sprites/items/particle_cold.png");
 	AddItems("assets/sprites/items/item_cold.png", "assets/sprites/items/item_cold.txt", ITEM_COLD, particle);
 }
 

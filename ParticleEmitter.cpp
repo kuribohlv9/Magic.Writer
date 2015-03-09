@@ -151,6 +151,10 @@ void ParticleEmitter::SetRotationVelocity(float velocity)
 {
 	m_rotationVelocity = velocity;
 }
+void ParticleEmitter::SetScaling(bool state)
+{
+	m_scaleParticle = state;
+}
 bool ParticleEmitter::IsActive()
 {
 	return m_active;

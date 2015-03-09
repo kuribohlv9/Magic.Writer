@@ -44,12 +44,12 @@ Player::Player(sf::Texture* texture, sf::Texture* particle, sf::SoundBuffer* cha
 	m_changeLaneSound.setVolume(10);
 
 	//Set emitter
-	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particle, 200);
+	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particle, 100);
 	m_emitter->SetActive(false);
-	m_emitter->SetSpawnRate(0);
-	m_emitter->SetLifeTime(1, 1);
-	m_emitter->SetSize(60, 1);
-	m_emitter->SetAcceleration(0, 2);
+	m_emitter->SetSpawnRate(0.2f);
+	m_emitter->SetLifeTime(1.5f, 1.5f);
+	m_emitter->SetSize(40, 40);
+	m_emitter->SetAcceleration(0, 0);
 }
 Player::~Player()
 {
@@ -66,13 +66,9 @@ Player::~Player()
 
 void Player::Update(float deltaTime)
 {
-	if (rand() % 2 == 0)
-		m_emitter->SetStartAngle(300, 320);
-	else
-		m_emitter->SetStartAngle(220, 240);
-
+	m_emitter->SetStartAngle(0, 360);
 	m_emitter->SetForce(50, 50);
-	m_emitter->SetPosition(GetX() + 10, GetY() - 120);
+	m_emitter->SetPosition(GetX() + 10, GetY() - 150);
 
 	//Handle movement between lanes
 	if (!IsStunned())

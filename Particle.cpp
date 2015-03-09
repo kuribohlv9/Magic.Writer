@@ -35,10 +35,10 @@ void Particle::Update(float deltaTime)
 		//Decrease life
 		m_life -= (int)((255 / m_secondsToLive) / 60);
 
-		//Fade particle to 0 alpha
-		sf::Color c = m_sprite.getColor();
-		c.a = m_life;
-		m_sprite.setColor(c);
+		////Fade particle to 0 alpha
+		//sf::Color c = m_sprite.getColor();
+		//c.a = m_life;
+		//m_sprite.setColor(c);
 
 		//Scale particle to size 0
 		if (m_scaleParticle)
@@ -71,6 +71,7 @@ void Particle::Activate(sf::Vector2f position, sf::Vector2f acceleration, sf::Ve
 	m_sprite.setColor(sf::Color::White);
 	m_sprite.setScale(1, 1);
 	m_active = true;
+	m_scaleParticle = scaleParticle;
 
 	m_rotationVelocity = rotationVelocity;
 	if (m_rotationVelocity != 0)

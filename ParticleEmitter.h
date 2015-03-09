@@ -21,6 +21,7 @@ public:
 	void SetSpawnRate(float spawnRate);
 	void SetForce(int forceMin, int forceMax);
 	void SetRotationVelocity(float velocity);
+	void SetScaling(bool state);
 	bool IsActive();
 private:
 	void ActivateParticle();
