@@ -15,6 +15,7 @@
 #include "PowerManager.h"
 #include "ParticleManager.h"
 #include "HighscoreManager.h"
+#include "BubbleManager.h"
 
 //Classes
 #include "Monster.h"
@@ -57,6 +58,7 @@ GameState::GameState()
 	m_player = new Player(texture, particleTexture, buffer);
 
 	m_powerManager = new PowerManager(&m_monsters, &m_activeItems, m_player);
+	m_bubbleManager = new BubbleManager(m_player, m_wordManager);
 
 	//Load sound
 	buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_spell_complete01.wav");
@@ -115,13 +117,7 @@ GameState::GameState()
 }
 GameState::~GameState()
 {
-	//Delete all bubbles
-	for (int i = 0; i < m_bubbles.size(); i++)
-	{
-		delete m_bubbles[i];
-		m_bubbles[i] = nullptr;
-	}
-	m_bubbles.clear();
+	//Remove items
 	m_activeItems.clear();
 
 	//Delete all monsters
@@ -323,11 +319,8 @@ void GameState::Draw()
 	//Draw player
 	m_player->Draw(m_drawManager);
 
-	//Draw bubbles
-	for (int i = 0; i < m_bubbles.size(); i++)
-	{
-		m_bubbles[i]->Draw(m_drawManager);
-	}
+	//BubbleManager
+	m_bubbleManager->Draw(m_drawManager);
 
 	//Draw typeable words
 	m_wordManager->Draw(m_drawManager);
@@ -393,21 +386,13 @@ ScreenState GameState::NextState()
 
 void GameState::InstantiateBubbles()
 {
-	//Instantiate thought bubbles
-	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background/bubbles_spritesheet.png");
+	//Instantiate thought bubble items
 	for (int i = 0; i < 3; i++)
 	{
-		int yOffset = 0;
-		if (i == 1)
-			yOffset = 50;
-		Bubble* bubble = new Bubble(725.0f + i * 200.0f, 910.0f + yOffset, texture, m_player);
-
 		Item* item = m_itemManager->GetItem();
 
-		bubble->SetItem(item);
+		m_bubbleManager->GetBubble(i)->SetItem(item);
 		m_wordManager->SetNewWord(item->GetName());
-
-		m_bubbles.push_back(bubble);
 	}
 }
 void GameState::InstantiateMonsters()
@@ -479,9 +464,10 @@ void GameState::ConvertWordToItem()
 		if (finishedWord.size() == 0)
 			return;
 
-		for (int i = 0; i < m_bubbles.size(); i++)
+		for (unsigned int i = 0; i < 3; i++)
 		{
-			Item* item = m_bubbles[i]->GetItem();
+			Bubble* bubble = m_bubbleManager->GetBubble(i);
+			Item* item = bubble->GetItem();
 
 			if (item->GetName() != finishedWord)
 				continue;
@@ -490,7 +476,7 @@ void GameState::ConvertWordToItem()
 
 			m_player->SetItem(item);
 			m_wordManager->SetNewWord(newItem->GetName());
-			m_bubbles[i]->SetItem(newItem);
+			bubble->SetItem(newItem);
 			m_score += 200;
 
 			m_conjureCompleteSound.play();
@@ -524,6 +510,8 @@ bool GameState::IsMonsters()
 bool GameState::PlayMode(float deltaTime)
 {
 	m_particleManager->Update(deltaTime);
+	m_bubbleManager->Update(deltaTime);
+
 	//Handle word input
 	if (m_player->GetItem() == nullptr && !m_player->IsStunned())
 	{
@@ -567,18 +555,6 @@ bool GameState::PlayMode(float deltaTime)
 				m_powerManager->BounceItem()->Move(itemDir.x, itemDir.y);
 			}
 		}
-	}
-
-
-	//Update bubbles
-	for (int i = 0; i < m_bubbles.size(); i++)
-	{
-		m_bubbles[i]->Update(deltaTime);
-		m_wordManager->SetWordPosition(m_bubbles[i]->GetPosition(), i);
-
-		bool active = m_wordManager->GetActiveBubbles().at(i);
-		int alpha = (active) ? 255 : 80;
-		m_bubbles[i]->SetAlpha(alpha);
 	}
 
 	//Update player

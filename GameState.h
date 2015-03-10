@@ -12,8 +12,8 @@ class PowerManager;
 class ParticleEmitter;
 class ParticleManager;
 class HighscoreManager;
+class BubbleManager;
 class Item;
-class Bubble;
 class Monster;
 class Player;
 class Wave;
@@ -72,9 +72,9 @@ private:
 	PowerManager* m_powerManager;
 	ParticleManager* m_particleManager;
 	HighscoreManager* m_highscoreManager;
+	BubbleManager* m_bubbleManager;
 
-	//Item & word variables
-	std::vector<Bubble*> m_bubbles;
+	//Items
 	std::vector<Item*> m_activeItems;
 
 	//Freeze
