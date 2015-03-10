@@ -147,7 +147,7 @@
     <ClCompile Include="ParticleEmitter.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PowerUpManager.cpp" />
+    <ClCompile Include="PowerupManager.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="TestState.cpp" />
     <ClCompile Include="TextureManager.cpp" />
