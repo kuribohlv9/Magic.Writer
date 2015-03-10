@@ -30,7 +30,6 @@ public:
 
 	bool NextBounce(Monster* monster);
 	bool AddItemToPierceList(Monster* monster);
-	void AddLaneToBounceList(int x);
 
 	sf::Vector2f ItemDirection();
 

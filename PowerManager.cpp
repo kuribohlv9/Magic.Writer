@@ -79,11 +79,6 @@ void PowerManager::Update(float deltaTime)
 			m_monsterPierceList.clear();
 		}
 	}
-	if (m_bounceCurrentItem != nullptr)
-	{
-		if (!m_bounceCurrentItem->IsActive() && m_player->GetItem() != m_bounceCurrentItem)
-			m_bounceCurrentItem = nullptr;
-	}
 }
 void PowerManager::Draw(DrawManager* drawManager)
 {
@@ -187,6 +182,7 @@ bool PowerManager::GetBounce()
 
 bool PowerManager::NextBounce(Monster* monster)
 {
+	m_LaneBounceList.push_back(monster->GetX());
 	if (m_bounceCurrentItem != nullptr)
 	{
 
@@ -195,22 +191,30 @@ bool PowerManager::NextBounce(Monster* monster)
 			if (!m_monster->at(i)->IsActive())
 				continue;
 
-			for (int j = 0; j < 5; j++)
+			if (m_monster->at(i)->GetX() != monster->GetX() && m_monster->at(i)->GetY() >= -15)
 			{
-				if (m_monster->at(i)->GetX() != monster->GetX())
+				bool isInList = false;
+				for (unsigned int k = 0; k < m_LaneBounceList.size(); k++)
 				{
-					for (unsigned int k = 0; k < m_LaneBounceList.size(); k++)
+					if (m_LaneBounceList.at(k) == m_monster->at(i)->GetX())
 					{
-						if (m_LaneBounceList.at(i) == m_monster->at(i)->GetX())
-						{
-							m_nextBounceTarget = m_monster->at(i);
-							return true;
-						}
+						isInList = true;
+						break;
 					}
+				}
+
+				if (!isInList)
+				{
+					m_nextBounceTarget = m_monster->at(i);
+					return true;
 				}
 			}
 		}
 	}
+
+	m_nextBounceTarget = nullptr;
+	m_bounceCurrentItem = nullptr;
+	m_LaneBounceList.clear();
 
 	return false;
 }
@@ -244,14 +248,4 @@ sf::Vector2f PowerManager::ItemDirection()
 	m_itemDir /= length;
 
 	return m_itemDir;
-}
-
-void PowerManager::AddLaneToBounceList(int x)
-{
-	for (unsigned int i = 0; i < m_LaneBounceList.size(); i++)
-	{
-		if (m_LaneBounceList.at(i) == x)
-			continue;
-		m_LaneBounceList.push_back(x);
-	}
 }

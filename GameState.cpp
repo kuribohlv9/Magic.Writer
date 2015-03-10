@@ -201,14 +201,14 @@ void GameState::CheckCollision()
 					continue;
 				if (CollisionManager::Check(monster->GetCollider(), item->GetCollider()))
 				{
-					if (m_powerManager->GetPierce())
+					if (m_powerManager->GetPierce()) //Item pierce collision
 					{
 						if (m_powerManager->AddItemToPierceList(monster))
 						{
 							monster->Damage(item->GetProperty(), m_score);
 						}
 					}
-					else if (m_powerManager->BounceItem() == item)
+					else if (m_powerManager->BounceItem() == item) //Item bounce collision
 					{
 						Monster* targetMonster = m_powerManager->NextBounceTarget();
 						if (targetMonster == monster)
@@ -232,7 +232,7 @@ void GameState::CheckCollision()
 							}
 						}
 					}
-					else
+					else //Item normal collision
 					{
 						monster->Damage(item->GetProperty(), m_score);
 
@@ -241,7 +241,7 @@ void GameState::CheckCollision()
 						item->SetState(ITEM_HIT);
 					}
 
-					if (monster->IsActive() == false)
+					if (monster->IsActive() == false) //Monster is dead
 					{
 						//Increase score
 						m_score += 100;
@@ -535,21 +535,20 @@ bool GameState::PlayMode(float deltaTime)
 		if (!m_activeItems.at(i)->IsActive())
 			continue;
 
-			if (m_powerManager->BounceItem() == nullptr)
-				m_activeItems.at(i)->Move(0, -m_speed * deltaTime);
+		if (m_powerManager->BounceItem() == nullptr)
+			m_activeItems.at(i)->Move(0, -m_speed * deltaTime);
+		else
+		{
+			if (m_powerManager->NextBounceTarget() == nullptr)
+				m_powerManager->BounceItem()->Move(0, -m_speed * deltaTime);
 			else
 			{
-				if (m_powerManager->NextBounceTarget() == nullptr)
-					m_powerManager->BounceItem()->Move(0, -m_speed * deltaTime);
-				else
-				{
-					sf::Vector2f itemDir = m_powerManager->ItemDirection();
+				sf::Vector2f itemDir = m_powerManager->ItemDirection();
 
-					itemDir *= m_speed * deltaTime;
-					m_powerManager->BounceItem()->Move(itemDir.x, itemDir.y);
-				}
-			
+				itemDir *= m_speed * deltaTime;
+				m_powerManager->BounceItem()->Move(itemDir.x, itemDir.y);
 			}
+		}
 	}
 
 
