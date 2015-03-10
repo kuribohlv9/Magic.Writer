@@ -4,6 +4,9 @@ class InputManager;
 class Monster;
 class Item;
 class Player;
+class TextureManager;
+class DrawManager;
+class ParticleEmitter;
 
 class PowerUpManager
 {
@@ -12,6 +15,7 @@ public:
 	~PowerUpManager();
 
 	void Update(float deltaTime);
+	void Draw(DrawManager* drawManager);
 
 	void ActivateFreeze();
 	void ActivateBounce();
@@ -40,11 +44,18 @@ private:
 	float m_freezeTimer;
 
 private:
+	TextureManager* m_textureManager;
 	InputManager* m_inputManager;
 	Item* m_pierceCurrentItem;
 	Item* m_bounceCurrentItem;
 	Monster* m_nextBounceTarget;
 	Player* m_player;
+
+	sf::Sprite m_frameSprite;
+	sf::Sprite m_fillSprite;
+	float m_powerupScore;
+	float m_targetScore;
+	ParticleEmitter* m_emitter;
 
 	std::vector<Monster*> m_monsterPierceList;
 	std::vector<Monster*>* m_monster;

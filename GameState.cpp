@@ -326,6 +326,8 @@ void GameState::Draw()
 	}
 
 	//Draw HUD
+	m_powerUpManager->Draw(m_drawManager);
+
 	for (int i = 0; i < m_life; i++)
 	{
 		m_life_sprite.setPosition(15.0f + 100.0f * i, 15);
@@ -479,7 +481,7 @@ void GameState::ConvertWordToItem()
 	}
 	else //If an item is spawned, activate it by pressing ENTER
 	{
-		if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Return))
+		if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Return) || m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Space))
 		{
 			//Activate item
 			spawnedItem->Activate();
