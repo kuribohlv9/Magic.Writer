@@ -4,14 +4,17 @@
     <ClCompile Include="Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Collider.cpp">
+    <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Source Files\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Source Files\Base</Filter>
     </ClCompile>
     <ClCompile Include="AudioManager.cpp">
       <Filter>Source Files\Managers</Filter>
@@ -19,7 +22,22 @@
     <ClCompile Include="CollisionManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="DrawManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="HighscoreManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
     <ClCompile Include="InputManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="InstructionState.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="StateManager.cpp">
@@ -28,17 +46,44 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="DrawManager.cpp">
+    <ClCompile Include="WaveManager.cpp">
       <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="WordManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleManager.cpp">
+      <Filter>Source Files\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="BubbleManager.cpp">
+      <Filter>Source Files\Bubbles</Filter>
+    </ClCompile>
+    <ClCompile Include="Bubble.cpp">
+      <Filter>Source Files\Bubbles</Filter>
+    </ClCompile>
+    <ClCompile Include="SmallBubble.cpp">
+      <Filter>Source Files\Bubbles</Filter>
     </ClCompile>
     <ClCompile Include="GameState.cpp">
       <Filter>Source Files\States</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="LosingState.cpp">
+      <Filter>Source Files\States</Filter>
     </ClCompile>
-    <ClCompile Include="Monster.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="MenuState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="TestState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>Source Files\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI_Button.cpp">
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="GUI_Element.cpp">
       <Filter>Source Files\GUI</Filter>
@@ -46,44 +91,11 @@
     <ClCompile Include="GUI_Label.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="GUI_Button.cpp">
-      <Filter>Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuState.cpp">
-      <Filter>Source Files\States</Filter>
-    </ClCompile>
-    <ClCompile Include="WordManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Item.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="ItemManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WaveManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Bubble.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Animator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Animation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LosingState.cpp">
-      <Filter>Source Files\States</Filter>
-    </ClCompile>
-    <ClCompile Include="HighscoreManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="Wave.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Source Files\Game Objects</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp">
       <Filter>Source Files\Particles</Filter>
@@ -91,52 +103,18 @@
     <ClCompile Include="ParticleEmitter.cpp">
       <Filter>Source Files\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleManager.cpp">
-      <Filter>Source Files\Particles</Filter>
+    <ClCompile Include="Wave.cpp">
+      <Filter>Source Files\Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="TestState.cpp">
-      <Filter>Source Files\States</Filter>
-    </ClCompile>
-    <ClCompile Include="PowerManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="SmallBubble.cpp" />
-	  <Filter>Source Files</Filter>
-	</ClCompile>
-	<ClCompile Include="Animation.cpp" />
-	  <Filter>Source Files</Filter>
-	</ClCompile>
-    <ClCompile Include="Animator.cpp" />
-	  <Filter>Source Files</Filter>
-	</ClCompile>
-    <ClCompile Include="AudioManager.cpp" />
-	  <Filter>Source Files\Managers</Filter>
-	</ClCompile>
-    <ClCompile Include="Bubble.cpp" />
-	  <Filter>Source Files</Filter>
-	</ClCompile>
-    <ClCompile Include="BubbleManager.cpp" />
-	  <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="InstructionState.cpp">
-      <Filter>Source Files\States</Filter>
-    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\Game Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ServiceLocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AudioManager.h">
@@ -148,7 +126,16 @@
     <ClInclude Include="DrawManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="HighscoreManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
     <ClInclude Include="InputManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="StateManager.h">
@@ -157,17 +144,35 @@
     <ClInclude Include="TextureManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="State.h">
+    <ClInclude Include="WaveManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="WordManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuState.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="LosingState.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="InstructionState.h">
       <Filter>Header Files\States</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>Header Files\States</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="State.h">
+      <Filter>Header Files\States</Filter>
     </ClInclude>
-    <ClInclude Include="Monster.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="TestState.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI_Button.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="GUI_Element.h">
       <Filter>Header Files\GUI</Filter>
@@ -175,50 +180,20 @@
     <ClInclude Include="GUI_Label.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="GUI_Button.h">
-      <Filter>Header Files\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuState.h">
-      <Filter>Header Files\States</Filter>
-    </ClInclude>
-    <ClInclude Include="WordManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Item.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ItemManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WaveManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="Animator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LosingState.h">
-      <Filter>Header Files\States</Filter>
-    </ClInclude>
-    <ClInclude Include="Bubble.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HighscoreManager.h">
-      <Filter>Header Files\Managers</Filter>
+      <Filter>Header Files\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="Wave.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleManager.h">
-      <Filter>Header Files\Particles</Filter>
+    <ClInclude Include="SmallBubble.h">
+      <Filter>Header Files\Bubbles</Filter>
+    </ClInclude>
+    <ClInclude Include="Bubble.h">
+      <Filter>Header Files\Bubbles</Filter>
+    </ClInclude>
+    <ClInclude Include="BubbleManager.h">
+      <Filter>Header Files\Bubbles</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>Header Files\Particles</Filter>
@@ -226,67 +201,87 @@
     <ClInclude Include="ParticleEmitter.h">
       <Filter>Header Files\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="TestState.h">
-      <Filter>Header Files\States</Filter>
+    <ClInclude Include="ParticleManager.h">
+      <Filter>Header Files\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="PowerManager.h">
-      <Filter>Header Files\Managers</Filter>
+    <ClInclude Include="Animation.h">
+      <Filter>Header Files\Base</Filter>
     </ClInclude>
-    <ClInclude Include="SmallBubble.h" />
-	  <Filter>Header Files</Filter>
+    <ClInclude Include="Animator.h">
+      <Filter>Header Files\Base</Filter>
     </ClInclude>
-	<ClInclude Include="Animation.h" />
-		<Filter>Header Files</Filter>
+    <ClInclude Include="Collider.h">
+      <Filter>Header Files\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Animator.h" />
-		<Filter>Header Files</Filter>
+    <ClInclude Include="ServiceLocator.h">
+      <Filter>Header Files\Base</Filter>
     </ClInclude>
-    <ClInclude Include="AudioManager.h" />
-		<Filter>Header Files\Managers</Filter>
+    <ClInclude Include="Utility.h">
+      <Filter>Header Files\Base</Filter>
     </ClInclude>
-    <ClInclude Include="Bubble.h" />
-		<Filter>Header Files</Filter>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BubbleManager.h" />
-	  <Filter>Header Files\Managers</Filter>
+    <ClInclude Include="Item.h">
+      <Filter>Header Files\Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="InstructionState.h">
-      <Filter>Header Files\States</Filter>
+    <ClInclude Include="Monster.h">
+      <Filter>Header Files\Game Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{c6914547-a326-4730-aeb5-fefb1bb11907}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{eae490c3-a96e-4c39-b389-c0d72ad03d67}</UniqueIdentifier>
+      <UniqueIdentifier>{90bc6bf9-a598-4110-8b2b-90d5e3798c78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{0a53645b-562a-4b65-b3ad-1dd5c3ba0306}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Managers">
-      <UniqueIdentifier>{a09073d9-de73-40ff-894f-42a0bfd600f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Managers">
-      <UniqueIdentifier>{8b7a9cc6-252c-4da5-a04f-6b6e3f8b00cd}</UniqueIdentifier>
+      <UniqueIdentifier>{617803ae-0b16-4fc8-ba43-82d5ecd016db}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\States">
-      <UniqueIdentifier>{4892c52f-1e7b-475e-8ea3-09c0c7957e36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\States">
-      <UniqueIdentifier>{76f03b50-acc9-435b-95be-47d8e2b66282}</UniqueIdentifier>
+      <UniqueIdentifier>{bfeed87c-0635-45a6-9a94-dbbab1d81824}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\GUI">
-      <UniqueIdentifier>{724b7989-03d6-436b-9e8e-7eaba2f0cf7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GUI">
-      <UniqueIdentifier>{96a7af0f-bb2e-4683-bacc-77f04eacaeb9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Particles">
-      <UniqueIdentifier>{db5f97f5-796b-48c7-aa62-5f8867b7170c}</UniqueIdentifier>
+      <UniqueIdentifier>{3b228eb7-3cf0-42c7-8d89-31f448c14c1e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Particles">
-      <UniqueIdentifier>{5cd27850-57ad-431a-aa9e-82b3f5989fdf}</UniqueIdentifier>
+      <UniqueIdentifier>{c62f4ca8-c6dc-4ca9-923f-976bb9174d46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game Objects">
+      <UniqueIdentifier>{cba163d0-4240-4b6b-b5e7-a807c8af2e8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game Objects">
+      <UniqueIdentifier>{a71d94f0-9082-4855-8a2b-610d16bc7dd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managers">
+      <UniqueIdentifier>{2700ea8e-9cf8-4021-8969-d18c844935e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{e9d9f540-1de0-42ce-a17d-2a863ddebf98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Base">
+      <UniqueIdentifier>{8d4968ab-62c9-4790-8170-90febf5a6c6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Base">
+      <UniqueIdentifier>{7f364441-f644-41ed-a684-638617367c35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{00ea9bcf-df6b-43da-8cde-e73d0c946637}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Particles">
+      <UniqueIdentifier>{79b04bd0-93fd-4bab-8ecb-8ba1587dcd64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Bubbles">
+      <UniqueIdentifier>{d1ee4eef-929e-49a3-8d8a-9360c3338930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Bubbles">
+      <UniqueIdentifier>{95c6e593-5b6a-4c97-8642-791d62277bb5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
+    <Text Include="ReadMe.txt">
+      <Filter>Header Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
