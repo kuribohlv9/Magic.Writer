@@ -99,6 +99,7 @@
     <ClInclude Include="GUI_Label.h" />
     <ClInclude Include="HighscoreManager.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="InstructionState.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="LosingState.h" />
@@ -137,6 +138,7 @@
     <ClCompile Include="GUI_Label.cpp" />
     <ClCompile Include="HighscoreManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="InstructionState.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="LosingState.cpp" />

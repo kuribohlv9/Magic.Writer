@@ -34,10 +34,6 @@ MenuState::MenuState()
 	m_buttons.push_back(m_highscoreButton);
 	m_exitButton = new GUI_Button(m_poleSprite.getPosition().x + 90, m_poleSprite.getPosition().y + 550, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
 	m_buttons.push_back(m_exitButton);
-	m_helpButton = new GUI_Button(m_poleSprite.getPosition().x - 300, m_poleSprite.getPosition().y + 550, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
-	m_buttons.push_back(m_helpButton);
-	m_helpExitButton = new GUI_Button(m_poleSprite.getPosition().x - 650, m_poleSprite.getPosition().y + 550, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
-	m_buttons.push_back(m_helpExitButton);
 
 	texture = m_textureManager->LoadTexture("assets/sprites/background/background.png");
 	m_backgroundSprite.setTexture(*texture);
@@ -75,26 +71,13 @@ bool MenuState::Update(float deltaTime)
 		}
 		else if (m_highscoreButton->IsPressed())
 		{
-			m_showHighscore = !m_showHighscore;
+			m_nextState = STATE_INSTRUCTION;
+			return false;
 		}
 		else if (m_exitButton->IsPressed())
 		{
 			m_nextState = STATE_INVALID;
 			return false;
-		}
-		else if (m_helpButton->IsPressed())
-		{
-			m_helpScreen = true;
-		}
-		return true;
-	}
-	else
-	{
-		m_helpExitButton->Update();
-
-		if (m_helpExitButton->IsPressed())
-		{
-			m_helpScreen = false;
 		}
 		return true;
 	}
@@ -107,11 +90,6 @@ void MenuState::Draw()
 	for (int i = 0; i < m_buttons.size(); i++)
 	{
 		m_buttons[i]->Draw(m_drawManager);
-	}
-
-	if (m_helpScreen)
-	{
-		m_helpExitButton->Draw(m_drawManager);
 	}
 
 	if (m_showHighscore)
