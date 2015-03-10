@@ -2,8 +2,6 @@
 #include "ServiceLocator.h"
 #include "PowerManager.h"
 #include "TextureManager.h"
-#include "ParticleManager.h"
-#include "ParticleEmitter.h"
 #include "DrawManager.h"
 #include "InputManager.h"
 #include "Item.h"
@@ -15,12 +13,15 @@ PowerManager::PowerManager(std::vector<Monster*>* monster, std::vector<Item*>* i
 	m_inputManager = ServiceLocator<InputManager >::GetService();
 	m_textureManager = ServiceLocator<TextureManager>::GetService();
 
+	m_pierceSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/pierce.png"));
+	m_bounceSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/bounce.png"));
+	m_freezeSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/freeze.png"));
 	m_frameSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/powerup_frame.png"));
 	m_fillSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/powerup_fill.png"));
 
-	m_frameSprite.setPosition(0, 600);
+	m_frameSprite.setPosition(20, 600);
 	m_fillSprite.setOrigin(0, m_frameSprite.getTextureRect().height);
-	m_fillSprite.setPosition(0, 1000);
+	m_fillSprite.setPosition(20, 1000);
 
 	m_item = item;
 	m_monster = monster;
@@ -32,6 +33,13 @@ PowerManager::PowerManager(std::vector<Monster*>* monster, std::vector<Item*>* i
 	m_bounce = false;
 	
 	m_powerupScore = 0;
+	m_fillSpeed = .1f;
+	m_stepSize = 100.0f / 3.0f;
+	m_freezeTime = 5.0f;
+
+	m_freezeSprite.setPosition(105, 620);
+	m_bounceSprite.setPosition(105, 750);
+	m_pierceSprite.setPosition(105, 880);
 }
 
 PowerManager::~PowerManager()
@@ -41,31 +49,22 @@ PowerManager::~PowerManager()
 
 void PowerManager::Update(float deltaTime)
 {
-	m_fillSprite.setScale(1, (m_powerupScore / 100.0f));
-	if (m_powerupScore < 100)
-		m_powerupScore += 0.1f;
+	UpdatePowerBar();
 
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num1))
+	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num1) && m_powerupScore >= m_stepSize)
+		ActivatePierce();
+
+	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num2) && m_powerupScore >= m_stepSize * 2.0f)
 		ActivateBounce();
 
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num2))
-	{
-		ActivatePierce();
-	}
-
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num3))
+	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num3) && m_powerupScore >= m_stepSize * 3.0f)
 		ActivateFreeze();
-
-	if (m_pierce)
-	{
-
-	}
 
 	if (m_frozen)
 	{
 		m_freezeTimer += deltaTime;
 
-		if (m_freezeTimer >= 1.5f)
+		if (m_freezeTimer >= m_freezeTime)
 		{
 			m_freezeTimer = 0;
 			RemoveFreeze();
@@ -80,23 +79,65 @@ void PowerManager::Update(float deltaTime)
 		}
 	}
 }
+void PowerManager::UpdatePowerBar()
+{
+	//Fill powerbar
+	if (m_powerupScore < 100.0f)
+		m_powerupScore += m_fillSpeed;
+
+	//Scale fill sprite
+	m_fillSprite.setScale(1, (m_powerupScore / 100.0f));
+
+	//Set colors for powerup icons
+	m_freezeSprite.setColor(sf::Color::White);
+	m_bounceSprite.setColor(sf::Color::White);
+	m_pierceSprite.setColor(sf::Color::White);
+	sf::Color fadeColor = sf::Color(100, 100, 150, 255);
+	if (m_powerupScore < m_stepSize * 3)
+	{
+		m_freezeSprite.setColor(fadeColor);
+	}
+	if (m_powerupScore < m_stepSize * 2)
+	{
+		m_bounceSprite.setColor(fadeColor);
+	}
+	if (m_powerupScore < m_stepSize)
+	{
+		m_pierceSprite.setColor(fadeColor);
+	}
+}
 void PowerManager::Draw(DrawManager* drawManager)
 {
 	drawManager->Draw(m_fillSprite, sf::RenderStates::Default);
 	drawManager->Draw(m_frameSprite, sf::RenderStates::Default);
+
+	drawManager->Draw(m_freezeSprite, sf::RenderStates::Default);
+	drawManager->Draw(m_bounceSprite, sf::RenderStates::Default);
+	drawManager->Draw(m_pierceSprite, sf::RenderStates::Default);
 }
 
+void PowerManager::ActivatePierce()
+{
+	if (m_player->GetItem() != nullptr)
+	{
+		m_pierceCurrentItem = m_player->GetItem();
+		m_powerupScore -= m_stepSize;
+	}
+}
 void PowerManager::ActivateBounce()
 {
-	if (m_player != nullptr)
+	if (m_player->GetItem() != nullptr)
+	{
 		m_bounceCurrentItem = m_player->GetItem();
+		m_powerupScore -= m_stepSize * 2;
+	}
 }
-
 void PowerManager::ActivateFreeze()
 {
 	if (!m_frozen)
 	{
 		m_frozen = true;
+		m_powerupScore -= m_stepSize * 3;
 
 		for (unsigned int i = 0; i < m_monster->size(); i++)
 		{
@@ -121,13 +162,6 @@ void PowerManager::RemoveFreeze()
 
 		m_monster->at(i)->Freeze(false);
 	}
-
-}
-
-void PowerManager::ActivatePierce()
-{
-	if (m_player->GetItem() != nullptr)
-		m_pierceCurrentItem = m_player->GetItem();
 
 }
 

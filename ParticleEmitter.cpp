@@ -24,12 +24,12 @@ ParticleEmitter::ParticleEmitter(sf::Texture* texture, int particleCount)
 ParticleEmitter::~ParticleEmitter()
 {
 	auto it = m_particles.begin();
-
 	while (it != m_particles.end())
 	{
 		delete *it;
 		++it;
 	}
+	
 }
 
 void ParticleEmitter::Update(float deltaTime)

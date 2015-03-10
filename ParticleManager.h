@@ -14,6 +14,7 @@ public:
 
 	void Update(float deltaTime);
 	void Draw(DrawManager* drawManager);
+	void Reset();
 
 private:
 	std::vector<ParticleEmitter*> m_emitters;

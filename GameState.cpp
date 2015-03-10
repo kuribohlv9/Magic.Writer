@@ -14,6 +14,7 @@
 #include "WaveManager.h"
 #include "PowerManager.h"
 #include "ParticleManager.h"
+#include "HighscoreManager.h"
 
 //Classes
 #include "Monster.h"
@@ -25,6 +26,7 @@
 #include "Wave.h"
 #include "ParticleEmitter.h"
 #include "GUI_Button.h"
+#include "GUI_Label.h"
 
 
 GameState::GameState()
@@ -36,6 +38,7 @@ GameState::GameState()
 	m_drawManager = ServiceLocator<DrawManager>::GetService();
 	m_inputManager = ServiceLocator<InputManager >::GetService();
 	m_audioManager = ServiceLocator<AudioManager>::GetService();
+	m_highscoreManager = ServiceLocator<HighscoreManager>::GetService();
 	m_particleManager = ServiceLocator<ParticleManager>::GetService();
 
 	//Load background texture
@@ -47,13 +50,14 @@ GameState::GameState()
 	//Load HUD
 	m_font = m_textureManager->LoadFont("assets/fonts/font.ttf");
 	m_score_sign_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/sign_score.png"));
-	m_score_sign_sprite.setPosition(ScreenWidth - 400, 0);
+	m_score_sign_sprite.setPosition(ScreenWidth - 270, -20);
 	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
 	m_scoreDisplay.setFont(*m_font);
 	m_scoreDisplay.setCharacterSize(40);
-	m_scoreDisplay.setPosition(1620, 90);
+	m_scoreDisplay.setPosition(1750, 75);
 	m_scoreDisplay.setString("0");
 	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
+<<<<<<< HEAD
 }
 GameState::~GameState()
 {
@@ -242,6 +246,8 @@ void GameState::Draw()
 	{
 		m_drawManager->Draw(m_victory_window, sf::RenderStates::Default);
 		m_back_to_menu_button->Draw(m_drawManager);
+		m_submit_button->Draw(m_drawManager);
+		m_drawManager->Draw(m_userTextBox, sf::RenderStates::Default);
 	}
 }
 void GameState::Enter()
@@ -376,6 +382,11 @@ void GameState::Exit()
 	{
 		delete m_next_wave_button;
 		m_next_wave_button = nullptr;
+	}
+	if (m_submit_button)
+	{
+		delete m_submit_button;
+		m_submit_button = nullptr;
 	}
 	m_particleManager->Reset();
 }
@@ -588,11 +599,6 @@ bool GameState::PlayMode(float deltaTime)
 			if (m_life > 0)
 			{
 				m_life -= 1;
-
-				if (m_life == 0)
-				{
-
-				}
 			}
 		}
 	}
@@ -669,10 +675,40 @@ bool GameState::VictoryMode(float deltaTime)
 	}
 	return true;
 }
-
 bool GameState::DefeatMode(float deltaTime)
 {
 	m_back_to_menu_button->Update();
+	m_submit_button->Update();
+
+	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::BackSpace))
+	{
+		int nameSize = m_userName.size();
+		if (nameSize > 0)
+		{
+			m_userName.erase(m_userName.begin() + nameSize - 1);
+			m_userTextBox.setString(m_userName);
+		}
+	}
+	else if (m_submit_button->IsPressed())
+	{
+		if (m_userName.size() > 0)
+		{
+			ScoreEntry entry;
+			entry.name = m_userName;
+			entry.score = m_score;
+			m_highscoreManager->WriteHighscore(entry);
+			return false;
+		}
+	}
+	else
+	{
+		char c = m_inputManager->GetInputChar();
+		if (c != ' ')
+		{
+			m_userName += c;
+			m_userTextBox.setString(m_userName);
+		}
+	}
 
 	if (m_back_to_menu_button->IsPressed())
 	{

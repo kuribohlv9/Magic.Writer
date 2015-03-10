@@ -11,12 +11,14 @@ class WaveManager;
 class PowerManager;
 class ParticleEmitter;
 class ParticleManager;
+class HighscoreManager;
 class Item;
 class Bubble;
 class Monster;
 class Player;
 class Wave;
 class GUI_Button;
+class GUI_Label;
 
 enum mode {
 	MODE_UNKNOWN,
@@ -69,6 +71,7 @@ private:
 	WaveManager* m_waveManager;
 	PowerManager* m_powerManager;
 	ParticleManager* m_particleManager;
+	HighscoreManager* m_highscoreManager;
 
 	//Item & word variables
 	std::vector<Bubble*> m_bubbles;
@@ -110,4 +113,9 @@ private:
 	sf::Sprite m_victory_window;
 	GUI_Button* m_back_to_menu_button;
 	GUI_Button* m_next_wave_button;
+
+	//Highscore input
+	GUI_Button* m_submit_button;
+	sf::Text m_userTextBox;
+	std::string m_userName;
 };
