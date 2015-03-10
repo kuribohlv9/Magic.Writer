@@ -61,66 +61,6 @@ GameState::GameState()
 }
 GameState::~GameState()
 {
-	//Remove items
-	m_activeItems.clear();
-
-	//Delete all monsters
-	auto it = m_monsters.begin();
-	while (it != m_monsters.end())
-	{
-		delete *it;
-		++it;
-	}
-	m_monsters.clear();
-
-	//Delete all waves
-	auto itr = m_waves.begin();
-	while (itr != m_waves.end())
-	{
-		delete *itr;
-		++itr;
-	}
-	m_waves.clear();
-
-	//Delete player
-	if (m_player)
-	{
-		delete m_player;
-		m_player = nullptr;
-	}
-
-	//Delete managers
-	if (m_wordManager)
-	{
-		delete m_wordManager;
-		m_wordManager = nullptr;
-	}
-		
-	if (m_itemManager)
-	{
-		delete m_itemManager;
-		m_itemManager = nullptr;
-	}
-		
-	if (m_waveManager)
-	{
-		delete m_waveManager;
-		m_waveManager = nullptr;
-	}	
-
-	if (m_powerManager)
-	{
-		delete m_powerManager;
-		m_powerManager = nullptr;
-	}
-
-	//Buttons
-	if (m_submit_button)
-	{
-		delete m_submit_button;
-		m_submit_button = nullptr;
-	}
-	Exit();
 }
 
 bool GameState::Update(float deltaTime)
