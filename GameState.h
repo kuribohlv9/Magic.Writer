@@ -8,7 +8,7 @@ class DrawManager;
 class TextureManager;
 class InputManager;
 class WaveManager;
-class PowerUpManager;
+class PowerManager;
 class ParticleEmitter;
 class ParticleManager;
 class Item;
@@ -67,7 +67,7 @@ private:
 	WordManager* m_wordManager;
 	ItemManager* m_itemManager;
 	WaveManager* m_waveManager;
-	PowerUpManager* m_powerUpManager;
+	PowerManager* m_powerManager;
 	ParticleManager* m_particleManager;
 
 	//Item & word variables

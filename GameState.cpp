@@ -12,7 +12,7 @@
 #include "WordManager.h"
 #include "ItemManager.h"
 #include "WaveManager.h"
-#include "PowerUpManager.h"
+#include "PowerManager.h"
 #include "ParticleManager.h"
 
 //Classes
@@ -53,7 +53,7 @@ GameState::GameState()
 	sf::SoundBuffer* buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_walk_sound.wav");
 	m_player = new Player(texture, particleTexture, buffer);
 
-	m_powerUpManager = new PowerUpManager(&m_monsters, &m_activeItems, m_player);
+	m_powerManager = new PowerManager(&m_monsters, &m_activeItems, m_player);
 
 	//Load sound
 	buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_spell_complete01.wav");
@@ -159,10 +159,10 @@ GameState::~GameState()
 		m_waveManager = nullptr;
 	}	
 
-	if (m_powerUpManager)
+	if (m_powerManager)
 	{
-		delete m_powerUpManager;
-		m_powerUpManager = nullptr;
+		delete m_powerManager;
+		m_powerManager = nullptr;
 	}
 }
 
@@ -201,20 +201,20 @@ void GameState::CheckCollision()
 					continue;
 				if (CollisionManager::Check(monster->GetCollider(), item->GetCollider()))
 				{
-					if (m_powerUpManager->GetPierce())
+					if (m_powerManager->GetPierce())
 					{
-						if (m_powerUpManager->AddItemToPierceList(monster))
+						if (m_powerManager->AddItemToPierceList(monster))
 						{
 							monster->Damage(item->GetProperty(), m_score);
 						}
 					}
-					else if (m_powerUpManager->BounceItem() == item)
+					else if (m_powerManager->BounceItem() == item)
 					{
-						Monster* targetMonster = m_powerUpManager->NextBounceTarget();
+						Monster* targetMonster = m_powerManager->NextBounceTarget();
 						if (targetMonster == monster)
 						{
 							monster->Damage(item->GetProperty(), m_score);
-							if (!m_powerUpManager->NextBounce(monster))
+							if (!m_powerManager->NextBounce(monster))
 							{
 								item->SetActive(false);
 								item->SetInGame(false);
@@ -224,7 +224,7 @@ void GameState::CheckCollision()
 						else if (targetMonster == nullptr)
 						{
 							monster->Damage(item->GetProperty(), m_score);
-							if (!m_powerUpManager->NextBounce(monster))
+							if (!m_powerManager->NextBounce(monster))
 							{
 								item->SetActive(false);
 								item->SetInGame(false);
@@ -275,7 +275,7 @@ void GameState::CheckCollision()
 void GameState::Draw()
 {
 	//Draw background
-	if (!m_powerUpManager->GetFrozen())
+	if (!m_powerManager->GetFrozen())
 	{
 		m_drawManager->Draw(m_backgroundSprite, sf::RenderStates::Default);
 	}
@@ -533,18 +533,18 @@ bool GameState::PlayMode(float deltaTime)
 		if (!m_activeItems.at(i)->IsActive())
 			continue;
 
-			if (m_powerUpManager->BounceItem() == nullptr)
+			if (m_powerManager->BounceItem() == nullptr)
 				m_activeItems.at(i)->Move(0, -m_speed * deltaTime);
 			else
 			{
-				if (m_powerUpManager->NextBounceTarget() == nullptr)
-					m_powerUpManager->BounceItem()->Move(0, -m_speed * deltaTime);
+				if (m_powerManager->NextBounceTarget() == nullptr)
+					m_powerManager->BounceItem()->Move(0, -m_speed * deltaTime);
 				else
 				{
-					sf::Vector2f itemDir = m_powerUpManager->ItemDirection();
+					sf::Vector2f itemDir = m_powerManager->ItemDirection();
 
 					itemDir *= m_speed * deltaTime;
-					m_powerUpManager->BounceItem()->Move(itemDir.x, itemDir.y);
+					m_powerManager->BounceItem()->Move(itemDir.x, itemDir.y);
 				}
 			
 			}
@@ -628,7 +628,7 @@ bool GameState::PlayMode(float deltaTime)
 
 	m_lastScore = m_score;
 
-	m_powerUpManager->Update(deltaTime);
+	m_powerManager->Update(deltaTime);
 
 	//Check win and lose condition
 	if (m_life <= 0)

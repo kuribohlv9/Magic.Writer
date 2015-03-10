@@ -97,9 +97,7 @@
     <ClCompile Include="TestState.cpp">
       <Filter>Source Files\States</Filter>
     </ClCompile>
-    <ClCompile Include="PowerupManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
+    <ClCompile Include="PowerManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -195,9 +193,6 @@
     <ClInclude Include="Wave.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PowerUpManager.h">
-      <Filter>Header files\Managers</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleManager.h">
       <Filter>Header Files\Particles</Filter>
     </ClInclude>
@@ -210,6 +205,7 @@
     <ClInclude Include="TestState.h">
       <Filter>Header Files\States</Filter>
     </ClInclude>
+    <ClInclude Include="PowerManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

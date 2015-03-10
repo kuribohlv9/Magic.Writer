@@ -108,7 +108,7 @@
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="ParticleManager.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PowerUpManager.h" />
+    <ClInclude Include="PowerManager.h" />
     <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateManager.h" />
@@ -147,7 +147,7 @@
     <ClCompile Include="ParticleEmitter.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PowerupManager.cpp" />
+    <ClCompile Include="PowerManager.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="TestState.cpp" />
     <ClCompile Include="TextureManager.cpp" />
