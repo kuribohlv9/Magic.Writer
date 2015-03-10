@@ -326,7 +326,7 @@ void GameState::Draw()
 	}
 
 	//Draw HUD
-	m_powerUpManager->Draw(m_drawManager);
+	m_powerManager->Draw(m_drawManager);
 
 	for (int i = 0; i < m_life; i++)
 	{

@@ -85,7 +85,7 @@ void PowerManager::Update(float deltaTime)
 			m_bounceCurrentItem = nullptr;
 	}
 }
-void PowerUpManager::Draw(DrawManager* drawManager)
+void PowerManager::Draw(DrawManager* drawManager)
 {
 	drawManager->Draw(m_fillSprite, sf::RenderStates::Default);
 	drawManager->Draw(m_frameSprite, sf::RenderStates::Default);
@@ -189,7 +189,6 @@ bool PowerManager::NextBounce(Monster* monster)
 {
 	if (m_bounceCurrentItem != nullptr)
 	{
-		bool foundNewTarget = false;
 
 		for (int i = 0; i < m_monster->size(); i++)
 		{
@@ -202,21 +201,15 @@ bool PowerManager::NextBounce(Monster* monster)
 				{
 					for (int k = 0; k < m_LaneBounceList.size(); k++)
 					{
-						if (m_LaneBounceList.at(i) == m_monster->at(i)->GetX());
+						if (m_LaneBounceList.at(i) == m_monster->at(i)->GetX())
+						{
+							m_nextBounceTarget = m_monster->at(i);
+							return true;
+						}
 					}
-					m_nextBounceTarget = m_monster->at(i);
-					foundNewTarget = true;
-					break;
 				}
 			}
-
-
-			if (foundNewTarget)
-			{
-				return true;
-			}
 		}
-		return foundNewTarget;
 	}
 
 	return false;
