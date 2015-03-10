@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "ServiceLocator.h"
 #include "PowerManager.h"
+#include "TextureManager.h"
+#include "ParticleManager.h"
+#include "ParticleEmitter.h"
+#include "DrawManager.h"
 #include "InputManager.h"
 #include "Item.h"
 #include "Player.h"
@@ -9,6 +13,14 @@
 PowerManager::PowerManager(std::vector<Monster*>* monster, std::vector<Item*>* item, Player* player)
 {
 	m_inputManager = ServiceLocator<InputManager >::GetService();
+	m_textureManager = ServiceLocator<TextureManager>::GetService();
+
+	m_frameSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/powerup_frame.png"));
+	m_fillSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/powerup_fill.png"));
+
+	m_frameSprite.setPosition(0, 600);
+	m_fillSprite.setOrigin(0, m_frameSprite.getTextureRect().height);
+	m_fillSprite.setPosition(0, 1000);
 
 	m_item = item;
 	m_monster = monster;
@@ -18,6 +30,8 @@ PowerManager::PowerManager(std::vector<Monster*>* monster, std::vector<Item*>* i
 	m_frozen = false;
 	m_pierce = false;
 	m_bounce = false;
+	
+	m_powerupScore = 0;
 }
 
 PowerManager::~PowerManager()
@@ -27,12 +41,15 @@ PowerManager::~PowerManager()
 
 void PowerManager::Update(float deltaTime)
 {
+	m_fillSprite.setScale(1, (m_powerupScore / 100.0f));
+	if (m_powerupScore < 100)
+		m_powerupScore += 0.1f;
+
 	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num1))
 		ActivateBounce();
 
 	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num2))
 	{
-
 		ActivatePierce();
 	}
 
@@ -67,6 +84,11 @@ void PowerManager::Update(float deltaTime)
 		if (!m_bounceCurrentItem->IsActive() && m_player->GetItem() != m_bounceCurrentItem)
 			m_bounceCurrentItem = nullptr;
 	}
+}
+void PowerUpManager::Draw(DrawManager* drawManager)
+{
+	drawManager->Draw(m_fillSprite, sf::RenderStates::Default);
+	drawManager->Draw(m_frameSprite, sf::RenderStates::Default);
 }
 
 void PowerManager::ActivateBounce()
@@ -194,6 +216,7 @@ bool PowerManager::NextBounce(Monster* monster)
 				return true;
 			}
 		}
+		return foundNewTarget;
 	}
 
 	return false;
