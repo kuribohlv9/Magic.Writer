@@ -252,7 +252,6 @@ void GameState::Enter()
 	m_wordManager = new WordManager();
 	m_itemManager = new ItemManager();
 	m_waveManager = new WaveManager();
-	m_powerManager = new PowerManager(&m_monsters, &m_activeItems, m_player);
 
 	//Instantiate player
 	sf::Texture* particleTexture = m_textureManager->LoadTexture("assets/sprites/wizard/particle.png");
@@ -264,6 +263,10 @@ void GameState::Enter()
 	buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_spell_complete01.wav");
 	m_conjureCompleteSound.setBuffer(*buffer);
 	m_conjureCompleteSound.setVolume(7);
+
+
+	m_powerManager = new PowerManager(&m_monsters, &m_activeItems, m_player);
+	m_bubbleManager = new BubbleManager(m_player, m_wordManager);
 
 	//Create bubbles and monster pool
 	InstantiateMonsters();
@@ -329,18 +332,6 @@ void GameState::Exit()
 		m_player = nullptr;
 	}
 
-	//Delete bubbles
-	auto it = m_bubbles.begin();
-	while (it != m_bubbles.end())
-	{
-		if (*it)
-		{
-			delete *it;
-			*it = nullptr;
-		}
-		it++;
-	}
-	m_bubbles.clear();
 	m_activeItems.clear();
 
 	//Delete monsters
