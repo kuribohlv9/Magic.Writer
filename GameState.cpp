@@ -535,21 +535,20 @@ bool GameState::PlayMode(float deltaTime)
 		if (!m_activeItems.at(i)->IsActive())
 			continue;
 
-			if (m_powerManager->BounceItem() == nullptr)
-				m_activeItems.at(i)->Move(0, -m_speed * deltaTime);
+		if (m_powerManager->BounceItem() == nullptr)
+			m_activeItems.at(i)->Move(0, -m_speed * deltaTime);
+		else
+		{
+			if (m_powerManager->NextBounceTarget() == nullptr)
+				m_powerManager->BounceItem()->Move(0, -m_speed * deltaTime);
 			else
 			{
-				if (m_powerManager->NextBounceTarget() == nullptr)
-					m_powerManager->BounceItem()->Move(0, -m_speed * deltaTime);
-				else
-				{
-					sf::Vector2f itemDir = m_powerManager->ItemDirection();
+				sf::Vector2f itemDir = m_powerManager->ItemDirection();
 
-					itemDir *= m_speed * deltaTime;
-					m_powerManager->BounceItem()->Move(itemDir.x, itemDir.y);
-				}
-			
+				itemDir *= m_speed * deltaTime;
+				m_powerManager->BounceItem()->Move(itemDir.x, itemDir.y);
 			}
+		}
 	}
 
 
