@@ -31,8 +31,6 @@ private:
 	GUI_Button* m_playButton;
 	GUI_Button* m_exitButton;
 	GUI_Button* m_highscoreButton;
-	GUI_Button* m_helpButton;
-	GUI_Button* m_helpExitButton;
 	sf::Sprite m_poleSprite;
 
 	bool m_helpScreen;

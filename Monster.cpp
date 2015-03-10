@@ -69,6 +69,11 @@ Monster::~Monster()
 		delete m_head_animator;
 		m_head_animator = nullptr;
 	}
+	if (m_emitter)
+	{
+		delete m_emitter;
+		m_emitter = nullptr;
+	}
 }
 
 void Monster::Draw(DrawManager* drawManager)

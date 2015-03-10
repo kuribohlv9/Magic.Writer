@@ -101,7 +101,14 @@
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="SmallBubble.cpp" />
+	  <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="BubbleManager.cpp" />
+	  <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="InstructionState.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -213,7 +220,14 @@
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="SmallBubble.h" />
+	  <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="BubbleManager.h" />
+	  <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="InstructionState.h">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

@@ -16,6 +16,7 @@ ParticleManager::~ParticleManager()
 		delete *it;
 		++it;
 	}
+	m_emitters.clear();
 }
 
 ParticleEmitter* ParticleManager::CreateEmitter(sf::Texture* texture, int particleCount)
@@ -39,4 +40,14 @@ void ParticleManager::Draw(DrawManager* drawManager)
 	{
 		m_emitters[i]->Draw(drawManager);
 	}
+}
+void ParticleManager::Reset()
+{
+	auto it = m_emitters.begin();
+	while (it != m_emitters.end())
+	{
+		delete *it;
+		++it;
+	}
+	m_emitters.clear();
 }

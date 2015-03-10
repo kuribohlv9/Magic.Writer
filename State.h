@@ -7,7 +7,8 @@ enum ScreenState
 	STATE_MENU,
 	STATE_GAME,
 	STATE_LOSING,
-	STATE_TEST
+	STATE_TEST,
+	STATE_INSTRUCTION
 };
 
 class State
