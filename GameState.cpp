@@ -57,7 +57,6 @@ GameState::GameState()
 	m_scoreDisplay.setPosition(1750, 75);
 	m_scoreDisplay.setString("0");
 	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
-<<<<<<< HEAD
 }
 GameState::~GameState()
 {
