@@ -6,7 +6,6 @@ class Item;
 class Player;
 class TextureManager;
 class DrawManager;
-class ParticleEmitter;
 
 class PowerManager
 {
@@ -36,6 +35,9 @@ public:
 	void RemoveFreeze();
 
 private:
+	void UpdatePowerBar();
+
+private:
 	bool m_frozen;
 	bool m_bounce;
 	bool m_pierce;
@@ -50,11 +52,16 @@ private:
 	Monster* m_nextBounceTarget;
 	Player* m_player;
 
+	//Powerbar
+	sf::Sprite m_pierceSprite;
+	sf::Sprite m_bounceSprite;
+	sf::Sprite m_freezeSprite;
 	sf::Sprite m_frameSprite;
 	sf::Sprite m_fillSprite;
 	float m_powerupScore;
-	float m_targetScore;
-	ParticleEmitter* m_emitter;
+	float m_fillSpeed;
+	float m_stepSize;
+	float m_freezeTime;
 
 	std::vector<Monster*> m_monsterPierceList;
 	std::vector<Monster*>* m_monster;
