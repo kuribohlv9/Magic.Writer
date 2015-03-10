@@ -49,7 +49,7 @@ void ParticleEmitter::Update(float deltaTime)
 
 
 	//Update active particles
-	for (int i = 0; i < m_particles.size(); i++)
+	for (unsigned int i = 0; i < m_particles.size(); i++)
 	{
 		if (!m_particles[i]->Active())
 			continue;
@@ -59,7 +59,7 @@ void ParticleEmitter::Update(float deltaTime)
 }
 void ParticleEmitter::Draw(DrawManager* drawManager)
 {
-	for (int i = 0; i < m_particles.size(); i++)
+	for (unsigned int i = 0; i < m_particles.size(); i++)
 	{
 		if (!m_particles[i]->Active())
 			continue;
@@ -70,7 +70,7 @@ void ParticleEmitter::Draw(DrawManager* drawManager)
 
 void ParticleEmitter::ActivateParticle()
 {
-	for (int i = 0; i < m_particles.size(); i++)
+	for (unsigned int i = 0; i < m_particles.size(); i++)
 	{
 		if (!m_particles[i]->Active())
 		{

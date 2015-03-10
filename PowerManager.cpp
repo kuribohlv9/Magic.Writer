@@ -103,7 +103,7 @@ void PowerManager::ActivateFreeze()
 	{
 		m_frozen = true;
 
-		for (int i = 0; i < m_monster->size(); i++)
+		for (unsigned int i = 0; i < m_monster->size(); i++)
 		{
 			if (!m_monster->at(i)->IsActive())
 				continue;
@@ -119,7 +119,7 @@ void PowerManager::RemoveFreeze()
 {
 	m_frozen = false;
 
-	for (int i = 0; i < m_monster->size(); i++)
+	for (unsigned int i = 0; i < m_monster->size(); i++)
 	{
 		if (!m_monster->at(i)->IsActive())
 			continue;
@@ -156,7 +156,7 @@ bool PowerManager::AddItemToPierceList(Monster* monster)
 	bool isInPool = false;
 	if (monster != nullptr)
 	{
-		for (int i = 0; i < m_monsterPierceList.size(); i++)
+		for (unsigned int i = 0; i < m_monsterPierceList.size(); i++)
 		{
 			if (m_monsterPierceList[i] == monster)
 			{
@@ -190,7 +190,7 @@ bool PowerManager::NextBounce(Monster* monster)
 	if (m_bounceCurrentItem != nullptr)
 	{
 
-		for (int i = 0; i < m_monster->size(); i++)
+		for (unsigned int i = 0; i < m_monster->size(); i++)
 		{
 			if (!m_monster->at(i)->IsActive())
 				continue;
@@ -199,7 +199,7 @@ bool PowerManager::NextBounce(Monster* monster)
 			{
 				if (m_monster->at(i)->GetX() != monster->GetX())
 				{
-					for (int k = 0; k < m_LaneBounceList.size(); k++)
+					for (unsigned int k = 0; k < m_LaneBounceList.size(); k++)
 					{
 						if (m_LaneBounceList.at(i) == m_monster->at(i)->GetX())
 						{
@@ -248,7 +248,7 @@ sf::Vector2f PowerManager::ItemDirection()
 
 void PowerManager::AddLaneToBounceList(int x)
 {
-	for (int i = 0; i < m_LaneBounceList.size(); i++)
+	for (unsigned int i = 0; i < m_LaneBounceList.size(); i++)
 	{
 		if (m_LaneBounceList.at(i) == x)
 			continue;

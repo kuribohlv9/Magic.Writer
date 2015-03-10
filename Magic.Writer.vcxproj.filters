@@ -97,7 +97,9 @@
     <ClCompile Include="TestState.cpp">
       <Filter>Source Files\States</Filter>
     </ClCompile>
-    <ClCompile Include="PowerManager.cpp" />
+    <ClCompile Include="PowerManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -205,7 +207,9 @@
     <ClInclude Include="TestState.h">
       <Filter>Header Files\States</Filter>
     </ClInclude>
-    <ClInclude Include="PowerManager.h" />
+    <ClInclude Include="PowerManager.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
