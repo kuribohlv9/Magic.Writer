@@ -36,9 +36,6 @@ GameState::GameState()
 	m_drawManager = ServiceLocator<DrawManager>::GetService();
 	m_inputManager = ServiceLocator<InputManager >::GetService();
 	m_audioManager = ServiceLocator<AudioManager>::GetService();
-	m_wordManager = new WordManager();
-	m_itemManager = new ItemManager();
-	m_waveManager = new WaveManager();
 	m_particleManager = ServiceLocator<ParticleManager>::GetService();
 
 	//Load background texture
@@ -47,123 +44,20 @@ GameState::GameState()
 	texture = m_textureManager->LoadTexture("assets/sprites/background/ice_background.png");
 	m_ice_backgroundSprite.setTexture(*texture);
 
-	//Instantiate player
-	sf::Texture* particleTexture = m_textureManager->LoadTexture("assets/sprites/wizard/particle.png");
-	texture = m_textureManager->LoadTexture("assets/sprites/wizard/wizard_spritesheet.png");
-	sf::SoundBuffer* buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_walk_sound.wav");
-	m_player = new Player(texture, particleTexture, buffer);
-
-	m_powerManager = new PowerManager(&m_monsters, &m_activeItems, m_player);
-
-	//Load sound
-	buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_spell_complete01.wav");
-	m_conjureCompleteSound.setBuffer(*buffer);
-	m_conjureCompleteSound.setVolume(7);
-
-	InstantiateBubbles();
-	InstantiateMonsters();
-	
-	//TEMPORARY HUD
+	//Load HUD
 	m_font = m_textureManager->LoadFont("assets/fonts/font.ttf");
 	m_score_sign_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/sign_score.png"));
 	m_score_sign_sprite.setPosition(ScreenWidth - 400, 0);
 	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
-	
 	m_scoreDisplay.setFont(*m_font);
 	m_scoreDisplay.setCharacterSize(40);
 	m_scoreDisplay.setPosition(1620, 90);
 	m_scoreDisplay.setString("0");
 	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
-
-	m_score = 0;
-	m_lastScore = 0;
-	m_life = 3;
-	m_speed = 800;
-	m_wave_level = 1;
-
-	//Instantiate waves
-	texture = m_textureManager->LoadTexture("assets/sprites/wave_spritesheet.png");
-
-	//Wave pool
-	for (int i = 0; i < 5; i++)
-	{
-		Wave* wave = new Wave(texture);
-		m_waves.push_back(wave);
-	}
-
-	//Victory and Losing screen
-	texture = m_textureManager->LoadTexture("assets/sprites/magic writer victory screen.png");
-	m_victory_window.setPosition(300, 200);
-	m_victory_window.setTexture(*texture);
-	m_victory_window.setTextureRect(sf::IntRect(0, 0, 1320, 680));
-	texture = m_textureManager->LoadTexture("assets/sprites/magic writer victory screen buttons.png");
-	m_next_wave_button = new GUI_Button(475, ScreenHeight-275, nullptr, texture, sf::IntRect(0,0,250,100));
-	m_next_wave_button->Refresh();
-	m_back_to_menu_button = new GUI_Button(1445, ScreenHeight - 275, nullptr, texture, sf::IntRect(250, 0, 250, 100));
-	m_back_to_menu_button->Refresh();
-	m_next_state = STATE_MENU;
-	m_status = MODE_PLAYING;
 }
 GameState::~GameState()
 {
-	//Delete all bubbles
-	for (int i = 0; i < m_bubbles.size(); i++)
-	{
-		delete m_bubbles[i];
-		m_bubbles[i] = nullptr;
-	}
-	m_bubbles.clear();
-	m_activeItems.clear();
-
-	//Delete all monsters
-	auto it = m_monsters.begin();
-	while (it != m_monsters.end())
-	{
-		delete *it;
-		++it;
-	}
-	m_monsters.clear();
-
-	//Delete all waves
-	auto itr = m_waves.begin();
-	while (itr != m_waves.end())
-	{
-		delete *itr;
-		++itr;
-	}
-	m_waves.clear();
-
-	//Delete player
-	if (m_player)
-	{
-		delete m_player;
-		m_player = nullptr;
-	}
-
-	//Delete managers
-	if (m_wordManager)
-	{
-		delete m_wordManager;
-		m_wordManager = nullptr;
-	}
-		
-	if (m_itemManager)
-	{
-		delete m_itemManager;
-		m_itemManager = nullptr;
-	}
-		
-	if (m_waveManager)
-	{
-		delete m_waveManager;
-		m_waveManager = nullptr;
-	}	
-
-	if (m_powerManager)
-	{
-		delete m_powerManager;
-		m_powerManager = nullptr;
-	}
+	Exit();
 }
 
 bool GameState::Update(float deltaTime)
@@ -352,21 +246,138 @@ void GameState::Draw()
 }
 void GameState::Enter()
 {
+	//Initialize managers
+	m_wordManager = new WordManager();
+	m_itemManager = new ItemManager();
+	m_waveManager = new WaveManager();
+	m_powerManager = new PowerManager(&m_monsters, &m_activeItems, m_player);
+
+	//Instantiate player
+	sf::Texture* particleTexture = m_textureManager->LoadTexture("assets/sprites/wizard/particle.png");
+	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/wizard/wizard_spritesheet.png");
+	sf::SoundBuffer* buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_walk_sound.wav");
+	m_player = new Player(texture, particleTexture, buffer);
+	
+	//Load sound
+	buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_spell_complete01.wav");
+	m_conjureCompleteSound.setBuffer(*buffer);
+	m_conjureCompleteSound.setVolume(7);
+
+	//Create bubbles and monster pool
+	InstantiateMonsters();
+	InstantiateBubbles();
+
+	//Instantiate waves
+	texture = m_textureManager->LoadTexture("assets/sprites/wave_spritesheet.png");
+	for (int i = 0; i < 5; i++)
+	{
+		Wave* wave = new Wave(texture);
+		m_waves.push_back(wave);
+	}
+
+	//Victory and Losing screen
+	texture = m_textureManager->LoadTexture("assets/sprites/magic writer victory screen.png");
+	m_victory_window.setPosition(300, 200);
+	m_victory_window.setTexture(*texture);
+	m_victory_window.setTextureRect(sf::IntRect(0, 0, 1320, 680));
+	texture = m_textureManager->LoadTexture("assets/sprites/magic writer victory screen buttons.png");
+	m_next_wave_button = new GUI_Button(475, ScreenHeight - 275, nullptr, texture, sf::IntRect(0, 0, 250, 100));
+	m_next_wave_button->Refresh();
+	m_back_to_menu_button = new GUI_Button(1445, ScreenHeight - 275, nullptr, texture, sf::IntRect(250, 0, 250, 100));
+	m_back_to_menu_button->Refresh();
+
+	//Instantsiate game variables
+	m_score = 0;
+	m_lastScore = 0;
+	m_life = 3;
+	m_speed = 800;
+	m_wave_level = 1;
 	m_status = MODE_PLAYING;
+	m_next_state = STATE_MENU;
 	m_waveManager->SetActiveWave(0);
 }
 void GameState::Exit()
 {
-	m_status = MODE_UNKNOWN;
+	//Delete Managers
+	if (m_wordManager)
+	{
+		delete m_wordManager;
+		m_wordManager = nullptr;
+	}
+	if (m_itemManager)
+	{
+		delete m_itemManager;
+		m_itemManager = nullptr;
+	}
+	if (m_waveManager)
+	{
+		delete m_waveManager;
+		m_waveManager = nullptr;
+	}
+	if (m_powerManager)
+	{
+		delete m_powerManager;
+		m_powerManager = nullptr;
+	}
 
+	//Delete player
+	if (m_player)
+	{
+		delete m_player;
+		m_player = nullptr;
+	}
+
+	//Delete bubbles
+	auto it = m_bubbles.begin();
+	while (it != m_bubbles.end())
+	{
+		if (*it)
+		{
+			delete *it;
+			*it = nullptr;
+		}
+		it++;
+	}
+	m_bubbles.clear();
+	m_activeItems.clear();
+
+	//Delete monsters
 	auto itr = m_monsters.begin();
 	while (itr != m_monsters.end())
 	{
-		if ((*itr)->IsActive())
-			(*itr)->SetActive(false);
+		if (*itr)
+		{
+			delete *itr;
+			*itr = nullptr;
+		}
 		itr++;
 	}
-	m_life = 3;
+	m_monsters.clear();
+
+	//Delete waves
+	auto itra = m_waves.begin();
+	while (itra != m_waves.end())
+	{
+		if (*itra)
+		{
+			delete *itra;
+			*itra = nullptr;
+		}
+		itra++;
+	}
+	m_waves.clear();
+
+	if (m_back_to_menu_button)
+	{
+		delete m_back_to_menu_button;
+		m_back_to_menu_button = nullptr;
+	}
+	if (m_next_wave_button)
+	{
+		delete m_next_wave_button;
+		m_next_wave_button = nullptr;
+	}
+	m_particleManager->Reset();
 }
 ScreenState GameState::NextState()
 {
@@ -445,9 +456,6 @@ void GameState::SpawnMonster()
 			break;
 		}
 	}
-
-	/*Monster* monster = new Monster(m_monsterTexture, 45, 3);
-	m_monsters.push_back(monster);*/
 }
 void GameState::ConvertWordToItem()
 {
