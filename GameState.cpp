@@ -291,6 +291,14 @@ void GameState::Enter()
 	m_back_to_menu_button = new GUI_Button(1445, ScreenHeight - 275, nullptr, texture, sf::IntRect(250, 0, 250, 100));
 	m_back_to_menu_button->Refresh();
 
+	//Highscore input
+	m_submit_button = new GUI_Button(1445, ScreenHeight - 500, nullptr, texture, sf::IntRect(500, 0, 250, 100));
+	m_submit_button->Refresh();
+	m_userTextBox.setFont(*m_font);
+	m_userTextBox.setCharacterSize(45);
+	m_userTextBox.setPosition(1445 - 500, ScreenHeight - 500);
+	m_userName = "";
+
 	//Instantsiate game variables
 	m_score = 0;
 	m_lastScore = 0;
@@ -303,6 +311,9 @@ void GameState::Enter()
 }
 void GameState::Exit()
 {
+	//Delete particles
+	m_particleManager->Reset();
+
 	//Delete Managers
 	if (m_wordManager)
 	{
@@ -375,7 +386,6 @@ void GameState::Exit()
 		delete m_submit_button;
 		m_submit_button = nullptr;
 	}
-	m_particleManager->Reset();
 }
 ScreenState GameState::NextState()
 {

@@ -62,6 +62,12 @@ Player::~Player()
 
 	//Point item towards nullptr
 	m_item = nullptr;
+
+	//point emitter towards nullptr
+	if (m_emitter)
+	{
+		m_emitter = nullptr;
+	}
 }
 
 void Player::Update(float deltaTime)

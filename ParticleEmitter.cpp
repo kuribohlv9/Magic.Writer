@@ -27,6 +27,7 @@ ParticleEmitter::~ParticleEmitter()
 	while (it != m_particles.end())
 	{
 		delete *it;
+		*it = nullptr;
 		++it;
 	}
 	

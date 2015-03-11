@@ -47,6 +47,7 @@ void ParticleManager::Reset()
 	while (it != m_emitters.end())
 	{
 		delete *it;
+		*it = nullptr;
 		++it;
 	}
 	m_emitters.clear();

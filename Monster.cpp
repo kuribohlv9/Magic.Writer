@@ -71,7 +71,6 @@ Monster::~Monster()
 	}
 	if (m_emitter)
 	{
-		delete m_emitter;
 		m_emitter = nullptr;
 	}
 }
