@@ -34,7 +34,6 @@ private:
 	sf::Sprite m_poleSprite;
 
 	bool m_helpScreen;
-	bool m_showHighscore;
 
 	sf::Sprite m_backgroundSprite;
 };

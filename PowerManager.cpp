@@ -19,9 +19,9 @@ PowerManager::PowerManager(std::vector<Monster*>* monster, std::vector<Item*>* i
 	m_frameSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/powerup_frame.png"));
 	m_fillSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/powerup_fill.png"));
 
-	m_frameSprite.setPosition(20, 600);
+	m_frameSprite.setPosition(20, 400);
 	m_fillSprite.setOrigin(0, m_frameSprite.getTextureRect().height);
-	m_fillSprite.setPosition(20, 1000);
+	m_fillSprite.setPosition(20, 800);
 
 	m_item = item;
 	m_monster = monster;
@@ -37,9 +37,9 @@ PowerManager::PowerManager(std::vector<Monster*>* monster, std::vector<Item*>* i
 	m_stepSize = 100.0f / 3.0f;
 	m_freezeTime = 5.0f;
 
-	m_freezeSprite.setPosition(105, 620);
-	m_bounceSprite.setPosition(105, 750);
-	m_pierceSprite.setPosition(105, 880);
+	m_freezeSprite.setPosition(105, 420);
+	m_bounceSprite.setPosition(105, 550);
+	m_pierceSprite.setPosition(105, 680);
 }
 
 PowerManager::~PowerManager()

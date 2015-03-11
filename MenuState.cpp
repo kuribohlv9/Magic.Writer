@@ -92,8 +92,7 @@ void MenuState::Draw()
 		m_buttons[i]->Draw(m_drawManager);
 	}
 
-	if (m_showHighscore)
-		m_highscoreManager->Draw(m_drawManager);
+	m_highscoreManager->Draw(m_drawManager);
 }
 
 void MenuState::Enter()

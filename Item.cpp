@@ -39,7 +39,7 @@ void Item::Update(float deltaTime)
 	m_emitter->SetSpawnRate((float)(r / 100));
 
 	//Deactivate above screen
-	if (m_y <= -400)
+	if (m_y <= -m_sprite.getTextureRect().height)
 	{
 		SetActive(false);
 		SetInGame(false);

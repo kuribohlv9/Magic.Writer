@@ -290,6 +290,7 @@ void GameState::Enter()
 	m_next_wave_button->Refresh();
 	m_back_to_menu_button = new GUI_Button(1445, ScreenHeight - 275, nullptr, texture, sf::IntRect(250, 0, 250, 100));
 	m_back_to_menu_button->Refresh();
+	m_submit_button = new GUI_Button(1445, ScreenHeight - 550, nullptr, texture, sf::IntRect(500, 0, 250, 100));
 
 	//Highscore input
 	m_submit_button = new GUI_Button(1445, ScreenHeight - 500, nullptr, texture, sf::IntRect(500, 0, 250, 100));
@@ -308,6 +309,8 @@ void GameState::Enter()
 	m_status = MODE_PLAYING;
 	m_next_state = STATE_MENU;
 	m_waveManager->SetActiveWave(0);
+	m_userTextBox.setFont(*m_font);
+	m_userTextBox.setPosition(1000, ScreenHeight - 500);
 }
 void GameState::Exit()
 {

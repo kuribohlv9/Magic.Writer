@@ -20,6 +20,7 @@ void AudioManager::Shutdown()
 	while (itrs != m_buffers.end())
 	{
 		delete itrs->second;
+		itrs->second = nullptr;
 		++itrs;
 	}
 	m_buffers.clear();
