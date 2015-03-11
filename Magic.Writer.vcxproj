@@ -103,6 +103,7 @@
     <ClInclude Include="InstructionState.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemManager.h" />
+    <ClInclude Include="LifeBar.h" />
     <ClInclude Include="LosingState.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Monster.h" />
