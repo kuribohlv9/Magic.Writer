@@ -1,3 +1,5 @@
+semihparlayan 84680
+charlie 19820
 semihochara 10410
 semih 7450
 semih 5000
@@ -5,11 +7,13 @@ folke 4540
 ara 4000
 detkrashsar 3520
 marcus 3000
+ellensuger 2840
 polack 2740
 dracula 2400
 olle 2000
 matilda 1570
 sebssebastian 1440
+tomilop 1280
 draculatva 1260
 charlie 1000
 laban 1000

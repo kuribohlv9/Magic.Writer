@@ -20,7 +20,7 @@ enum PlayerState
 class Player : public GameObject
 {
 public:
-	Player(sf::Texture* texture, sf::Texture* particle, sf::SoundBuffer* changeLaneBuffer);
+	Player(sf::Texture* texture, sf::Texture* particle, sf::Texture* sandParticle, sf::SoundBuffer* changeLaneBuffer);
 	~Player();
 	void Update(float deltaTime);
 	void Draw(DrawManager* drawManager);
@@ -39,6 +39,7 @@ private:
 
 private:
 	ParticleEmitter* m_emitter;
+	ParticleEmitter* m_sandEmitter;
 	Animator* m_animator;
 	InputManager* m_inputManager;
 	Item* m_item;
