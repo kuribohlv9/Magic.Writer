@@ -35,10 +35,10 @@ void Particle::Update(float deltaTime)
 		//Decrease life
 		m_life -= (int)((255 / m_secondsToLive) / 60);
 
-		////Fade particle to 0 alpha
-		//sf::Color c = m_sprite.getColor();
-		//c.a = m_life;
-		//m_sprite.setColor(c);
+		//Fade particle to 0 alpha
+		sf::Color c = m_sprite.getColor();
+		c.a = m_life;
+		m_sprite.setColor(c);
 
 		//Scale particle to size 0
 		if (m_scaleParticle)

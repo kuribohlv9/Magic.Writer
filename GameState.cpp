@@ -49,7 +49,7 @@ GameState::GameState()
 	m_ice_backgroundSprite.setTexture(*texture);
 
 	//Load HUD
-	m_font = m_textureManager->LoadFont("assets/fonts/font.ttf");
+	m_font = m_textureManager->LoadFont("assets/fonts/game.ttf");
 	m_score_sign_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/sign_score.png"));
 	m_score_sign_sprite.setPosition(ScreenWidth - 270, -20);
 	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
@@ -255,9 +255,10 @@ void GameState::Enter()
 
 	//Instantiate player
 	sf::Texture* particleTexture = m_textureManager->LoadTexture("assets/sprites/wizard/particle.png");
+	sf::Texture* sandParticle = m_textureManager->LoadTexture("assets/sprites/wizard/sand_particle.png");
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/wizard/wizard_spritesheet.png");
 	sf::SoundBuffer* buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_walk_sound.wav");
-	m_player = new Player(texture, particleTexture, buffer);
+	m_player = new Player(texture, particleTexture, sandParticle, buffer);
 	
 	//Load sound
 	buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_spell_complete01.wav");
@@ -295,10 +296,11 @@ void GameState::Enter()
 	//Highscore input
 	m_submit_button = new GUI_Button(1445, ScreenHeight - 500, nullptr, texture, sf::IntRect(500, 0, 250, 100));
 	m_submit_button->Refresh();
+	m_userName = "";
 	m_userTextBox.setFont(*m_font);
 	m_userTextBox.setCharacterSize(45);
 	m_userTextBox.setPosition(1445 - 500, ScreenHeight - 500);
-	m_userName = "";
+	m_userTextBox.setString(m_userName);
 
 	//Instantsiate game variables
 	m_score = 0;

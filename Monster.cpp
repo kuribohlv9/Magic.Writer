@@ -142,7 +142,14 @@ void Monster::Update(float deltaTime)
 		HandleBodyParts();
 
 		//Move monster position
-		Move(0, m_speed * deltaTime);
+		if (m_state == MONSTER_HIT)
+			Move(0, -m_speed * deltaTime * 3);
+		else if (m_state == MONSTER_CRITICAL)
+			Move(0, -m_speed * deltaTime * 5);
+		else
+			Move(0, m_speed * deltaTime);
+
+
 		m_head_sprite.setPosition(m_sprite.getPosition());
 		m_snail_sprite.setPosition(m_sprite.getPosition());
 		m_foam_sprite.setPosition(m_sprite.getPosition());
@@ -195,7 +202,6 @@ void Monster::Damage(ItemProperty property, int &score)
 		score += 500;
 		m_state = MONSTER_CRITICAL;
 		m_head_animator->SetAnimation("critical");
-		Move(0, -75);
 	}
 	else
 	{
