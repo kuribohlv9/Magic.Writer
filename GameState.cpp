@@ -58,9 +58,27 @@ GameState::GameState()
 	m_scoreDisplay.setPosition(1750, 75);
 	m_scoreDisplay.setString("0");
 	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
+
+	//Load Music
+	sf::Music* music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Dubakupado.ogg");
+	music->setVolume(20);
+	m_game_themes.push_back(music);
+	music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/AngloZulu.ogg");
+	music->setVolume(20);
+	m_game_themes.push_back(music);
+	music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Rite_of_Passage.ogg");
+	music->setVolume(20);
+	m_game_themes.push_back(music);
+	music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Whimsy_Groove.ogg");
+	music->setVolume(20);
+	m_game_themes.push_back(music);
+	music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Zanzibar.ogg");
+	music->setVolume(20);
+	m_game_themes.push_back(music);
 }
 GameState::~GameState()
 {
+	Exit();
 }
 
 bool GameState::Update(float deltaTime)
@@ -313,6 +331,10 @@ void GameState::Enter()
 	m_waveManager->SetActiveWave(0);
 	m_userTextBox.setFont(*m_font);
 	m_userTextBox.setPosition(1000, ScreenHeight - 500);
+
+
+	m_active_theme = m_game_themes[rand() % 5];
+	m_active_theme->play();
 }
 void GameState::Exit()
 {
@@ -391,6 +413,8 @@ void GameState::Exit()
 		delete m_submit_button;
 		m_submit_button = nullptr;
 	}
+
+	m_active_theme->stop();
 }
 ScreenState GameState::NextState()
 {
@@ -630,6 +654,12 @@ bool GameState::PlayMode(float deltaTime)
 
 	m_powerManager->Update(deltaTime);
 
+	if (m_active_theme->getStatus() == sf::Music::Status::Stopped)
+	{
+		m_active_theme = m_game_themes[rand() % 5];
+		m_active_theme->play();
+	}
+
 	//Check win and lose condition
 	if (m_life <= 0)
 	{
@@ -638,6 +668,7 @@ bool GameState::PlayMode(float deltaTime)
 	else if (!m_waveManager->IsActive() && !IsMonsters())
 	{
 		m_status = MODE_VICTORY;
+		m_active_theme->stop();
 	}
 
 	return true;
