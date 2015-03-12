@@ -8,6 +8,7 @@
 #include "ParticleManager.h"
 #include "TextureManager.h"
 #include "ServiceLocator.h"
+#include "AudioManager.h"
 
 Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, ItemProperty weakness, sf::Texture* particleTexture)
 {
@@ -196,7 +197,6 @@ void Monster::Damage(ItemProperty property, int &score)
 { 
 	int randomSoundIndex = rand() % 3;
 	m_hitSound.setBuffer(*m_hitBuffers[randomSoundIndex]);
-	m_hitSound.play();
 	if (property == m_weakness)
 	{
 		m_health -= 2;
@@ -217,7 +217,9 @@ void Monster::Damage(ItemProperty property, int &score)
 		m_state = MONSTER_DEATH;
 		m_head_animator->SetAnimation("death");
 		m_emitter->SetActive(false);
+		m_hitSound.setBuffer(*m_cheering);
 	}
+	m_hitSound.play();
 }
 
 void Monster::HandleBodyParts()
@@ -292,5 +294,7 @@ void Monster::SetSounds(sf::SoundBuffer* hitBuffer, sf::SoundBuffer* hitBufferTw
 	m_hitBuffers[1] = hitBufferTwo;
 	m_hitBuffers[2] = hitBufferThree;
 
-	m_hitSound.setVolume(5);
+	m_hitSound.setVolume(10);
+
+	m_cheering = ServiceLocator<AudioManager>::GetService()->LoadSoundFromFile("assets/audio/complete/small_exterior_crowd_applause_with_cheering_fix.wav");
 }

@@ -42,6 +42,7 @@ private:
 
 	sf::SoundBuffer* m_hitBuffers[3];
 	sf::Sound m_hitSound;
+	sf::SoundBuffer* m_cheering;
 	ParticleEmitter* m_emitter;
 	Animator* m_head_animator;
 	sf::Sprite m_head_sprite;
