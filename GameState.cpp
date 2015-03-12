@@ -414,7 +414,8 @@ void GameState::Exit()
 		m_submit_button = nullptr;
 	}
 
-	m_active_theme->stop();
+	if (m_active_theme != nullptr)
+		m_active_theme->stop();
 }
 ScreenState GameState::NextState()
 {

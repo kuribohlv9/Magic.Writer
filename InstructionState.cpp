@@ -27,16 +27,13 @@ InstructionState::InstructionState()
 	texture = m_textureManager->LoadTexture("assets/sprites/splashscreen-2.png");
 	m_secondHelpPage.setTexture(*texture);
 
-	//Next page texture
-	texture = m_textureManager->LoadTexture("assets/sprites/back_next.png");
+	//GUI button textures
+	texture = m_textureManager->LoadTexture("assets/sprites/back_next_exit.png");
 
 	//GUI buttons
 	m_nextPageButton = new GUI_Button(ScreenWidth - 150, ScreenHeight - 100, nullptr, texture, sf::IntRect(0, 0, 312, 178));
 	m_lastPageButton = new GUI_Button(150, ScreenHeight - 100, nullptr, texture, sf::IntRect(312, 0, 312, 178));
-	
-	//Exit button texture
-	texture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");
-	m_exitToMenuButton = new GUI_Button(ScreenWidth - 150, ScreenHeight - 100, nullptr, texture, sf::IntRect(421 * 2 + 60, 0, 431 - 60, 219));
+	m_exitToMenuButton = new GUI_Button(ScreenWidth - 150, ScreenHeight - 100, nullptr, texture, sf::IntRect(624, 0, 312, 178));
 }
 
 InstructionState::~InstructionState()
