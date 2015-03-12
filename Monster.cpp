@@ -6,10 +6,13 @@
 #include <time.h>
 #include "ParticleEmitter.h"
 #include "ParticleManager.h"
+#include "TextureManager.h"
 #include "ServiceLocator.h"
 
 Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, ItemProperty weakness, sf::Texture* particleTexture)
 {
+	m_textureManager = ServiceLocator<TextureManager>::GetService();
+
 	m_active = false;
 
 	//Variables
@@ -51,6 +54,9 @@ Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spr
 	m_collider->SetParent(this);
 	m_collider->SetWidthHeight(m_sprite_width / 4, m_sprite_height / 4);
 
+	sf::Texture* texturE = m_textureManager->LoadTexture("assets/sprites/monster/life_bar.png");
+	m_lifeBar.setTexture(*texturE);
+
 	m_weakness = weakness;
 
 	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particleTexture, 50);
@@ -91,17 +97,10 @@ void Monster::Draw(DrawManager* drawManager)
 	}
 
 	//Draw health
-	sf::CircleShape hp;
 	for (int i = 0; i < m_health; i++)
 	{
-		hp.setFillColor(sf::Color::White);
-		hp.setRadius(15);
-		hp.setPosition(m_x + i*30, m_y-100);
-		drawManager->Draw(hp, sf::RenderStates::Default);
-
-		hp.setFillColor(sf::Color::Black);
-		hp.setRadius(10);
-		drawManager->Draw(hp, sf::RenderStates::Default);
+		m_lifeBar.setPosition(m_x + i*25 - 50, m_y-120);
+		drawManager->Draw(m_lifeBar, sf::RenderStates::Default);
 	}
 
 	/*sf::RectangleShape shape;
