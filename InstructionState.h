@@ -26,8 +26,8 @@ private:
 	DrawManager* m_drawManager;
 
 	// GUI elements
-	GUI_Button* m_nextPage;
-	GUI_Button* m_lastPage;
+	GUI_Button* m_nextPageButton;
+	GUI_Button* m_lastPageButton;
 	GUI_Button* m_exitToMenuButton;
 	std::vector<GUI_Button*> m_buttons;
 
@@ -35,4 +35,6 @@ private:
 	sf::Sprite m_secondHelpPage;
 
 	bool m_firstPage;
+
+	int satan;
 };
