@@ -168,11 +168,13 @@ void Monster::Freeze(bool state)
 		if (m_y < 700)
 		{
 			m_frozen = true;
+			m_emitter->SetActive(false);
 			m_sprite.setTextureRect(sf::IntRect(0, 0, m_sprite_width, m_sprite_height));
 		}
 	}
 	else
 	{
+		m_emitter->SetActive(true);
 		m_frozen = false;
 		m_sprite.setTextureRect(sf::IntRect(m_sprite_width * 2, 0, m_sprite_width, m_sprite_height));
 	}

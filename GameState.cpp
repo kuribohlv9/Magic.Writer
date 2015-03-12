@@ -43,9 +43,9 @@ GameState::GameState()
 	m_particleManager = ServiceLocator<ParticleManager>::GetService();
 
 	//Load background texture
-	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background/background.png");
+	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background.png");
 	m_backgroundSprite.setTexture(*texture);
-	texture = m_textureManager->LoadTexture("assets/sprites/background/ice_background.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/ice_background.png");
 	m_ice_backgroundSprite.setTexture(*texture);
 
 	//Load HUD
