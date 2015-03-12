@@ -77,10 +77,6 @@ private:
 	//Items
 	std::vector<Item*> m_activeItems;
 
-	//Freeze
-	bool m_frozen;
-	float m_freezeTimer;
-
 	//Monster
 	std::vector<Monster*> m_monsters;
 

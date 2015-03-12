@@ -9,6 +9,7 @@
 #include "ServiceLocator.h"
 #include "ParticleManager.h"
 #include "ParticleEmitter.h"
+#include <iostream>
 
 Player::Player(sf::Texture* texture, sf::Texture* particle, sf::Texture* sandParticle, sf::SoundBuffer* changeLaneBuffer)
 {
@@ -33,8 +34,8 @@ Player::Player(sf::Texture* texture, sf::Texture* particle, sf::Texture* sandPar
 
 	//Set start position
 	m_state = PLAYER_IDLE;
-	m_lane = 1;
-	ChangeLane(1);
+	m_lane = 3;
+	ChangeLane(-1);
 	SetPosition(Lanes[2], 780);
 	m_targetX = static_cast<float>(Lanes[2]);
 	m_animator->SetAnimation("idle");
@@ -132,6 +133,7 @@ void Player::Update(float deltaTime)
 	{
 		m_item->SetPosition(m_x - 25, m_y - 170);
 	}
+	std::cout << GetX() << std::endl;
 }
 void Player::Draw(DrawManager* drawManager)
 {

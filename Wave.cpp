@@ -36,7 +36,6 @@ void Wave::Update(float deltaTime)
 
 	float distance = abs(GetY() - 800.0f);
 	float scaleFactor = distance / 800.0f;
-	std::cout << GetX() << std::endl;
 	m_sprite.setScale(1.8f - scaleFactor, 1.0f);
 
 
