@@ -45,6 +45,7 @@ private:
 	Item* m_item;
 	PlayerState m_state;
 	sf::Sound m_changeLaneSound;
+	sf::Sound m_throwing_sound;
 	int m_lane;
 
 	float m_targetX;
