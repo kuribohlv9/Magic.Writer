@@ -26,7 +26,7 @@ void HighscoreManager::Draw(DrawManager* drawManager)
 		if (i < m_maxEntries)
 		{
 			m_text.setString(std::to_string(i + 1) + ". " + m_entries[i].GetText());
-			m_text.setPosition(m_position.x, m_position.y + i * 45);
+			m_text.setPosition(m_position.x, m_position.y + i * 31);
 
 			drawManager->Draw(m_text, sf::RenderStates::Default);
 
@@ -34,7 +34,8 @@ void HighscoreManager::Draw(DrawManager* drawManager)
 		else if (m_lastEntry.name == m_entries[i].name)
 		{
 			m_text.setString(std::to_string(i + 1) + ". " + m_entries[i].GetText());
-			m_text.setPosition(m_position.x, m_position.y + (m_maxEntries + 1) * 45);
+			float yvalue = m_maxEntries + 0.5f;
+			m_text.setPosition(m_position.x, m_position.y + (yvalue * 31));
 
 			drawManager->Draw(m_text, sf::RenderStates::Default);
 		}
@@ -93,7 +94,8 @@ void HighscoreManager::ReadHighscore()
 void HighscoreManager::SetFont(sf::Font* font)
 {
 	m_text.setFont(*font);
-	m_text.setCharacterSize(40);
+	m_text.setCharacterSize(20);
+	m_text.setColor(sf::Color(73, 47, 34, 255));
 }
 void HighscoreManager::SetPosition(float x, float y)
 {

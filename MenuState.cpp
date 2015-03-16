@@ -19,9 +19,9 @@ MenuState::MenuState()
 	m_nextState = STATE_INVALID;
 
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");
-	sf::Font* font = m_textureManager->LoadFont("assets/fonts/menu.ttf");
+	sf::Font* font = m_textureManager->LoadFont("assets/fonts/game.ttf");
 	m_highscoreManager->SetFont(font);
-	m_highscoreManager->SetPosition(300, 100);
+	m_highscoreManager->SetPosition(350, 125);
 
 	m_poleSprite.setTexture(*texture);
 	m_poleSprite.setTextureRect(sf::IntRect(0, 219 * 2, 167, 775));
@@ -37,6 +37,11 @@ MenuState::MenuState()
 
 	texture = m_textureManager->LoadTexture("assets/sprites/background_menu.png");
 	m_backgroundSprite.setTexture(*texture);
+
+	//Highscore sign
+	texture = m_textureManager->LoadTexture("assets/sprites/score_screen.png");
+	m_highscoreSprite.setTexture(*texture);
+	m_highscoreSprite.setPosition(300, 0);
 }
 MenuState::~MenuState()
 {
@@ -92,6 +97,7 @@ void MenuState::Draw()
 		m_buttons[i]->Draw(m_drawManager);
 	}
 
+	m_drawManager->Draw(m_highscoreSprite, sf::RenderStates::Default);
 	m_highscoreManager->Draw(m_drawManager);
 }
 

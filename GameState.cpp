@@ -155,7 +155,7 @@ void GameState::CheckCollision()
 						item->SetState(ITEM_HIT);
 					}
 
-					if (monster->IsActive() == false) //Monster is dead
+					if (!monster->IsActive()) //Monster is dead
 					{
 						//Increase score
 						m_score += 100;
@@ -735,7 +735,7 @@ bool GameState::DefeatMode(float deltaTime)
 	else
 	{
 		char c = m_inputManager->GetInputChar();
-		if (c != ' ')
+		if (c != ' ' && m_userName.size() < 8)
 		{
 			m_userName += c;
 			m_userTextBox.setString(m_userName);

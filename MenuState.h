@@ -32,6 +32,7 @@ private:
 	GUI_Button* m_exitButton;
 	GUI_Button* m_highscoreButton;
 	sf::Sprite m_poleSprite;
+	sf::Sprite m_highscoreSprite;
 
 	bool m_helpScreen;
 

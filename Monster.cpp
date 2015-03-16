@@ -131,9 +131,7 @@ void Monster::Update(float deltaTime)
 		}
 		else if (m_state == MONSTER_DEATH)
 		{
-			if (!m_head_animator->Complete())
-				m_speed = 0;
-			else if (m_head_animator->Complete())
+			if (m_head_animator->Complete())
 				SetActive(false);
 		}
 			
@@ -142,7 +140,7 @@ void Monster::Update(float deltaTime)
 		HandleBodyParts();
 
 		//Move monster position
-		if (m_state == MONSTER_HIT)
+		if (m_state == MONSTER_HIT || m_state == MONSTER_DEATH)
 			Move(0, -m_speed * deltaTime * 3);
 		else if (m_state == MONSTER_CRITICAL)
 			Move(0, -m_speed * deltaTime * 5);
