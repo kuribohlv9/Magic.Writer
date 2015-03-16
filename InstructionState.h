@@ -35,6 +35,4 @@ private:
 	sf::Sprite m_secondHelpPage;
 
 	bool m_firstPage;
-
-	int satan;
 };

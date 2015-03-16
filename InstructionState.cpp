@@ -13,8 +13,6 @@
 
 InstructionState::InstructionState()
 {
-	satan = 0;
-
 	m_textureManager = ServiceLocator<TextureManager>::GetService();
 	m_drawManager = ServiceLocator<DrawManager>::GetService();
 	m_nextState = STATE_MENU;
@@ -46,16 +44,13 @@ bool InstructionState::Update(float deltaTime)
 {
 	m_nextPageButton->Update();
 	m_lastPageButton->Update();
-
-	if (!m_firstPage)
-		m_exitToMenuButton->Update();
+	m_exitToMenuButton->Update();
 
 	if (m_nextPageButton->IsPressed() && m_firstPage || m_lastPageButton->IsPressed() && !m_firstPage)
 	{
 		m_firstPage = !m_firstPage;
 	}
-
-	if (m_exitToMenuButton->IsPressed())
+	else if (m_exitToMenuButton->IsPressed())
 	{
 		m_nextState = STATE_MENU;
 		return false;
