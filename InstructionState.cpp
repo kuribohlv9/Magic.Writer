@@ -55,8 +55,6 @@ bool InstructionState::Update(float deltaTime)
 		m_nextState = STATE_MENU;
 		return false;
 	}
-
-	
 	return true;
 }
 

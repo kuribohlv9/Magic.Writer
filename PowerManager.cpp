@@ -147,7 +147,7 @@ bool PowerManager::SetNewBounceTarget(Monster* hitMonster)
 			if (!monster->IsActive())
 				continue;
 
-			if (monster->GetY() >= -15 && monster->GetY() <= 800)
+			if (monster->GetY() >= -15 && monster->GetY() <= 760)
 			{
 				bool isInList = false;
 				for (unsigned int k = 0; k < m_LaneBounceList.size(); k++)
@@ -158,7 +158,6 @@ bool PowerManager::SetNewBounceTarget(Monster* hitMonster)
 						break;
 					}
 				}
-
 				if (!isInList)
 				{
 					m_bounceTarget = monster;
@@ -167,7 +166,6 @@ bool PowerManager::SetNewBounceTarget(Monster* hitMonster)
 			}
 		}
 	}
-
 	m_bounceTarget = nullptr;
 	m_bounceCurrentItem = nullptr;
 	m_LaneBounceList.clear();

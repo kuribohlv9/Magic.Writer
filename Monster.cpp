@@ -214,6 +214,7 @@ void Monster::Damage(ItemProperty property, int &score)
 	{
 		m_state = MONSTER_DEATH;
 		m_head_animator->SetAnimation("death");
+		m_collider->SetWidthHeight(0, 0);
 		m_emitter->SetActive(false);
 		m_hitSound.setBuffer(*m_cheering);
 	}

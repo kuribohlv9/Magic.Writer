@@ -134,7 +134,7 @@ void Player::Update(float deltaTime)
 	//Set possible item position
 	if (m_item)
 	{
-		m_item->SetPosition(m_x - 25, m_y - 170);
+		m_item->SetPosition(m_x - 25, m_y - 145);
 	}
 	std::cout << GetX() << std::endl;
 }
