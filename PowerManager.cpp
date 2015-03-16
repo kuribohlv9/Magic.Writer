@@ -33,20 +33,20 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 	m_freezeTime = 5.0f;
 	m_fadeColor = sf::Color(100, 100, 150, 255);
 
-	m_pierceSprite.setPosition(40, 465);
+	m_pierceSprite.setPosition(40, 455);
 	m_pierceSprite.setScale(0.8, 0.8);
 
-	m_bounceSprite.setPosition(40, 234);
+	m_bounceSprite.setPosition(40, 224);
 	m_bounceSprite.setScale(0.8, 0.8);
 
 	m_freezeSprite.setPosition(40, 10);
 	m_freezeSprite.setScale(0.8, 0.8);
 
-	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/hud/plupp.png");
+	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/hud/pluppen.png");
 	for (unsigned int i = 0; i < 24; i++)
 	{
 		sf::Sprite s;
-		s.setPosition(130, (texture->getSize().y * 25) - i * texture->getSize().y - i * 2);
+		s.setPosition(130, (texture->getSize().y * 18) - i * texture->getSize().y - i * -8);
 		s.setTexture(*texture);
 
 		if (i % 4 == 0)
@@ -57,11 +57,13 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 
 	texture = m_textureManager->LoadTexture("assets/sprites/hud/powerup_particle.png");
 
-	m_pEmitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(texture, 10);
+	/*m_pEmitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(texture, 10);
 	m_pEmitter->SetRotationVelocity(0);
 	m_pEmitter->SetStartAngle(0, 360);
 	m_pEmitter->SetSpawnRate(0.5f);
-	m_pEmitter->SetPosition(m_pierceSprite.getPosition().x, m_pierceSprite.getPosition().y);
+	m_pEmitter->SetScaling(false);
+	m_pEmitter->SetForce(0, 0);
+	m_pEmitter->SetPosition(m_pierceSprite.getPosition().x, m_pierceSprite.getPosition().y);*/
 }
 
 PowerManager::~PowerManager()
@@ -71,8 +73,6 @@ PowerManager::~PowerManager()
 
 void PowerManager::Update(float deltaTime)
 {
-	m_pEmitter->SetStartAngle(0, 360);
-
 	//Update power up bar
 	UpdatePowerBar();
 
