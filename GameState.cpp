@@ -24,7 +24,6 @@
 #include "Player.h"
 #include "Bubble.h"
 #include "Utility.h"
-#include "Wave.h"
 #include "ParticleEmitter.h"
 #include "GUI_Button.h"
 #include "GUI_Label.h"
@@ -201,13 +200,9 @@ void GameState::Draw()
 	//Draw Particles
 	m_particleManager->Draw(m_drawManager);
 
-	//Draw waves
-	for (int i = 0; i < m_waves.size(); i++)
-	{
-		if (!m_waves[i]->IsActive())
-			continue;
-		m_waves[i]->Draw(m_drawManager);
-	}
+
+	//Draw HUD
+	m_powerManager->Draw(m_drawManager);
 
 	//Draw monster
 	for (int i = 0; i < m_monsters.size(); i++)
@@ -236,9 +231,8 @@ void GameState::Draw()
 		}
 	}
 
-	//Draw HUD
-	m_powerManager->Draw(m_drawManager);
 
+	//Draw lives
 	for (int i = 0; i < m_life; i++)
 	{
 		m_life_sprite.setPosition(15.0f + 100.0f * i, 15);
@@ -289,14 +283,6 @@ void GameState::Enter()
 	//Create bubbles and monster pool
 	InstantiateMonsters();
 	InstantiateBubbles();
-
-	//Instantiate waves
-	texture = m_textureManager->LoadTexture("assets/sprites/wave_spritesheet.png");
-	for (int i = 0; i < 5; i++)
-	{
-		Wave* wave = new Wave(texture);
-		m_waves.push_back(wave);
-	}
 
 	//Victory and Losing screen
 	texture = m_textureManager->LoadTexture("assets/sprites/magic writer victory screen.png");
@@ -620,30 +606,6 @@ bool GameState::PlayMode(float deltaTime)
 			}
 		}
 	}
-
-	//Update waves
-	if (!m_powerManager->IsFrozen())
-	{
-		m_waveTimer += deltaTime;
-		for (int i = 0; i < m_waves.size(); i++)
-		{
-			if (!m_waves[i]->IsActive())
-			{
-				if (m_waveTimer >= 6)
-				{
-					m_waves[i]->Activate();
-					m_waveTimer = 0;
-				}
-				else
-				{
-					continue;
-				}
-			}
-
-			m_waves[i]->Update(deltaTime);
-		}
-	}
-
 	//Convert written words into item
 	ConvertWordToItem();
 

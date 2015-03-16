@@ -100,9 +100,6 @@
     <ClCompile Include="ParticleEmitter.cpp">
       <Filter>Source Files\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="Wave.cpp">
-      <Filter>Source Files\Game Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files\Game Objects</Filter>
     </ClCompile>
@@ -181,9 +178,6 @@
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Header Files\Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Wave.h">
       <Filter>Header Files\Game Objects</Filter>
     </ClInclude>
     <ClInclude Include="SmallBubble.h">

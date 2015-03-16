@@ -7,6 +7,7 @@
 #include "Item.h"
 #include "Player.h"
 #include "Monster.h"
+#include <iostream>
 
 PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* activeItems, Player* player)
 {
@@ -16,12 +17,6 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 	m_pierceSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/pierce.png"));
 	m_bounceSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/bounce.png"));
 	m_freezeSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/freeze.png"));
-	m_frameSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/powerup_frame.png"));
-	m_fillSprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/hud/powerup_fill.png"));
-
-	m_frameSprite.setPosition(20, 400);
-	m_fillSprite.setOrigin(0, m_frameSprite.getTextureRect().height);
-	m_fillSprite.setPosition(20, 800);
 
 	m_activeItems = activeItems;
 	m_monsters = monsters;
@@ -36,9 +31,27 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 	m_freezeTime = 5.0f;
 	m_fadeColor = sf::Color(100, 100, 150, 255);
 
-	m_freezeSprite.setPosition(105, 420);
-	m_bounceSprite.setPosition(105, 550);
-	m_pierceSprite.setPosition(105, 680);
+	m_pierceSprite.setPosition(40, 465);
+	m_pierceSprite.setScale(0.8, 0.8);
+
+	m_bounceSprite.setPosition(40, 234);
+	m_bounceSprite.setScale(0.8, 0.8);
+
+	m_freezeSprite.setPosition(40, 10);
+	m_freezeSprite.setScale(0.8, 0.8);
+
+	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/hud/plupp.png");
+	for (unsigned int i = 0; i < 24; i++)
+	{
+		sf::Sprite s;
+		s.setPosition(130, (texture->getSize().y * 25) - i * texture->getSize().y - i * 2);
+		s.setTexture(*texture);
+
+		if (i % 4 == 0)
+			s.setColor(sf::Color(241, 132, 132, 255));
+
+		m_plupps.push_back(s);
+	}
 }
 
 PowerManager::~PowerManager()
@@ -52,11 +65,11 @@ void PowerManager::Update(float deltaTime)
 	UpdatePowerBar();
 
 	//Check for power up input
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num1) && m_powerupScore >= m_stepSize)
+	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num1) && m_activePlupps >= 8)
 		ActivatePierce();
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num2) && m_powerupScore >= m_stepSize * 2.0f)
+	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num2) && m_activePlupps >= 16)
 		ActivateBounce();
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num3) && m_powerupScore >= m_stepSize * 3.0f)
+	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num3) && m_activePlupps >= 24)
 		ActivateFreeze();
 
 	//Reset frozen
@@ -88,35 +101,56 @@ void PowerManager::UpdatePowerBar()
 		m_powerupScore += m_fillSpeed;
 
 	//Scale fill sprite
-	m_fillSprite.setScale(1, (m_powerupScore / 100.0f));
+	float scoreNormal = m_powerupScore / 100.0f;
+
+	for (unsigned int i = 0; i < m_plupps.size(); i++)
+	{
+		sf::Color color = sf::Color(241, 132, 132, 255); // Red
+
+		if (i <= m_plupps.size() * scoreNormal)
+		{
+			if (i == 7 || i == 15 || i == 23)
+				color = sf::Color(84, 231, 112, 255); // Green
+			else
+				color = sf::Color::White; // White
+		}
+		else if (i == 7 || i == 15 || i == 23)
+		{
+			color = sf::Color(100, 100, 100, 255); // Gray
+		}
+
+		m_plupps[i].setColor(color);
+	}
 
 	//Set colors for powerup icons
-	m_freezeSprite.setColor(sf::Color::White);
-	m_bounceSprite.setColor(sf::Color::White);
-	m_pierceSprite.setColor(sf::Color::White);
-	if (m_powerupScore < m_stepSize * 3)
+	m_freezeSprite.setColor(m_fadeColor);
+	m_bounceSprite.setColor(m_fadeColor);
+	m_pierceSprite.setColor(m_fadeColor);
+	m_activePlupps = 24 * scoreNormal + 1;
+	if (m_activePlupps >= 8)
 	{
-		m_freezeSprite.setColor(m_fadeColor);
+		m_pierceSprite.setColor(sf::Color::White);
 	}
-	if (m_powerupScore < m_stepSize * 2)
+	if (m_activePlupps >= 16)
 	{
 		m_bounceSprite.setColor(m_fadeColor);
 	}
-	if (m_powerupScore < m_stepSize)
+	if (m_activePlupps >= 24)
 	{
 		m_pierceSprite.setColor(m_fadeColor);
 	}
 }
 void PowerManager::Draw(DrawManager* drawManager)
 {
-	//Draw power up bar
-	drawManager->Draw(m_fillSprite, sf::RenderStates::Default);
-	drawManager->Draw(m_frameSprite, sf::RenderStates::Default);
-
 	//Draw power up icons
 	drawManager->Draw(m_freezeSprite, sf::RenderStates::Default);
 	drawManager->Draw(m_bounceSprite, sf::RenderStates::Default);
 	drawManager->Draw(m_pierceSprite, sf::RenderStates::Default);
+
+	for (unsigned int i = 0; i < m_plupps.size(); i++)
+	{
+		drawManager->Draw(m_plupps[i], sf::RenderStates::Default);
+	}
 }
 
 //Bounce methods

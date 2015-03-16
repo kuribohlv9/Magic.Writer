@@ -136,7 +136,6 @@ void Player::Update(float deltaTime)
 	{
 		m_item->SetPosition(m_x - 25, m_y - 145);
 	}
-	std::cout << GetX() << std::endl;
 }
 void Player::Draw(DrawManager* drawManager)
 {
