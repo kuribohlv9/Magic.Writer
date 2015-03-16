@@ -217,6 +217,10 @@ void Monster::Damage(ItemProperty property, int &score)
 		m_collider->SetWidthHeight(0, 0);
 		m_emitter->SetActive(false);
 		m_hitSound.setBuffer(*m_cheering);
+
+		m_foam_sprite.setColor(sf::Color::Transparent);
+		m_sprite.setColor(sf::Color::Transparent);
+		m_snail_sprite.setColor(sf::Color::Transparent);
 	}
 	m_hitSound.play();
 }
@@ -270,8 +274,9 @@ void Monster::Activate(int speed, int health)
 	m_state = MONSTER_MOVE;
 
 	//Set color
-	m_foam_sprite.setColor(sf::Color(255, 255, 255, 255));
+	m_foam_sprite.setColor(sf::Color::White);
 	m_snail_sprite.setColor(sf::Color(255, 255, 255, 0));
+	m_sprite.setColor(sf::Color::White);
 
 
 	//Randomize start position
