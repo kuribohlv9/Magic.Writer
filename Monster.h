@@ -4,6 +4,7 @@
 class Animator;
 class DrawManager;
 class ParticleEmitter;
+class TextureManager;
 
 enum MonsterState
 {
@@ -37,14 +38,17 @@ private:
 private:
 	MonsterState m_state;
 	ItemProperty m_weakness;
+	TextureManager* m_textureManager;
 
 	sf::SoundBuffer* m_hitBuffers[3];
 	sf::Sound m_hitSound;
+	sf::SoundBuffer* m_cheering;
 	ParticleEmitter* m_emitter;
 	Animator* m_head_animator;
 	sf::Sprite m_head_sprite;
 	sf::Sprite m_snail_sprite;
 	sf::Sprite m_foam_sprite;
+	sf::Sprite m_lifeBar;
 	int m_sprite_width;
 	int m_sprite_height;
 

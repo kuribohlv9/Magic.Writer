@@ -35,7 +35,7 @@ MenuState::MenuState()
 	m_exitButton = new GUI_Button(m_poleSprite.getPosition().x + 90, m_poleSprite.getPosition().y + 550, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
 	m_buttons.push_back(m_exitButton);
 
-	texture = m_textureManager->LoadTexture("assets/sprites/background/background.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/background.png");
 	m_backgroundSprite.setTexture(*texture);
 }
 MenuState::~MenuState()

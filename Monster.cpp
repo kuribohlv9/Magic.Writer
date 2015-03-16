@@ -6,10 +6,14 @@
 #include <time.h>
 #include "ParticleEmitter.h"
 #include "ParticleManager.h"
+#include "TextureManager.h"
 #include "ServiceLocator.h"
+#include "AudioManager.h"
 
 Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spriteWidth, int spriteHeight, float speed, ItemProperty weakness, sf::Texture* particleTexture)
 {
+	m_textureManager = ServiceLocator<TextureManager>::GetService();
+
 	m_active = false;
 
 	//Variables
@@ -51,6 +55,9 @@ Monster::Monster(sf::Texture* texture, const std::string& animationFile, int spr
 	m_collider->SetParent(this);
 	m_collider->SetWidthHeight(m_sprite_width / 4, m_sprite_height / 4);
 
+	sf::Texture* texturE = m_textureManager->LoadTexture("assets/sprites/monster/life_bar.png");
+	m_lifeBar.setTexture(*texturE);
+
 	m_weakness = weakness;
 
 	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particleTexture, 50);
@@ -91,17 +98,10 @@ void Monster::Draw(DrawManager* drawManager)
 	}
 
 	//Draw health
-	sf::CircleShape hp;
 	for (int i = 0; i < m_health; i++)
 	{
-		hp.setFillColor(sf::Color::White);
-		hp.setRadius(15);
-		hp.setPosition(m_x + i*30, m_y-100);
-		drawManager->Draw(hp, sf::RenderStates::Default);
-
-		hp.setFillColor(sf::Color::Black);
-		hp.setRadius(10);
-		drawManager->Draw(hp, sf::RenderStates::Default);
+		m_lifeBar.setPosition(m_x + i*25 - 50, m_y-120);
+		drawManager->Draw(m_lifeBar, sf::RenderStates::Default);
 	}
 
 	/*sf::RectangleShape shape;
@@ -169,11 +169,13 @@ void Monster::Freeze(bool state)
 		if (m_y < 700)
 		{
 			m_frozen = true;
+			m_emitter->SetActive(false);
 			m_sprite.setTextureRect(sf::IntRect(0, 0, m_sprite_width, m_sprite_height));
 		}
 	}
 	else
 	{
+		m_emitter->SetActive(true);
 		m_frozen = false;
 		m_sprite.setTextureRect(sf::IntRect(m_sprite_width * 2, 0, m_sprite_width, m_sprite_height));
 	}
@@ -195,7 +197,6 @@ void Monster::Damage(ItemProperty property, int &score)
 { 
 	int randomSoundIndex = rand() % 3;
 	m_hitSound.setBuffer(*m_hitBuffers[randomSoundIndex]);
-	m_hitSound.play();
 	if (property == m_weakness)
 	{
 		m_health -= 2;
@@ -216,7 +217,9 @@ void Monster::Damage(ItemProperty property, int &score)
 		m_state = MONSTER_DEATH;
 		m_head_animator->SetAnimation("death");
 		m_emitter->SetActive(false);
+		m_hitSound.setBuffer(*m_cheering);
 	}
+	m_hitSound.play();
 }
 
 void Monster::HandleBodyParts()
@@ -291,5 +294,7 @@ void Monster::SetSounds(sf::SoundBuffer* hitBuffer, sf::SoundBuffer* hitBufferTw
 	m_hitBuffers[1] = hitBufferTwo;
 	m_hitBuffers[2] = hitBufferThree;
 
-	m_hitSound.setVolume(5);
+	m_hitSound.setVolume(10);
+
+	m_cheering = ServiceLocator<AudioManager>::GetService()->LoadSoundFromFile("assets/audio/complete/small_exterior_crowd_applause_with_cheering_fix.wav");
 }

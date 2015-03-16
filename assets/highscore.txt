@@ -8,6 +8,7 @@ semih 5000
 folke 4540
 ara 4000
 detkrashsar 3520
+semihskakor 3510
 marcus 3000
 ellensuger 2840
 polack 2740

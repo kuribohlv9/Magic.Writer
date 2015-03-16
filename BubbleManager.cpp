@@ -15,7 +15,7 @@ BubbleManager::BubbleManager(Player* player, WordManager* wordManager)
 	m_player = player;
 
 	//Instantiate bubbles
-	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background/bubbles_spritesheet.png");
+	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/bubbles_spritesheet.png");
 	for (int i = 0; i < 3; i++)
 	{
 		int yOffset = 0;

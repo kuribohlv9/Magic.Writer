@@ -7,6 +7,7 @@
 #include "InputManager.h"
 #include "DrawManager.h"
 #include "ServiceLocator.h"
+#include "AudioManager.h"
 #include "ParticleManager.h"
 #include "ParticleEmitter.h"
 #include <iostream>
@@ -43,6 +44,8 @@ Player::Player(sf::Texture* texture, sf::Texture* particle, sf::Texture* sandPar
 	//Set sound
 	m_changeLaneSound.setBuffer(*changeLaneBuffer);
 	m_changeLaneSound.setVolume(10);
+	m_throwing_sound.setBuffer(*ServiceLocator<AudioManager>::GetService()->LoadSoundFromFile("assets/audio/complete/Wizard_hurt2.wav"));
+	m_throwing_sound.setVolume(50);
 
 	//Set emitter
 	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particle, 100);
@@ -212,6 +215,7 @@ void Player::SetItem(Item* item)
 		//Change state to throwing and change animation
 		m_state = PLAYER_THROWING;
 		m_animator->SetAnimation("throwing");
+		m_throwing_sound.play();
 	}
 
 	m_emitter->SetActive((item != nullptr));

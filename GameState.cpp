@@ -43,9 +43,9 @@ GameState::GameState()
 	m_particleManager = ServiceLocator<ParticleManager>::GetService();
 
 	//Load background texture
-	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background/background.png");
+	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/background.png");
 	m_backgroundSprite.setTexture(*texture);
-	texture = m_textureManager->LoadTexture("assets/sprites/background/ice_background.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/ice_background.png");
 	m_ice_backgroundSprite.setTexture(*texture);
 
 	//Load HUD
@@ -56,7 +56,6 @@ GameState::GameState()
 	m_scoreDisplay.setFont(*m_font);
 	m_scoreDisplay.setCharacterSize(40);
 	m_scoreDisplay.setPosition(1750, 75);
-	m_scoreDisplay.setString("0");
 	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
 
 	//Load Music
@@ -319,6 +318,7 @@ void GameState::Enter()
 	m_userTextBox.setCharacterSize(45);
 	m_userTextBox.setPosition(1445 - 500, ScreenHeight - 500);
 	m_userTextBox.setString(m_userName);
+	m_scoreDisplay.setString("0");
 
 	//Instantsiate game variables
 	m_score = 0;
@@ -414,7 +414,8 @@ void GameState::Exit()
 		m_submit_button = nullptr;
 	}
 
-	m_active_theme->stop();
+	if (m_active_theme != nullptr)
+		m_active_theme->stop();
 }
 ScreenState GameState::NextState()
 {
@@ -441,33 +442,33 @@ void GameState::InstantiateMonsters()
 
 	sf::Texture* particleTexture = m_textureManager->LoadTexture("assets/sprites/particle.png");
 
-	sf::SoundBuffer* monsterHitBuffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Monster_hurt01.wav");
-	sf::SoundBuffer* monsterHitBufferTwo = m_audioManager->LoadSoundFromFile("assets/audio/complete/Monster_hurt02.wav");
-	sf::SoundBuffer* monsterHitBufferThree = m_audioManager->LoadSoundFromFile("assets/audio/complete/Monster_hurt03.wav");
+	sf::SoundBuffer* monsterHitBuffer = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
+	sf::SoundBuffer* monsterHitBufferTwo = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
+	sf::SoundBuffer* monsterHitBufferThree = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
 	//Monster pool
 	for (int i = 0; i < 20; i++)
 	{
 		if (i < 5)
 		{
-			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 225, 238, 45, ITEM_ALIVE, particleTexture);
+			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 173, 183, 45, ITEM_ALIVE, particleTexture);
 			undeadMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
 			m_monsters.push_back(undeadMonster);
 		}
 		else if (i > 4 && i < 10)
 		{
-			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 200, 227, 45, ITEM_COLD, particleTexture);
+			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 153, 173, 45, ITEM_COLD, particleTexture);
 			lavaMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
 			m_monsters.push_back(lavaMonster);
 		}
 		else if (i > 9 && i < 15)
 		{
-			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 207, 207, 45, ITEM_DEAD, particleTexture);
+			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 178, 161, 45, ITEM_DEAD, particleTexture);
 			aliveMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
 			m_monsters.push_back(aliveMonster);
 		}
 		else if (i > 14)
 		{
-			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 226, 220, 45, ITEM_HOT, particleTexture);
+			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 182, 178, 45, ITEM_HOT, particleTexture);
 			iceMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
 			m_monsters.push_back(iceMonster);
 		}
@@ -481,7 +482,7 @@ void GameState::SpawnMonster()
 		Monster* monster = m_monsters[randomMonster];
 		if (!monster->IsActive())
 		{
-			monster->Activate(35 + 5*m_wave_level, 2+1*m_wave_level/2);
+			monster->Activate(20 + 5*m_wave_level, 2+1*m_wave_level/2);
 			break;
 		}
 	}
@@ -577,15 +578,17 @@ bool GameState::PlayMode(float deltaTime)
 		if (!m_activeItems.at(i)->IsActive())
 			continue;
 
-		if (m_powerManager->GetBounceItem() == nullptr)
+		//Not a bounce item
+		if (m_powerManager->GetBounceItem() != m_activeItems[i])
 		{
-			m_activeItems.at(i)->Move(0, -m_speed * deltaTime);
+			m_activeItems[i]->Move(0, -m_speed * deltaTime);
 		}
-		else
+		else//Item is bouncy
 		{
+			//No Target
 			if (m_powerManager->GetBounceTarget() == nullptr)
 			{
-				m_powerManager->GetBounceItem()->Move(0, -m_speed * deltaTime);
+				m_activeItems[i]->Move(0, -m_speed * deltaTime);
 			}
 			else
 			{
@@ -656,9 +659,13 @@ bool GameState::PlayMode(float deltaTime)
 		m_player->ChantingAnimation();
 	}
 
+	//Update score display
 	if (m_score != m_lastScore)
+	{
 		m_scoreDisplay.setString(std::to_string(m_score));
-
+		float width = m_scoreDisplay.getGlobalBounds().width;
+		m_scoreDisplay.setPosition(1800 - width / 2, 75);
+	}
 	m_lastScore = m_score;
 
 	m_powerManager->Update(deltaTime);
