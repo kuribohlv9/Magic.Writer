@@ -21,7 +21,7 @@ MenuState::MenuState()
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");
 	sf::Font* font = m_textureManager->LoadFont("assets/fonts/game.ttf");
 	m_highscoreManager->SetFont(font);
-	m_highscoreManager->SetPosition(350, 125);
+	m_highscoreManager->SetPosition(100, 125);
 
 	m_poleSprite.setTexture(*texture);
 	m_poleSprite.setTextureRect(sf::IntRect(0, 219 * 2, 167, 775));
@@ -41,7 +41,7 @@ MenuState::MenuState()
 	//Highscore sign
 	texture = m_textureManager->LoadTexture("assets/sprites/score_screen.png");
 	m_highscoreSprite.setTexture(*texture);
-	m_highscoreSprite.setPosition(300, 0);
+	m_highscoreSprite.setPosition(50, 0);
 }
 MenuState::~MenuState()
 {

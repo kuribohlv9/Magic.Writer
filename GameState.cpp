@@ -585,7 +585,6 @@ bool GameState::PlayMode(float deltaTime)
 			}
 		}
 	}
-
 	//Update player
 	m_player->Update(deltaTime);
 
@@ -606,6 +605,7 @@ bool GameState::PlayMode(float deltaTime)
 			}
 		}
 	}
+
 	//Convert written words into item
 	ConvertWordToItem();
 
