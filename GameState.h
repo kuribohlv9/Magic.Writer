@@ -77,10 +77,6 @@ private:
 	//Items
 	std::vector<Item*> m_activeItems;
 
-	//Freeze
-	bool m_frozen;
-	float m_freezeTimer;
-
 	//Monster
 	std::vector<Monster*> m_monsters;
 
@@ -118,4 +114,8 @@ private:
 	GUI_Button* m_submit_button;
 	sf::Text m_userTextBox;
 	std::string m_userName;
+
+	//Music
+	std::vector<sf::Music*> m_game_themes;
+	sf::Music* m_active_theme;
 };

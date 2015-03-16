@@ -49,7 +49,7 @@ GameState::GameState()
 	m_ice_backgroundSprite.setTexture(*texture);
 
 	//Load HUD
-	m_font = m_textureManager->LoadFont("assets/fonts/font.ttf");
+	m_font = m_textureManager->LoadFont("assets/fonts/game.ttf");
 	m_score_sign_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/sign_score.png"));
 	m_score_sign_sprite.setPosition(ScreenWidth - 270, -20);
 	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
@@ -58,9 +58,27 @@ GameState::GameState()
 	m_scoreDisplay.setPosition(1750, 75);
 	m_scoreDisplay.setString("0");
 	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
+
+	//Load Music
+	sf::Music* music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Dubakupado.ogg");
+	music->setVolume(20);
+	m_game_themes.push_back(music);
+	music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/AngloZulu.ogg");
+	music->setVolume(20);
+	m_game_themes.push_back(music);
+	music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Rite_of_Passage.ogg");
+	music->setVolume(20);
+	m_game_themes.push_back(music);
+	music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Whimsy_Groove.ogg");
+	music->setVolume(20);
+	m_game_themes.push_back(music);
+	music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Zanzibar.ogg");
+	music->setVolume(20);
+	m_game_themes.push_back(music);
 }
 GameState::~GameState()
 {
+	Exit();
 }
 
 bool GameState::Update(float deltaTime)
@@ -98,20 +116,20 @@ void GameState::CheckCollision()
 					continue;
 				if (CollisionManager::Check(monster->GetCollider(), item->GetCollider()))
 				{
-					if (m_powerManager->GetPierce()) //Item pierce collision
+					if (m_powerManager->GetPierceItem() == item) //Item pierce collision
 					{
 						if (m_powerManager->AddItemToPierceList(monster))
 						{
 							monster->Damage(item->GetProperty(), m_score);
 						}
 					}
-					else if (m_powerManager->BounceItem() == item) //Item bounce collision
+					else if (m_powerManager->GetBounceItem() == item) //Item bounce collision
 					{
-						Monster* targetMonster = m_powerManager->NextBounceTarget();
+						Monster* targetMonster = m_powerManager->GetBounceTarget();
 						if (targetMonster == monster)
 						{
 							monster->Damage(item->GetProperty(), m_score);
-							if (!m_powerManager->NextBounce(monster))
+							if (!m_powerManager->SetNewBounceTarget(monster))
 							{
 								item->SetActive(false);
 								item->SetInGame(false);
@@ -121,7 +139,7 @@ void GameState::CheckCollision()
 						else if (targetMonster == nullptr)
 						{
 							monster->Damage(item->GetProperty(), m_score);
-							if (!m_powerManager->NextBounce(monster))
+							if (!m_powerManager->SetNewBounceTarget(monster))
 							{
 								item->SetActive(false);
 								item->SetInGame(false);
@@ -172,7 +190,7 @@ void GameState::CheckCollision()
 void GameState::Draw()
 {
 	//Draw background
-	if (!m_powerManager->GetFrozen())
+	if (!m_powerManager->IsFrozen())
 	{
 		m_drawManager->Draw(m_backgroundSprite, sf::RenderStates::Default);
 	}
@@ -255,9 +273,10 @@ void GameState::Enter()
 
 	//Instantiate player
 	sf::Texture* particleTexture = m_textureManager->LoadTexture("assets/sprites/wizard/particle.png");
+	sf::Texture* sandParticle = m_textureManager->LoadTexture("assets/sprites/wizard/sand_particle.png");
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/wizard/wizard_spritesheet.png");
 	sf::SoundBuffer* buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_walk_sound.wav");
-	m_player = new Player(texture, particleTexture, buffer);
+	m_player = new Player(texture, particleTexture, sandParticle, buffer);
 	
 	//Load sound
 	buffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Wizard_spell_complete01.wav");
@@ -295,10 +314,11 @@ void GameState::Enter()
 	//Highscore input
 	m_submit_button = new GUI_Button(1445, ScreenHeight - 500, nullptr, texture, sf::IntRect(500, 0, 250, 100));
 	m_submit_button->Refresh();
+	m_userName = "";
 	m_userTextBox.setFont(*m_font);
 	m_userTextBox.setCharacterSize(45);
 	m_userTextBox.setPosition(1445 - 500, ScreenHeight - 500);
-	m_userName = "";
+	m_userTextBox.setString(m_userName);
 
 	//Instantsiate game variables
 	m_score = 0;
@@ -311,6 +331,10 @@ void GameState::Enter()
 	m_waveManager->SetActiveWave(0);
 	m_userTextBox.setFont(*m_font);
 	m_userTextBox.setPosition(1000, ScreenHeight - 500);
+
+
+	m_active_theme = m_game_themes[rand() % 5];
+	m_active_theme->play();
 }
 void GameState::Exit()
 {
@@ -389,6 +413,8 @@ void GameState::Exit()
 		delete m_submit_button;
 		m_submit_button = nullptr;
 	}
+
+	m_active_theme->stop();
 }
 ScreenState GameState::NextState()
 {
@@ -527,10 +553,13 @@ bool GameState::PlayMode(float deltaTime)
 	}
 
 	//Update wave manager
-	m_waveManager->Update(deltaTime);
-	if (m_waveManager->CanSpawnMonster())
+	if (!m_powerManager->IsFrozen())
 	{
-		SpawnMonster();
+		m_waveManager->Update(deltaTime);
+		if (m_waveManager->CanSpawnMonster())
+		{
+			SpawnMonster();
+		}
 	}
 
 	//Update active items
@@ -542,25 +571,28 @@ bool GameState::PlayMode(float deltaTime)
 		m_activeItems[i]->Update(deltaTime);
 	}
 
-	
 	//Item movement
 	for (int i = 0; i < m_activeItems.size(); i++)
 	{
 		if (!m_activeItems.at(i)->IsActive())
 			continue;
 
-		if (m_powerManager->BounceItem() == nullptr)
+		if (m_powerManager->GetBounceItem() == nullptr)
+		{
 			m_activeItems.at(i)->Move(0, -m_speed * deltaTime);
+		}
 		else
 		{
-			if (m_powerManager->NextBounceTarget() == nullptr)
-				m_powerManager->BounceItem()->Move(0, -m_speed * deltaTime);
+			if (m_powerManager->GetBounceTarget() == nullptr)
+			{
+				m_powerManager->GetBounceItem()->Move(0, -m_speed * deltaTime);
+			}
 			else
 			{
-				sf::Vector2f itemDir = m_powerManager->ItemDirection();
+				sf::Vector2f itemDir = m_powerManager->GetItemDirection();
 
 				itemDir *= m_speed * deltaTime;
-				m_powerManager->BounceItem()->Move(itemDir.x, itemDir.y);
+				m_powerManager->GetBounceItem()->Move(itemDir.x, itemDir.y);
 			}
 		}
 	}
@@ -587,23 +619,26 @@ bool GameState::PlayMode(float deltaTime)
 	}
 
 	//Update waves
-	m_waveTimer += deltaTime;
-	for (int i = 0; i < m_waves.size(); i++)
+	if (!m_powerManager->IsFrozen())
 	{
-		if (!m_waves[i]->IsActive())
+		m_waveTimer += deltaTime;
+		for (int i = 0; i < m_waves.size(); i++)
 		{
-			if (m_waveTimer >= 6)
+			if (!m_waves[i]->IsActive())
 			{
-				m_waves[i]->Activate();
-				m_waveTimer = 0;
+				if (m_waveTimer >= 6)
+				{
+					m_waves[i]->Activate();
+					m_waveTimer = 0;
+				}
+				else
+				{
+					continue;
+				}
 			}
-			else
-			{
-				continue;
-			}
-		}
 
-		m_waves[i]->Update(deltaTime);
+			m_waves[i]->Update(deltaTime);
+		}
 	}
 
 	//Convert written words into item
@@ -628,6 +663,12 @@ bool GameState::PlayMode(float deltaTime)
 
 	m_powerManager->Update(deltaTime);
 
+	if (m_active_theme->getStatus() == sf::Music::Status::Stopped)
+	{
+		m_active_theme = m_game_themes[rand() % 5];
+		m_active_theme->play();
+	}
+
 	//Check win and lose condition
 	if (m_life <= 0)
 	{
@@ -636,6 +677,7 @@ bool GameState::PlayMode(float deltaTime)
 	else if (!m_waveManager->IsActive() && !IsMonsters())
 	{
 		m_status = MODE_VICTORY;
+		m_active_theme->stop();
 	}
 
 	return true;

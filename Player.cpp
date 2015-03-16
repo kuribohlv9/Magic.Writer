@@ -9,8 +9,9 @@
 #include "ServiceLocator.h"
 #include "ParticleManager.h"
 #include "ParticleEmitter.h"
+#include <iostream>
 
-Player::Player(sf::Texture* texture, sf::Texture* particle, sf::SoundBuffer* changeLaneBuffer)
+Player::Player(sf::Texture* texture, sf::Texture* particle, sf::Texture* sandParticle, sf::SoundBuffer* changeLaneBuffer)
 {
 	//Variables
 	m_inputManager = ServiceLocator<InputManager>::GetService();
@@ -33,8 +34,8 @@ Player::Player(sf::Texture* texture, sf::Texture* particle, sf::SoundBuffer* cha
 
 	//Set start position
 	m_state = PLAYER_IDLE;
-	m_lane = 1;
-	ChangeLane(1);
+	m_lane = 3;
+	ChangeLane(-1);
 	SetPosition(Lanes[2], 780);
 	m_targetX = static_cast<float>(Lanes[2]);
 	m_animator->SetAnimation("idle");
@@ -47,9 +48,21 @@ Player::Player(sf::Texture* texture, sf::Texture* particle, sf::SoundBuffer* cha
 	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particle, 100);
 	m_emitter->SetActive(false);
 	m_emitter->SetSpawnRate(0.2f);
-	m_emitter->SetLifeTime(1.5f, 1.5f);
+	m_emitter->SetLifeTime(2, 2);
 	m_emitter->SetSize(40, 40);
 	m_emitter->SetAcceleration(0, 0);
+	m_emitter->SetForce(50, 50);
+
+	//Set sand emitter
+	m_sandEmitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(sandParticle, 200);
+	m_sandEmitter->SetActive(false);
+	m_sandEmitter->SetSpawnRate(0);
+	m_sandEmitter->SetLifeTime(.25f, .25f);
+	m_sandEmitter->SetSize(1, 60);
+	m_sandEmitter->SetForce(0, 0);
+	m_sandEmitter->SetRotationVelocity(2);
+	m_sandEmitter->SetAcceleration(0, -2);
+	m_sandEmitter->SetScaling(false);
 }
 Player::~Player()
 {
@@ -62,19 +75,14 @@ Player::~Player()
 
 	//Point item towards nullptr
 	m_item = nullptr;
-
-	//point emitter towards nullptr
-	if (m_emitter)
-	{
-		m_emitter = nullptr;
-	}
 }
 
 void Player::Update(float deltaTime)
 {
-	m_emitter->SetStartAngle(0, 360);
-	m_emitter->SetForce(50, 50);
+	m_sandEmitter->SetPosition(GetX(), GetY() + 70);
+
 	m_emitter->SetPosition(GetX() + 10, GetY() - 150);
+	m_emitter->SetStartAngle(0, 360);
 
 	//Handle movement between lanes
 	if (!IsStunned())
@@ -93,21 +101,6 @@ void Player::Update(float deltaTime)
 		}
 		break;
 	case PLAYER_KNOCKEDDOWN:
-		if (m_animator->Complete())
-		{
-			if (m_item)
-			{
-				m_state = PLAYER_HOLDING;
-				m_animator->SetAnimation("holding");
-			}
-			else
-			{
-				m_state = PLAYER_IDLE;
-				m_animator->SetAnimation("idle");
-			}
-			m_sprite.setScale(1, 1);
-		}
-		break;
 	case PLAYER_JUMPING:
 		if (m_animator->Complete())
 		{
@@ -122,6 +115,8 @@ void Player::Update(float deltaTime)
 				m_animator->SetAnimation("idle");
 			}
 			m_sprite.setScale(1, 1);
+
+			m_sandEmitter->SetActive(false);
 		}
 		break;
 	}
@@ -138,6 +133,7 @@ void Player::Update(float deltaTime)
 	{
 		m_item->SetPosition(m_x - 25, m_y - 170);
 	}
+	std::cout << GetX() << std::endl;
 }
 void Player::Draw(DrawManager* drawManager)
 {
@@ -182,6 +178,14 @@ void Player::ChangeLane(int xDirection)
 		m_changeLaneSound.stop();
 		m_changeLaneSound.setPlayingOffset(sf::seconds(0.4f));
 		m_changeLaneSound.play();
+	}
+
+	if (m_sandEmitter && xDirection != 0)
+	{
+		//Activate emitter
+		float angle = (xDirection == 1) ? 0 : 180;
+		m_sandEmitter->SetActive(true);
+		m_sandEmitter->SetStartAngle(angle, angle);
 	}
 }
 
@@ -252,6 +256,14 @@ void Player::Knockdown()
 	m_state = PLAYER_KNOCKEDDOWN;
 	m_animator->SetAnimation("knockback");
 	m_sprite.setScale(knockDirection * 0.9f, 0.9f);
+
+	//Remove item on knockdown
+	if (m_item)
+	{
+		m_item->SetActive(false);
+		m_item->SetInGame(false);
+		m_item = nullptr;
+	}
 
 	ChangeLane(knockDirection);
 }

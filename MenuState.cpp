@@ -19,7 +19,7 @@ MenuState::MenuState()
 	m_nextState = STATE_INVALID;
 
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");
-	sf::Font* font = m_textureManager->LoadFont("assets/fonts/font.ttf");
+	sf::Font* font = m_textureManager->LoadFont("assets/fonts/menu.ttf");
 	m_highscoreManager->SetFont(font);
 	m_highscoreManager->SetPosition(300, 100);
 

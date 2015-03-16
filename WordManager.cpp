@@ -12,7 +12,7 @@ WordManager::WordManager()
 	m_inputManager = ServiceLocator<InputManager>::GetService();
 
 	//Load a font
-	sf::Font* font = m_textureManager->LoadFont("assets/fonts/font.ttf");
+	sf::Font* font = m_textureManager->LoadFont("assets/fonts/game.ttf");
 	m_text.setFont(*font);
 	m_text.setCharacterSize(25);
 
