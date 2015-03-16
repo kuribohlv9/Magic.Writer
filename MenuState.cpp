@@ -18,21 +18,21 @@ MenuState::MenuState()
 	m_highscoreManager = ServiceLocator<HighscoreManager>::GetService();
 	m_nextState = STATE_INVALID;
 
-	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");
+	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet2.png");
 	sf::Font* font = m_textureManager->LoadFont("assets/fonts/game.ttf");
 	m_highscoreManager->SetFont(font);
 	m_highscoreManager->SetPosition(100, 125);
 
 	m_poleSprite.setTexture(*texture);
-	m_poleSprite.setTextureRect(sf::IntRect(0, 219 * 2, 167, 775));
-	m_poleSprite.setPosition(ScreenWidth / 2, ScreenHeight - 775);
+	m_poleSprite.setTextureRect(sf::IntRect(0, 305, 117, 539));
+	m_poleSprite.setPosition(ScreenWidth / 2 - 150, ScreenHeight - 600);
 
 
-	m_playButton = new GUI_Button(m_poleSprite.getPosition().x + 180, m_poleSprite.getPosition().y + 100, nullptr, texture, sf::IntRect(0, 0, 431, 219));
+	m_playButton = new GUI_Button(m_poleSprite.getPosition().x + 120, m_poleSprite.getPosition().y + 100, nullptr, texture, sf::IntRect(0, 0, 297, 140));
 	m_buttons.push_back(m_playButton);
-	m_highscoreButton = new GUI_Button(m_poleSprite.getPosition().x + 130, m_poleSprite.getPosition().y + 320, nullptr, texture, sf::IntRect(431, 0, 431, 219));
+	m_highscoreButton = new GUI_Button(m_poleSprite.getPosition().x + 75, m_poleSprite.getPosition().y + 250, nullptr, texture, sf::IntRect(297, 0, 273, 123));
 	m_buttons.push_back(m_highscoreButton);
-	m_exitButton = new GUI_Button(m_poleSprite.getPosition().x + 90, m_poleSprite.getPosition().y + 550, nullptr, texture, sf::IntRect(431 * 2, 0, 431, 219));
+	m_exitButton = new GUI_Button(m_poleSprite.getPosition().x + 50, m_poleSprite.getPosition().y + 400, nullptr, texture, sf::IntRect(570, 0, 237, 132));
 	m_buttons.push_back(m_exitButton);
 
 	texture = m_textureManager->LoadTexture("assets/sprites/background_menu.png");
