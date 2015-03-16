@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "ServiceLocator.h"
 #include "PowerManager.h"
+#include "ParticleManager.h"
+#include "ParticleEmitter.h"
 #include "TextureManager.h"
 #include "DrawManager.h"
 #include "InputManager.h"
@@ -52,6 +54,14 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 
 		m_plupps.push_back(s);
 	}
+
+	texture = m_textureManager->LoadTexture("assets/sprites/hud/powerup_particle.png");
+
+	m_pEmitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(texture, 10);
+	m_pEmitter->SetRotationVelocity(0);
+	m_pEmitter->SetStartAngle(0, 360);
+	m_pEmitter->SetSpawnRate(0.5f);
+	m_pEmitter->SetPosition(m_pierceSprite.getPosition().x, m_pierceSprite.getPosition().y);
 }
 
 PowerManager::~PowerManager()
@@ -61,6 +71,8 @@ PowerManager::~PowerManager()
 
 void PowerManager::Update(float deltaTime)
 {
+	m_pEmitter->SetStartAngle(0, 360);
+
 	//Update power up bar
 	UpdatePowerBar();
 
@@ -133,11 +145,11 @@ void PowerManager::UpdatePowerBar()
 	}
 	if (m_activePlupps >= 16)
 	{
-		m_bounceSprite.setColor(m_fadeColor);
+		m_bounceSprite.setColor(sf::Color::White);
 	}
 	if (m_activePlupps >= 24)
 	{
-		m_pierceSprite.setColor(m_fadeColor);
+		m_pierceSprite.setColor(sf::Color::White);
 	}
 }
 void PowerManager::Draw(DrawManager* drawManager)

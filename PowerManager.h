@@ -6,6 +6,7 @@ class Item;
 class Player;
 class TextureManager;
 class DrawManager;
+class ParticleEmitter;
 
 class PowerManager
 {
@@ -51,6 +52,7 @@ private:
 
 	//Powerbar
 	sf::Sprite m_pierceSprite;
+	ParticleEmitter* m_pEmitter;
 	sf::Sprite m_bounceSprite;
 	sf::Sprite m_freezeSprite;
 	std::vector<sf::Sprite> m_plupps;
