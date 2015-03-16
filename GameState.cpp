@@ -442,9 +442,9 @@ void GameState::InstantiateMonsters()
 
 	sf::Texture* particleTexture = m_textureManager->LoadTexture("assets/sprites/particle.png");
 
-	sf::SoundBuffer* monsterHitBuffer = m_audioManager->LoadSoundFromFile("assets/audio/complete/Monster_hurt01.wav");
-	sf::SoundBuffer* monsterHitBufferTwo = m_audioManager->LoadSoundFromFile("assets/audio/complete/Monster_hurt02.wav");
-	sf::SoundBuffer* monsterHitBufferThree = m_audioManager->LoadSoundFromFile("assets/audio/complete/Monster_hurt03.wav");
+	sf::SoundBuffer* monsterHitBuffer = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
+	sf::SoundBuffer* monsterHitBufferTwo = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
+	sf::SoundBuffer* monsterHitBufferThree = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
 	//Monster pool
 	for (int i = 0; i < 20; i++)
 	{
@@ -482,7 +482,7 @@ void GameState::SpawnMonster()
 		Monster* monster = m_monsters[randomMonster];
 		if (!monster->IsActive())
 		{
-			monster->Activate(35 + 5*m_wave_level, 2+1*m_wave_level/2);
+			monster->Activate(20 + 5*m_wave_level, 2+1*m_wave_level/2);
 			break;
 		}
 	}
