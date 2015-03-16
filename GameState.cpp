@@ -605,28 +605,7 @@ bool GameState::PlayMode(float deltaTime)
 			}
 		}
 	}
-	//Update waves
-	if (!m_powerManager->IsFrozen())
-	{
-		m_waveTimer += deltaTime;
-		for (int i = 0; i < m_waves.size(); i++)
-		{
-			if (!m_waves[i]->IsActive())
-			{
-				if (m_waveTimer >= 6)
-				{
-					m_waves[i]->Activate();
-					m_waveTimer = 0;
-				}
-				else
-				{
-					continue;
-				}
-			}
 
-			m_waves[i]->Update(deltaTime);
-		}
-	}
 	//Convert written words into item
 	ConvertWordToItem();
 
