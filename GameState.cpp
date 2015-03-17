@@ -426,7 +426,7 @@ void GameState::InstantiateMonsters()
 	sf::Texture* aliveTexture = m_textureManager->LoadTexture("assets/sprites/monster/alive_monster_spritesheet.png");
 	sf::Texture* iceTexture = m_textureManager->LoadTexture("assets/sprites/monster/ice_monster_spritesheet.png");
 
-	sf::Texture* particleTexture = m_textureManager->LoadTexture("assets/sprites/particle.png");
+	sf::Texture* particle = m_textureManager->LoadTexture("assets/sprites/monster/particle.png");
 
 	sf::SoundBuffer* monsterHitBuffer = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
 	sf::SoundBuffer* monsterHitBufferTwo = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
@@ -436,25 +436,25 @@ void GameState::InstantiateMonsters()
 	{
 		if (i < 5)
 		{
-			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 173, 183, 45, ITEM_ALIVE, particleTexture);
+			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 173, 183, 45, ITEM_ALIVE, particle);
 			undeadMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
 			m_monsters.push_back(undeadMonster);
 		}
 		else if (i > 4 && i < 10)
 		{
-			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 153, 173, 45, ITEM_COLD, particleTexture);
+			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 153, 173, 45, ITEM_COLD, particle);
 			lavaMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
 			m_monsters.push_back(lavaMonster);
 		}
 		else if (i > 9 && i < 15)
 		{
-			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 178, 161, 45, ITEM_DEAD, particleTexture);
+			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 178, 161, 45, ITEM_DEAD, particle);
 			aliveMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
 			m_monsters.push_back(aliveMonster);
 		}
 		else if (i > 14)
 		{
-			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 182, 178, 45, ITEM_HOT, particleTexture);
+			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 182, 178, 45, ITEM_HOT, particle);
 			iceMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
 			m_monsters.push_back(iceMonster);
 		}

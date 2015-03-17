@@ -177,11 +177,11 @@ void Engine::HandleEvents()
 		{
 			if (event.text.unicode >= 97 && event.text.unicode <= 122)
 			{
-				m_input_manager->SetInputChar(static_cast<char>(event.text.unicode));
+				m_input_manager->SetInputChar(static_cast<char>(event.text.unicode - 32));
 			}
 			else if (event.text.unicode >= 65 && event.text.unicode <= 90)
 			{
-				m_input_manager->SetInputChar(static_cast<char>(event.text.unicode + 32));
+				m_input_manager->SetInputChar(static_cast<char>(event.text.unicode));
 			}
 		}
 	}

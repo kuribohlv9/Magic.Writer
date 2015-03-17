@@ -14,7 +14,7 @@ WordManager::WordManager()
 	//Load a font
 	sf::Font* font = m_textureManager->LoadFont("assets/fonts/game.ttf");
 	m_text.setFont(*font);
-	m_text.setCharacterSize(25);
+	m_text.setCharacterSize(23);
 
 	//Create words
 	for (int i = 0; i < 3; i++)
