@@ -33,24 +33,27 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 	m_freezeTime = 5.0f;
 	m_fadeColor = sf::Color(100, 100, 150, 255);
 
-	m_pierceSprite.setPosition(40, 455);
+	m_pierceSprite.setPosition(115, 546);
 	m_pierceSprite.setScale(0.8, 0.8);
 
-	m_bounceSprite.setPosition(40, 224);
+	m_bounceSprite.setPosition(115, 272);
 	m_bounceSprite.setScale(0.8, 0.8);
 
-	m_freezeSprite.setPosition(40, 10);
+	m_freezeSprite.setPosition(115, 0);
 	m_freezeSprite.setScale(0.8, 0.8);
 
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/hud/pluppen.png");
+	int extraHeight = 0;
 	for (unsigned int i = 0; i < 24; i++)
 	{
 		sf::Sprite s;
-		s.setPosition(130, (texture->getSize().y * 18) - i * texture->getSize().y - i * -8);
 		s.setTexture(*texture);
 
-		if (i % 4 == 0)
-			s.setColor(sf::Color(241, 132, 132, 255));
+		if (i == 7 || i == 15 || i == 23)
+			extraHeight += 50;
+
+		s.setPosition(130, (texture->getSize().y * 22) - i * texture->getSize().y - i * -8 - extraHeight);
+
 
 		m_plupps.push_back(s);
 	}
@@ -114,7 +117,6 @@ void PowerManager::UpdatePowerBar()
 
 	//Scale fill sprite
 	float scoreNormal = m_powerupScore / 100.0f;
-
 	for (unsigned int i = 0; i < m_plupps.size(); i++)
 	{
 		sf::Color color = sf::Color(241, 132, 132, 255); // Red
@@ -149,20 +151,23 @@ void PowerManager::UpdatePowerBar()
 	}
 	if (m_activePlupps >= 24)
 	{
-		m_pierceSprite.setColor(sf::Color::White);
+		m_freezeSprite.setColor(sf::Color::White);
 	}
+	std::cout << m_activePlupps << std::endl;
 }
 void PowerManager::Draw(DrawManager* drawManager)
 {
-	//Draw power up icons
-	drawManager->Draw(m_freezeSprite, sf::RenderStates::Default);
-	drawManager->Draw(m_bounceSprite, sf::RenderStates::Default);
-	drawManager->Draw(m_pierceSprite, sf::RenderStates::Default);
+	
 
 	for (unsigned int i = 0; i < m_plupps.size(); i++)
 	{
 		drawManager->Draw(m_plupps[i], sf::RenderStates::Default);
 	}
+
+	//Draw power up icons
+	drawManager->Draw(m_freezeSprite, sf::RenderStates::Default);
+	drawManager->Draw(m_bounceSprite, sf::RenderStates::Default);
+	drawManager->Draw(m_pierceSprite, sf::RenderStates::Default);
 }
 
 //Bounce methods

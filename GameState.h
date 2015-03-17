@@ -27,6 +27,29 @@ enum mode {
 	MODE_VICTORY
 };
 
+struct UserInfo
+{
+	int defeatedMonster;
+	int defeatedMonsterScore = 300;
+	std::string GetDefeatedMonster()
+	{
+		return "Monsters defeated: " + std::to_string(defeatedMonster) + "X"
+			+ std::to_string(defeatedMonsterScore) + " = " + std::to_string(defeatedMonster * defeatedMonsterScore);
+	}
+
+	int criticalHits;
+	int criticalScore = 50;
+	std::string GetCriticalHits()
+	{
+		return "Critical hits: " + std::to_string(criticalHits)
+			+ "X" + std::to_string(criticalScore)
+			+ " = " + std::to_string(criticalHits * criticalScore);
+	}
+
+	int perfectWords;
+	int perfectWordScore = 100;
+};
+
 class GameState : public State
 {
 public:
@@ -44,6 +67,7 @@ public:
 private:
 	void ConvertWordToItem();
 	void CheckCollision();
+	void SetUserInfo();
 
 	void InstantiateBubbles();
 	void InstantiateMonsters();
@@ -109,6 +133,8 @@ private:
 	sf::Sprite m_victory_window;
 	GUI_Button* m_back_to_menu_button;
 	GUI_Button* m_next_wave_button;
+	sf::Text m_userInfoText;
+	UserInfo m_userInfo;
 
 	//Highscore input
 	GUI_Button* m_submit_button;

@@ -200,22 +200,27 @@ bool Monster::Burst()
 	}
 	return false;
 }
+bool Monster::IsDead()
+{
+	return m_health <= 0;
+}
 
-void Monster::Damage(ItemProperty property, int &score)
+void Monster::Damage(ItemProperty property, bool& critical)
 { 
+	critical = false;
 	int randomSoundIndex = rand() % 3;
 	m_hitSound.setBuffer(*m_hitBuffers[randomSoundIndex]);
+
 	if (property == m_weakness)
 	{
 		m_health -= 2;
-		score += 500;
 		m_state = MONSTER_CRITICAL;
+		critical = true;
 		m_head_animator->SetAnimation("critical");
 	}
 	else
 	{
 		m_health -= 1;
-		score += 250;
 		m_state = MONSTER_HIT;
 		m_head_animator->SetAnimation("hit");
 	}

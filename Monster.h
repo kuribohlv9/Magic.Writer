@@ -23,8 +23,9 @@ public:
 	void Draw(DrawManager* drawManager);
 	void Update(float deltaTime);
 	void Freeze(bool state);
-	void Damage(ItemProperty property, int &score);
+	void Damage(ItemProperty property, bool& critical);
 	void Activate(int speed, int health);
+	bool IsDead();
 	bool Burst();
 
 	void SetSounds(

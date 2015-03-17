@@ -56,6 +56,8 @@ GameState::GameState()
 	m_scoreDisplay.setCharacterSize(40);
 	m_scoreDisplay.setPosition(1750, 75);
 	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
+	m_userInfoText.setFont(*m_font);
+	m_userInfoText.setPosition(ScreenWidth / 2 - 100, ScreenHeight / 2);
 
 	//Load Music
 	sf::Music* music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Dubakupado.ogg");
@@ -112,13 +114,19 @@ void GameState::CheckCollision()
 				Monster* monster = m_monsters[j];
 				if (!monster->IsActive())
 					continue;
+
 				if (CollisionManager::Check(monster->GetCollider(), item->GetCollider()))
 				{
+					bool critical = false;
+
 					if (m_powerManager->GetPierceItem() == item) //Item pierce collision
 					{
 						if (m_powerManager->AddItemToPierceList(monster))
 						{
-							monster->Damage(item->GetProperty(), m_score);
+							//Damage and check for crit
+							monster->Damage(item->GetProperty(), critical);
+							if (critical)
+								m_userInfo.criticalHits++;
 						}
 					}
 					else if (m_powerManager->GetBounceItem() == item) //Item bounce collision
@@ -126,7 +134,11 @@ void GameState::CheckCollision()
 						Monster* targetMonster = m_powerManager->GetBounceTarget();
 						if (targetMonster == monster)
 						{
-							monster->Damage(item->GetProperty(), m_score);
+							//Damage and check for crit
+							monster->Damage(item->GetProperty(), critical);
+							if (critical)
+								m_userInfo.criticalHits++;
+
 							if (!m_powerManager->SetNewBounceTarget(monster))
 							{
 								item->SetActive(false);
@@ -136,7 +148,11 @@ void GameState::CheckCollision()
 						}
 						else if (targetMonster == nullptr)
 						{
-							monster->Damage(item->GetProperty(), m_score);
+							//Damage and check for crit
+							monster->Damage(item->GetProperty(), critical);
+							if (critical)
+								m_userInfo.criticalHits++;
+
 							if (!m_powerManager->SetNewBounceTarget(monster))
 							{
 								item->SetActive(false);
@@ -147,17 +163,21 @@ void GameState::CheckCollision()
 					}
 					else //Item normal collision
 					{
-						monster->Damage(item->GetProperty(), m_score);
+						//Damage and check for crit
+						monster->Damage(item->GetProperty(), critical);
+						if (critical)
+							m_userInfo.criticalHits++;
 
 						item->SetActive(false);
 						item->SetInGame(false);
 						item->SetState(ITEM_HIT);
 					}
 
-					if (!monster->IsActive()) //Monster is dead
+					if (monster->IsDead()) //Monster is dead
 					{
 						//Increase score
-						m_score += 100;
+						m_score += m_userInfo.defeatedMonsterScore;
+						m_userInfo.defeatedMonster++;
 					}
 				}
 			}
@@ -200,9 +220,15 @@ void GameState::Draw()
 	//Draw Particles
 	m_particleManager->Draw(m_drawManager);
 
-
 	//Draw HUD
 	m_powerManager->Draw(m_drawManager);
+
+	//Draw lives
+	for (int i = 0; i < m_life; i++)
+	{
+		m_life_sprite.setPosition(1400 + 150 * i, 1080 - 107);
+		m_drawManager->Draw(m_life_sprite, sf::RenderStates::Default);
+	}
 
 	//Draw monster
 	for (int i = 0; i < m_monsters.size(); i++)
@@ -231,14 +257,6 @@ void GameState::Draw()
 		}
 	}
 
-
-	//Draw lives
-	for (int i = 0; i < m_life; i++)
-	{
-		m_life_sprite.setPosition(15.0f + 100.0f * i, 15);
-		m_drawManager->Draw(m_life_sprite, sf::RenderStates::Default);
-	}
-
 	m_drawManager->Draw(m_score_sign_sprite, sf::RenderStates::Default);
 	m_drawManager->Draw(m_scoreDisplay, sf::RenderStates::Default);
 
@@ -248,6 +266,7 @@ void GameState::Draw()
 		m_drawManager->Draw(m_victory_window, sf::RenderStates::Default);
 		m_next_wave_button->Draw(m_drawManager);
 		m_back_to_menu_button->Draw(m_drawManager);
+		m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);
 	}
 	else if (m_status == MODE_DEFEAT)
 	{
@@ -255,7 +274,12 @@ void GameState::Draw()
 		m_back_to_menu_button->Draw(m_drawManager);
 		m_submit_button->Draw(m_drawManager);
 		m_drawManager->Draw(m_userTextBox, sf::RenderStates::Default);
+		m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);
 	}
+
+
+	/*SetUserInfo();
+	m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);*/
 }
 void GameState::Enter()
 {
@@ -527,6 +551,14 @@ bool GameState::IsMonsters()
 
 	return false;
 }
+void GameState::SetUserInfo()
+{
+	std::string i = "";
+	i += m_userInfo.GetDefeatedMonster();
+	i += "\n" + m_userInfo.GetCriticalHits();
+
+	m_userInfoText.setString(i);
+}
 
 bool GameState::PlayMode(float deltaTime)
 {
@@ -647,6 +679,7 @@ bool GameState::PlayMode(float deltaTime)
 	{
 		m_status = MODE_VICTORY;
 		m_active_theme->stop();
+		SetUserInfo();
 	}
 
 	return true;
