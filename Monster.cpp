@@ -86,8 +86,13 @@ void Monster::Draw(DrawManager* drawManager)
 {
 	if (m_frozen)
 	{
-		drawManager->Draw(m_sprite, sf::RenderStates::Default);
-		drawManager->Draw(m_foam_sprite, sf::RenderStates::Default);
+		if (m_state == MONSTER_DEATH)
+			drawManager->Draw(m_head_sprite, sf::RenderStates::Default);
+		else
+		{
+			drawManager->Draw(m_sprite, sf::RenderStates::Default);
+			drawManager->Draw(m_foam_sprite, sf::RenderStates::Default);
+		}
 	}
 	else
 	{
@@ -129,10 +134,9 @@ void Monster::Update(float deltaTime)
 				m_head_animator->SetAnimation("move");
 			}
 		}
-		else if (m_state == MONSTER_DEATH)
+		else if (m_head_animator->Complete())
 		{
-			if (m_head_animator->Complete())
-				SetActive(false);
+			SetActive(false);
 		}
 			
 
@@ -147,16 +151,21 @@ void Monster::Update(float deltaTime)
 		else
 			Move(0, m_speed * deltaTime);
 
-
 		m_head_sprite.setPosition(m_sprite.getPosition());
 		m_snail_sprite.setPosition(m_sprite.getPosition());
 		m_foam_sprite.setPosition(m_sprite.getPosition());
-	}
 
-	//Deactivate monster
-	if (m_y > ScreenHeight)
+		//Deactivate monster
+		if (m_y > ScreenHeight)
+		{
+			SetActive(false);
+		}
+	}
+	else if (m_state == MONSTER_DEATH)
 	{
-		SetActive(false);
+		m_head_animator->Update(deltaTime);
+		if (m_head_animator->Complete())
+			SetActive(false);
 	}
 }
 
@@ -173,7 +182,8 @@ void Monster::Freeze(bool state)
 	}
 	else
 	{
-		m_emitter->SetActive(true);
+		if (m_state != MONSTER_DEATH)
+			m_emitter->SetActive(true);
 		m_frozen = false;
 		m_sprite.setTextureRect(sf::IntRect(m_sprite_width * 2, 0, m_sprite_width, m_sprite_height));
 	}
