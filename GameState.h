@@ -109,6 +109,7 @@ private:
 	sf::Font* m_font;
 
 	//Test HUD
+	sf::Sprite m_lifeSprite, m_lifeSprite2, m_lifeSprite3;
 	sf::Text m_scoreDisplay;
 	int m_score;
 	int m_lastScore;

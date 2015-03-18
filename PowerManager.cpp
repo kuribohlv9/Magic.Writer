@@ -30,15 +30,18 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 	m_activePlupps = 0;
 	m_freezeTime = 9;
 	m_fadeColor = sf::Color(100, 100, 150, 255);
-
-	m_pierceSprite.setPosition(115, 546);
+	
+	m_pierceSprite.setOrigin(96 / 2, 96 / 2);
 	m_pierceSprite.setScale(0.8, 0.8);
+	m_pierceSprite.setPosition(123, 596);
 
-	m_bounceSprite.setPosition(115, 272);
+	m_bounceSprite.setOrigin(96 / 2, 96 / 2);
 	m_bounceSprite.setScale(0.8, 0.8);
+	m_bounceSprite.setPosition(123, 320);
 
-	m_freezeSprite.setPosition(115, 0);
+	m_freezeSprite.setOrigin(96 / 2, 96 / 2);
 	m_freezeSprite.setScale(0.8, 0.8);
+	m_freezeSprite.setPosition(123, 48);
 
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/hud/pluppen.png");
 	int extraHeight = 0;
@@ -46,12 +49,12 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 	{
 		sf::Sprite s;
 		s.setTexture(*texture);
+		s.setOrigin(texture->getSize().x / 2, texture->getSize().y / 2);
 
 		if (i == 7 || i == 15 || i == 23)
 			extraHeight += 50;
 
-		s.setPosition(130, (texture->getSize().y * 22) - i * texture->getSize().y - i * -8 - extraHeight);
-
+		s.setPosition(125, (texture->getSize().y * 22) - i * texture->getSize().y - i * -8 - extraHeight);
 
 		m_plupps.push_back(s);
 	}
@@ -129,8 +132,7 @@ void PowerManager::UpdatePowerBar()
 }
 void PowerManager::Draw(DrawManager* drawManager)
 {
-	
-
+	//Draw plupps
 	for (unsigned int i = 0; i < m_plupps.size(); i++)
 	{
 		drawManager->Draw(m_plupps[i], sf::RenderStates::Default);
@@ -147,7 +149,6 @@ void PowerManager::AddPowerupPlupps(int amount)
 	if (m_activePlupps > 23)
 		m_activePlupps = 23;
 }
-
 //Bounce methods
 void PowerManager::ActivateBounce()
 {

@@ -230,6 +230,21 @@ void GameState::Draw()
 		m_drawManager->Draw(m_ice_backgroundSprite, sf::RenderStates::Default);
 	}
 
+
+	//Draw life
+	if (m_life > 2)
+	{
+		m_drawManager->Draw(m_lifeSprite, sf::RenderStates::Default);
+	}
+	if (m_life > 1)
+	{
+		m_drawManager->Draw(m_lifeSprite2, sf::RenderStates::Default);
+	}
+	if (m_life > 0)
+	{
+		m_drawManager->Draw(m_lifeSprite3, sf::RenderStates::Default);
+	}
+
 	//Draw Particles
 	m_particleManager->Draw(m_drawManager);
 
@@ -327,6 +342,21 @@ void GameState::Enter()
 	m_defeat_window.setPosition(300, 200);
 	m_defeat_window.setTexture(*texture);
 	m_defeat_window.setTextureRect(sf::IntRect(0, 0, 1320, 680));
+
+	//Life sprite
+	texture = m_textureManager->LoadTexture("assets/sprites/plupp_collection.png");
+	m_lifeSprite.setTexture(*texture);
+	m_lifeSprite.setOrigin(texture->getSize().x / 2, 0);
+	m_lifeSprite.setPosition(ScreenWidth - 125, 0);
+
+	m_lifeSprite2.setTexture(*texture);
+	m_lifeSprite2.setOrigin(texture->getSize().x / 2, 0);
+	m_lifeSprite2.setColor(sf::Color(241, 132, 132, 255));
+	m_lifeSprite2.setPosition(ScreenWidth - 125, texture->getSize().y);
+
+	m_lifeSprite3.setTexture(*texture);
+	m_lifeSprite3.setOrigin(texture->getSize().x / 2, 0);
+	m_lifeSprite3.setPosition(ScreenWidth - 125, texture->getSize().y * 2);
 
 	texture = m_textureManager->LoadTexture("assets/sprites/magic writer victory screen buttons.png");
 	m_next_wave_button = new GUI_Button(475, ScreenHeight - 275, nullptr, texture, sf::IntRect(0, 0, 250, 100));
@@ -636,7 +666,9 @@ bool GameState::PlayMode(float deltaTime)
 			m_monsters[i]->Burst();
 			
 		if (m_life > 0 && m_monsters[i]->GetY() >= ScreenHeight)
+		{
 			m_life -= 1;
+		}
 	}
 
 	//Convert written words into item
