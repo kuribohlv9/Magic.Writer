@@ -151,4 +151,5 @@ private:
 	//Music
 	std::vector<sf::Music*> m_game_themes;
 	sf::Music* m_active_theme;
+	sf::Music* m_losing_theme;
 };

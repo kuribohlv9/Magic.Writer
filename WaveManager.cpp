@@ -108,7 +108,14 @@ bool WaveManager::IsActive()
 void WaveManager::SetActiveWave(int level)
 {
 	//Set the active wave to 0 for now
-	m_active_wave = m_waves[0];
+	std::vector<float> wave;
+	wave.push_back(1.0f);
+	for (int i = 1; i < 10; i++)
+	{
+		wave.push_back(5.0f - level);
+	}
+	m_active_wave = wave;
+	//m_active_wave = m_waves[0];
 	m_active = true;
 	m_monster_number = 0;
 	m_timer = 0;

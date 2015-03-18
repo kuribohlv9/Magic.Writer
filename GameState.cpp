@@ -77,6 +77,9 @@ GameState::GameState()
 	music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Zanzibar.ogg");
 	music->setVolume(20);
 	m_game_themes.push_back(music);
+
+	music = m_audioManager->LoadMusicFromFile("assets/Audio/Game_Over_-_Banjo-Kazooie.ogg");
+	m_losing_theme = music;
 }
 GameState::~GameState()
 {
@@ -505,7 +508,7 @@ void GameState::SpawnMonster()
 		Monster* monster = m_monsters[randomMonster];
 		if (!monster->IsActive())
 		{
-			monster->Activate(20 + 5*m_wave_level, 2+1*m_wave_level/2);
+			monster->Activate(20 + 10*m_wave_level);
 			break;
 		}
 	}
@@ -724,6 +727,11 @@ bool GameState::VictoryMode(float deltaTime)
 }
 bool GameState::DefeatMode(float deltaTime)
 {
+	if (m_losing_theme->getStatus() == sf::Music::Status::Stopped)
+	{
+		m_losing_theme->play();
+	}
+
 	m_back_to_menu_button->Update();
 	m_submit_button->Update();
 
@@ -744,6 +752,7 @@ bool GameState::DefeatMode(float deltaTime)
 			entry.name = m_userName;
 			entry.score = m_score;
 			m_highscoreManager->WriteHighscore(entry);
+			m_losing_theme->stop();
 			return false;
 		}
 	}
@@ -759,6 +768,7 @@ bool GameState::DefeatMode(float deltaTime)
 
 	if (m_back_to_menu_button->IsPressed())
 	{
+		m_losing_theme->stop();
 		return false;
 	}
 	return true;

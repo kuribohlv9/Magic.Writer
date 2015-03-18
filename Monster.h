@@ -24,7 +24,7 @@ public:
 	void Update(float deltaTime);
 	void Freeze(bool state);
 	void Damage(ItemProperty property, bool& critical);
-	void Activate(int speed, int health);
+	void Activate(int speed);
 	bool IsDead();
 	bool Burst();
 

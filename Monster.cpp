@@ -279,13 +279,13 @@ void Monster::HandleBodyParts()
 	}
 }
 
-void Monster::Activate(int speed, int health)
+void Monster::Activate(int speed)
 {
 	//Activation and reset function
 	m_frozen = false;
 	m_activeBurst = false;
 	m_speed = speed;
-	m_health = health;
+	m_health = 2;
 	m_state = MONSTER_MOVE;
 
 	//Set color
