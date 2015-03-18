@@ -219,7 +219,7 @@ void Monster::Damage(ItemProperty property, bool& oneShot)
 		m_state = MONSTER_CRITICAL;
 		m_head_animator->SetAnimation("critical");
 	}
-	else
+	else if (property == ITEM_NEUTRAL)
 	{
 		m_health -= 1;
 		m_state = MONSTER_HIT;

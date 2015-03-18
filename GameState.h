@@ -1,6 +1,6 @@
 #pragma once
 #include "State.h"
-
+#include "GameObject.h"
 class AudioManager;
 class ItemManager;
 class WordManager;
@@ -61,6 +61,7 @@ private:
 	void SetUserInfoVictory();
 	void SetUserInfoDefeat();
 	void UpdateScore();
+	bool AllowProperty(ItemProperty prop);
 
 	void InstantiateBubbles();
 	void InstantiateMonsters();

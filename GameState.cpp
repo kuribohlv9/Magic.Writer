@@ -466,7 +466,7 @@ void GameState::InstantiateBubbles()
 	//Instantiate thought bubble items
 	for (int i = 0; i < 3; i++)
 	{
-		Item* item = m_itemManager->GetItem();
+		Item* item = m_itemManager->GetItem(true, true);
 
 		m_bubbleManager->GetBubble(i)->SetItem(item);
 		m_wordManager->SetNewWord(item->GetName());
@@ -474,9 +474,7 @@ void GameState::InstantiateBubbles()
 }
 void GameState::InstantiateMonsters()
 {
-	sf::Texture* undeadTexture = m_textureManager->LoadTexture("assets/sprites/monster/undead_monster_spritesheet.png");
 	sf::Texture* lavaTexture = m_textureManager->LoadTexture("assets/sprites/monster/lava_monster_spritesheet.png");
-	sf::Texture* aliveTexture = m_textureManager->LoadTexture("assets/sprites/monster/alive_monster_spritesheet.png");
 	sf::Texture* iceTexture = m_textureManager->LoadTexture("assets/sprites/monster/ice_monster_spritesheet.png");
 
 	sf::Texture* particle = m_textureManager->LoadTexture("assets/sprites/monster/particle.png");
@@ -485,27 +483,15 @@ void GameState::InstantiateMonsters()
 	sf::SoundBuffer* monsterHitBufferTwo = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
 	sf::SoundBuffer* monsterHitBufferThree = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
 	//Monster pool
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		if (i < 5)
-		{
-			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 173, 183, 45, ITEM_ALIVE, particle);
-			undeadMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
-			m_monsters.push_back(undeadMonster);
-		}
-		else if (i > 4 && i < 10)
 		{
 			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 153, 173, 45, ITEM_COLD, particle);
 			lavaMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
 			m_monsters.push_back(lavaMonster);
 		}
-		else if (i > 9 && i < 15)
-		{
-			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 178, 161, 45, ITEM_DEAD, particle);
-			aliveMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
-			m_monsters.push_back(aliveMonster);
-		}
-		else if (i > 14)
+		else if (i >=5 )
 		{
 			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 182, 178, 45, ITEM_HOT, particle);
 			iceMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
@@ -517,7 +503,7 @@ void GameState::SpawnMonster()
 {
 	while (true)
 	{
-		int randomMonster = rand() % 20;
+		int randomMonster = rand() % m_monsters.size();
 		Monster* monster = m_monsters[randomMonster];
 		if (!monster->IsActive())
 		{
@@ -546,7 +532,7 @@ void GameState::ConvertWordToItem()
 			if (item->GetName() != finishedWord)
 				continue;
 
-			Item* newItem = m_itemManager->GetItem();
+			Item* newItem = m_itemManager->GetItem(AllowProperty(ITEM_HOT), AllowProperty(ITEM_COLD));
 
 			m_player->SetItem(item);
 			m_wordManager->SetNewWord(newItem->GetName());
@@ -612,6 +598,20 @@ void GameState::UpdateScore()
 {
 	m_userInfo.totalScore += m_userInfo.currentScore;
 	m_userInfo.currentScore = 0;
+}
+bool GameState::AllowProperty(ItemProperty prop)
+{
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		ItemProperty p = m_bubbleManager->GetBubble(i)->GetItem()->GetProperty();
+
+		if (p == prop)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 bool GameState::PlayMode(float deltaTime)
