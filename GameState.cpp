@@ -96,6 +96,9 @@ bool GameState::Update(float deltaTime)
 		case MODE_DEFEAT:
 			return DefeatMode(deltaTime);
 
+		case MODE_READY:
+			return ReadyMode(deltaTime);
+
 		default:
 			return true;
 	}
@@ -293,6 +296,14 @@ void GameState::Draw()
 		m_drawManager->Draw(m_userTextBox, sf::RenderStates::Default);
 		m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);
 	}
+	if (m_status == MODE_READY)
+	{
+		//test
+		m_drawManager->Draw(m_ready_text, sf::RenderStates::Default);
+	}
+
+	SetUserInfo();
+	m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);
 }
 void GameState::Enter()
 {
@@ -376,8 +387,8 @@ void GameState::Enter()
 	m_next_state = STATE_MENU;
 	m_waveManager->SetActiveWave(0);
 
-	m_active_theme = m_game_themes[rand() % 5];
-	m_active_theme->play();
+	//Readymode
+	GotoReady();
 }
 void GameState::Exit()
 {
@@ -512,7 +523,7 @@ void GameState::SpawnMonster()
 		Monster* monster = m_monsters[randomMonster];
 		if (!monster->IsActive())
 		{
-			monster->Activate(20 + 10*m_wave_level);
+			monster->Activate(25 + 5*m_wave_level);
 			break;
 		}
 	}
@@ -707,7 +718,7 @@ bool GameState::PlayMode(float deltaTime)
 
 	m_powerManager->Update(deltaTime);
 
-	if (m_active_theme->getStatus() == sf::Music::Status::Stopped)
+	if (!m_active_theme || m_active_theme->getStatus() == sf::Music::Status::Stopped)
 	{
 		m_active_theme = m_game_themes[rand() % 5];
 		m_active_theme->play();
@@ -739,6 +750,8 @@ bool GameState::VictoryMode(float deltaTime)
 		m_wave_level++;
 		m_waveManager->SetActiveWave(m_wave_level);
 		m_status = MODE_PLAYING;
+		m_life = 3;
+		GotoReady();
 	}
 	else if (m_back_to_menu_button->IsPressed())
 	{
@@ -793,4 +806,28 @@ bool GameState::DefeatMode(float deltaTime)
 		return false;
 	}
 	return true;
+}
+
+bool GameState::ReadyMode(float deltaTime)
+{
+	m_ready_timer++;
+	if (m_ready_timer > 180)
+	{
+		m_status = MODE_PLAYING;
+	}
+	return true;
+}
+
+void GameState::GotoReady()
+{
+	m_ready_string = "Wave " + std::to_string(m_wave_level) + " Start!";
+	m_ready_text.setFont(*m_font);
+	m_ready_text.setColor(sf::Color::Black);
+	m_ready_text.setStyle(sf::Text::Bold);
+	m_ready_text.setCharacterSize(40);
+	m_ready_text.setString(m_ready_string);
+	m_ready_text.setPosition(ScreenWidth/2 - m_ready_text.getLocalBounds().width/2, 100);
+
+	m_ready_timer = 0;
+	m_status = MODE_READY;
 }
