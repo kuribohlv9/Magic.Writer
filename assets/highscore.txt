@@ -1,4 +1,5 @@
 akwopdiu 100000
+SIMON 46250
 ara 31190
 ellen 14580
 charlie 19820
@@ -41,3 +42,4 @@ OLOLOL 0
 SEMIH 0
 SIGROD 0
 POLACKEN 0
+DERP 0

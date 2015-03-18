@@ -521,7 +521,7 @@ void GameState::SpawnMonster()
 		Monster* monster = m_monsters[randomMonster];
 		if (!monster->IsActive())
 		{
-			monster->Activate(25 + 5*m_wave_level);
+			monster->Activate(25 + 7*m_wave_level);
 			break;
 		}
 	}
