@@ -24,7 +24,8 @@ enum mode {
 	MODE_UNKNOWN,
 	MODE_PLAYING,
 	MODE_DEFEAT,
-	MODE_VICTORY
+	MODE_VICTORY,
+	MODE_READY
 };
 
 struct UserInfo
@@ -82,6 +83,9 @@ private:
 	bool PlayMode(float deltaTime);
 	bool VictoryMode(float deltaTime);
 	bool DefeatMode(float deltaTime);
+	bool ReadyMode(float deltaTime);
+
+	void GotoReady();
 
 	bool IsMonsters();
 
@@ -109,10 +113,6 @@ private:
 
 	//Monster
 	std::vector<Monster*> m_monsters;
-
-	//Waves
-	std::vector<Wave*> m_waves;
-	float m_waveTimer;
 
 	//Background
 	sf::Sprite m_backgroundSprite;
@@ -152,4 +152,9 @@ private:
 	std::vector<sf::Music*> m_game_themes;
 	sf::Music* m_active_theme;
 	sf::Music* m_losing_theme;
+
+	//Readymode
+	sf::Text m_ready_text;
+	std::string m_ready_string;
+	float m_ready_timer;
 };
