@@ -27,8 +27,11 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 
 	m_frozen = false;
 	
-	m_activePlupps = 0;
+
 	m_freezeTime = 9;
+	m_timerDelay = 1.5f;
+	m_pluppTimer = 0;
+	m_activePlupps = 0;
 	m_fadeColor = sf::Color(100, 100, 150, 255);
 	
 	m_pierceSprite.setOrigin(96 / 2, 96 / 2);
@@ -67,6 +70,7 @@ PowerManager::~PowerManager()
 void PowerManager::Update(float deltaTime)
 {
 	//Update power up bar
+	m_pluppTimer += deltaTime;
 	UpdatePowerBar();
 
 	//Check for power up input
@@ -101,7 +105,12 @@ void PowerManager::Update(float deltaTime)
 }
 void PowerManager::UpdatePowerBar()
 {
-	//m_activePlupps = 24 * scoreNormal + 1;
+	if (m_pluppTimer >= m_timerDelay)
+	{
+		m_pluppTimer -= m_timerDelay;
+
+		AddPowerupPlupps(1);
+	}
 	for (unsigned int i = 0; i < m_plupps.size(); i++)
 	{
 		sf::Color color = sf::Color(241, 132, 132, 255); // Red

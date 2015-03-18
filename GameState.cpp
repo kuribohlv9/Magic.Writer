@@ -178,6 +178,9 @@ void GameState::CheckCollision()
 						{
 							m_userInfo.currentScore += m_userInfo.criticalHitScore;
 							m_userInfo.oneShots++;
+							
+							//Increase power plupps
+							m_powerManager->AddPowerupPlupps(2);
 						}
 						else
 						{
@@ -539,9 +542,6 @@ void GameState::ConvertWordToItem()
 			bubble->SetItem(newItem);
 
 			m_conjureCompleteSound.play();
-
-			//Increase power plupps
-			m_powerManager->AddPowerupPlupps(2);
 			break;
 		}
 	}
