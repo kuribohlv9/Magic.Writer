@@ -280,7 +280,7 @@ int Player::GetCurrentLane()
 	return m_lane;
 }
 
-void Player::ChantingAnimation()
+void Player::PlayChantingAnimation()
 {
 	if (m_state == PLAYER_IDLE)
 	{

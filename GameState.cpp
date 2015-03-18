@@ -57,7 +57,9 @@ GameState::GameState()
 	m_scoreDisplay.setPosition(1750, 75);
 	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
 	m_userInfoText.setFont(*m_font);
-	m_userInfoText.setPosition(ScreenWidth / 2 - 100, ScreenHeight / 2);
+	m_userInfoText.setPosition(450, ScreenHeight / 2 - 150);
+	m_userInfoText.setColor(sf::Color::Black);
+	m_userInfoText.setCharacterSize(25);
 
 	//Load Music
 	sf::Music* music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Dubakupado.ogg");
@@ -117,16 +119,13 @@ void GameState::CheckCollision()
 
 				if (CollisionManager::Check(monster->GetCollider(), item->GetCollider()))
 				{
-					bool critical = false;
+					bool damageMonster = false;
 
 					if (m_powerManager->GetPierceItem() == item) //Item pierce collision
 					{
 						if (m_powerManager->AddItemToPierceList(monster))
 						{
-							//Damage and check for crit
-							monster->Damage(item->GetProperty(), critical);
-							if (critical)
-								m_userInfo.criticalHits++;
+							damageMonster = true;
 						}
 					}
 					else if (m_powerManager->GetBounceItem() == item) //Item bounce collision
@@ -134,10 +133,7 @@ void GameState::CheckCollision()
 						Monster* targetMonster = m_powerManager->GetBounceTarget();
 						if (targetMonster == monster)
 						{
-							//Damage and check for crit
-							monster->Damage(item->GetProperty(), critical);
-							if (critical)
-								m_userInfo.criticalHits++;
+							damageMonster = true;
 
 							if (!m_powerManager->SetNewBounceTarget(monster))
 							{
@@ -148,10 +144,7 @@ void GameState::CheckCollision()
 						}
 						else if (targetMonster == nullptr)
 						{
-							//Damage and check for crit
-							monster->Damage(item->GetProperty(), critical);
-							if (critical)
-								m_userInfo.criticalHits++;
+							damageMonster = true;
 
 							if (!m_powerManager->SetNewBounceTarget(monster))
 							{
@@ -164,20 +157,33 @@ void GameState::CheckCollision()
 					else //Item normal collision
 					{
 						//Damage and check for crit
-						monster->Damage(item->GetProperty(), critical);
-						if (critical)
-							m_userInfo.criticalHits++;
+						damageMonster = true;
 
 						item->SetActive(false);
 						item->SetInGame(false);
 						item->SetState(ITEM_HIT);
 					}
 
-					if (monster->IsDead()) //Monster is dead
+					if (damageMonster)
 					{
-						//Increase score
-						m_score += m_userInfo.defeatedMonsterScore;
-						m_userInfo.defeatedMonster++;
+						bool critical = false;
+						//Damage monster
+						monster->Damage(item->GetProperty(), critical);
+
+						//Check for critical
+						if (critical)
+						{
+							m_score += m_userInfo.criticalScore;
+							m_userInfo.criticalHits++;
+						}
+
+						//Monster is dead
+						if (monster->IsDead())
+						{
+							//Increase score
+							m_score += m_userInfo.defeatedMonsterScore;
+							m_userInfo.defeatedMonster++;
+						}
 					}
 				}
 			}
@@ -270,16 +276,14 @@ void GameState::Draw()
 	}
 	else if (m_status == MODE_DEFEAT)
 	{
-		m_drawManager->Draw(m_victory_window, sf::RenderStates::Default);
+		m_drawManager->Draw(m_defeat_window, sf::RenderStates::Default);
 		m_back_to_menu_button->Draw(m_drawManager);
 		m_submit_button->Draw(m_drawManager);
 		m_drawManager->Draw(m_userTextBox, sf::RenderStates::Default);
 		m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);
 	}
-
-
-	/*SetUserInfo();
-	m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);*/
+	SetUserInfo();
+	m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);
 }
 void GameState::Enter()
 {
@@ -309,10 +313,16 @@ void GameState::Enter()
 	InstantiateBubbles();
 
 	//Victory and Losing screen
-	texture = m_textureManager->LoadTexture("assets/sprites/magic writer victory screen.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/victory_screen.png");
 	m_victory_window.setPosition(300, 200);
 	m_victory_window.setTexture(*texture);
 	m_victory_window.setTextureRect(sf::IntRect(0, 0, 1320, 680));
+
+	texture = m_textureManager->LoadTexture("assets/sprites/defeat_screen.png");
+	m_defeat_window.setPosition(300, 200);
+	m_defeat_window.setTexture(*texture);
+	m_defeat_window.setTextureRect(sf::IntRect(0, 0, 1320, 680));
+
 	texture = m_textureManager->LoadTexture("assets/sprites/magic writer victory screen buttons.png");
 	m_next_wave_button = new GUI_Button(475, ScreenHeight - 275, nullptr, texture, sf::IntRect(0, 0, 250, 100));
 	m_next_wave_button->Refresh();
@@ -331,6 +341,9 @@ void GameState::Enter()
 	m_scoreDisplay.setString("0");
 
 	//Instantsiate game variables
+	m_userInfo.criticalHits = 0;
+	m_userInfo.defeatedMonster = 0;
+	m_userInfo.perfectWords = 0;
 	m_score = 0;
 	m_lastScore = 0;
 	m_life = 3;
@@ -505,7 +518,8 @@ void GameState::ConvertWordToItem()
 	//If the item is not spawned, check if a word is complete and spawn it.
 	if (!spawnedItem)
 	{
-		std::string finishedWord = m_wordManager->GetFinishedWord();
+		bool perfectWord = false;
+		std::string finishedWord = m_wordManager->GetFinishedWord(perfectWord);
 		if (finishedWord.size() == 0)
 			return;
 
@@ -522,9 +536,16 @@ void GameState::ConvertWordToItem()
 			m_player->SetItem(item);
 			m_wordManager->SetNewWord(newItem->GetName());
 			bubble->SetItem(newItem);
-			m_score += 200;
 
 			m_conjureCompleteSound.play();
+
+			//If player entered a word with no errors
+			if (perfectWord)
+			{
+				m_powerManager->AddPowerupPlupps(2);
+				m_score += m_userInfo.perfectWordScore;
+				m_userInfo.perfectWords++;
+			}
 			break;
 		}
 	}
@@ -556,6 +577,7 @@ void GameState::SetUserInfo()
 	std::string i = "";
 	i += m_userInfo.GetDefeatedMonster();
 	i += "\n" + m_userInfo.GetCriticalHits();
+	i += "\n" + m_userInfo.GetPerfectWords();
 
 	m_userInfoText.setString(i);
 }
@@ -647,10 +669,8 @@ bool GameState::PlayMode(float deltaTime)
 	//Increase score if player enters correct key
 	if (m_wordManager->GetCorrectKey())
 	{
-		m_score += 10;
-
 		//Chanting animation
-		m_player->ChantingAnimation();
+		m_player->PlayChantingAnimation();
 	}
 
 	//Update score display

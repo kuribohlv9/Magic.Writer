@@ -27,10 +27,8 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 
 	m_frozen = false;
 	
-	m_powerupScore = 0;
-	m_fillSpeed = .1f;
-	m_stepSize = 100.0f / 3.0f;
-	m_freezeTime = 5.0f;
+	m_activePlupps = 0;
+	m_freezeTime = 9;
 	m_fadeColor = sf::Color(100, 100, 150, 255);
 
 	m_pierceSprite.setPosition(115, 546);
@@ -57,18 +55,7 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 
 		m_plupps.push_back(s);
 	}
-
-	texture = m_textureManager->LoadTexture("assets/sprites/hud/powerup_particle.png");
-
-	/*m_pEmitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(texture, 10);
-	m_pEmitter->SetRotationVelocity(0);
-	m_pEmitter->SetStartAngle(0, 360);
-	m_pEmitter->SetSpawnRate(0.5f);
-	m_pEmitter->SetScaling(false);
-	m_pEmitter->SetForce(0, 0);
-	m_pEmitter->SetPosition(m_pierceSprite.getPosition().x, m_pierceSprite.getPosition().y);*/
 }
-
 PowerManager::~PowerManager()
 {
 
@@ -80,11 +67,11 @@ void PowerManager::Update(float deltaTime)
 	UpdatePowerBar();
 
 	//Check for power up input
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num1) && m_activePlupps >= 8)
+	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num1) && m_activePlupps >= 7)
 		ActivatePierce();
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num2) && m_activePlupps >= 16)
+	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num2) && m_activePlupps >= 15)
 		ActivateBounce();
-	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num3) && m_activePlupps >= 24)
+	if (m_inputManager->IsKeyDownOnce(sf::Keyboard::Key::Num3) && m_activePlupps >= 23)
 		ActivateFreeze();
 
 	//Reset frozen
@@ -111,27 +98,13 @@ void PowerManager::Update(float deltaTime)
 }
 void PowerManager::UpdatePowerBar()
 {
-	//Fill powerbar
-	if (m_powerupScore < 100.0f)
-		m_powerupScore += m_fillSpeed;
-
-	//Scale fill sprite
-	float scoreNormal = m_powerupScore / 100.0f;
+	//m_activePlupps = 24 * scoreNormal + 1;
 	for (unsigned int i = 0; i < m_plupps.size(); i++)
 	{
 		sf::Color color = sf::Color(241, 132, 132, 255); // Red
 
-		if (i <= m_plupps.size() * scoreNormal)
-		{
-			if (i == 7 || i == 15 || i == 23)
-				color = sf::Color(84, 231, 112, 255); // Green
-			else
-				color = sf::Color::White; // White
-		}
-		else if (i == 7 || i == 15 || i == 23)
-		{
-			color = sf::Color(100, 100, 100, 255); // Gray
-		}
+		if (i < m_activePlupps)
+			color = sf::Color::White;
 
 		m_plupps[i].setColor(color);
 	}
@@ -140,16 +113,15 @@ void PowerManager::UpdatePowerBar()
 	m_freezeSprite.setColor(m_fadeColor);
 	m_bounceSprite.setColor(m_fadeColor);
 	m_pierceSprite.setColor(m_fadeColor);
-	m_activePlupps = 24 * scoreNormal + 1;
-	if (m_activePlupps >= 8)
+	if (m_activePlupps >= 7)
 	{
 		m_pierceSprite.setColor(sf::Color::White);
 	}
-	if (m_activePlupps >= 16)
+	if (m_activePlupps >= 15)
 	{
 		m_bounceSprite.setColor(sf::Color::White);
 	}
-	if (m_activePlupps >= 24)
+	if (m_activePlupps >= 23)
 	{
 		m_freezeSprite.setColor(sf::Color::White);
 	}
@@ -169,6 +141,12 @@ void PowerManager::Draw(DrawManager* drawManager)
 	drawManager->Draw(m_bounceSprite, sf::RenderStates::Default);
 	drawManager->Draw(m_pierceSprite, sf::RenderStates::Default);
 }
+void PowerManager::AddPowerupPlupps(int amount)
+{
+	m_activePlupps += amount;
+	if (m_activePlupps > 23)
+		m_activePlupps = 23;
+}
 
 //Bounce methods
 void PowerManager::ActivateBounce()
@@ -178,8 +156,8 @@ void PowerManager::ActivateBounce()
 		//Get bounce item
 		m_bounceCurrentItem = m_player->GetItem();
 
-		//Remove power
-		m_powerupScore -= m_stepSize * 2;
+		//Remove plupps
+		m_activePlupps -= 15;
 
 		//Activate bounce item
 		m_bounceCurrentItem->Activate();
@@ -266,7 +244,7 @@ void PowerManager::ActivateFreeze()
 		m_frozen = true;
 
 		//Remove power
-		m_powerupScore -= m_stepSize * 3;
+		m_activePlupps -= 23;
 
 		//Freeze all monsters
 		for (unsigned int i = 0; i < m_monsters->size(); i++)
@@ -308,7 +286,7 @@ void PowerManager::ActivatePierce()
 		m_pierceCurrentItem = m_player->GetItem();
 
 		//Remove power
-		m_powerupScore -= m_stepSize;
+		m_activePlupps -= 7;
 
 		//Activate pierce item
 		m_pierceCurrentItem->Activate();

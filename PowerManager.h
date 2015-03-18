@@ -33,6 +33,7 @@ public:
 	void ActivatePierce();
 	Item* GetPierceItem();
 	bool AddItemToPierceList(Monster* monster);
+	void AddPowerupPlupps(int amount);
 
 private:
 	void UpdatePowerBar();
@@ -52,14 +53,10 @@ private:
 
 	//Powerbar
 	sf::Sprite m_pierceSprite;
-	ParticleEmitter* m_pEmitter;
 	sf::Sprite m_bounceSprite;
 	sf::Sprite m_freezeSprite;
 	std::vector<sf::Sprite> m_plupps;
 	sf::Color m_fadeColor;
-	float m_powerupScore;
-	float m_fillSpeed;
-	float m_stepSize;
 	int m_activePlupps;
 
 	std::vector<Monster*> m_monsterPierceList;

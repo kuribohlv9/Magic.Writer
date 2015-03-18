@@ -31,7 +31,7 @@ public:
 	void Knockdown();
 	bool IsStunned();
 	int GetCurrentLane();
-	void ChantingAnimation();
+	void PlayChantingAnimation();
 
 private:
 	void HandleMovement();

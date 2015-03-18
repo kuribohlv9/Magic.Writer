@@ -33,7 +33,7 @@ struct UserInfo
 	int defeatedMonsterScore = 300;
 	std::string GetDefeatedMonster()
 	{
-		return "Monsters defeated: " + std::to_string(defeatedMonster) + "X"
+		return "Monsters defeated: " + std::to_string(defeatedMonster) + "x"
 			+ std::to_string(defeatedMonsterScore) + " = " + std::to_string(defeatedMonster * defeatedMonsterScore);
 	}
 
@@ -42,12 +42,18 @@ struct UserInfo
 	std::string GetCriticalHits()
 	{
 		return "Critical hits: " + std::to_string(criticalHits)
-			+ "X" + std::to_string(criticalScore)
+			+ "x" + std::to_string(criticalScore)
 			+ " = " + std::to_string(criticalHits * criticalScore);
 	}
 
 	int perfectWords;
 	int perfectWordScore = 100;
+	std::string GetPerfectWords()
+	{
+		return "Perfect words: " + std::to_string(perfectWords)
+			+ "x" + std::to_string(perfectWordScore)
+			+ " = " + std::to_string(perfectWords * perfectWordScore);
+	}
 };
 
 class GameState : public State
@@ -131,6 +137,7 @@ private:
 
 	//Victory and Losing screens
 	sf::Sprite m_victory_window;
+	sf::Sprite m_defeat_window;
 	GUI_Button* m_back_to_menu_button;
 	GUI_Button* m_next_wave_button;
 	sf::Text m_userInfoText;
