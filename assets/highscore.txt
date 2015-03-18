@@ -21,6 +21,7 @@ svennen 1270
 draculatva 1260
 charlie 1000
 laban 1000
+UHMM 600
 hakan 520
 simon 500
 ryssen 500

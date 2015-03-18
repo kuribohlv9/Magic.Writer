@@ -137,10 +137,10 @@ void GameState::CheckCollision()
 
 							if (!m_powerManager->SetNewBounceTarget(monster))
 							{
-								item->SetActive(false);
-								item->SetInGame(false);
 								item->SetState(ITEM_HIT);
 							}
+
+							//Hej snälla och gulliga Ara! <3
 						}
 						else if (targetMonster == nullptr)
 						{
@@ -148,8 +148,6 @@ void GameState::CheckCollision()
 
 							if (!m_powerManager->SetNewBounceTarget(monster))
 							{
-								item->SetActive(false);
-								item->SetInGame(false);
 								item->SetState(ITEM_HIT);
 							}
 						}
@@ -159,8 +157,6 @@ void GameState::CheckCollision()
 						//Damage and check for crit
 						damageMonster = true;
 
-						item->SetActive(false);
-						item->SetInGame(false);
 						item->SetState(ITEM_HIT);
 					}
 
@@ -173,19 +169,19 @@ void GameState::CheckCollision()
 						//Check for critical
 						if (oneShot)
 						{
-							m_score += m_userInfo.criticalHitScore;
+							m_userInfo.currentScore += m_userInfo.criticalHitScore;
 							m_userInfo.oneShots++;
 						}
 						else
 						{
-							m_score += m_userInfo.neutralHitScore;
+							m_userInfo.currentScore += m_userInfo.neutralHitScore;
 						}
 
 						//Monster is dead
 						if (monster->IsDead())
 						{
 							//Increase score
-							m_score += m_userInfo.monsterDefeatedScore;
+							m_userInfo.currentScore += m_userInfo.monsterDefeatedScore;
 							m_userInfo.monstersDefeated++;
 						}
 					}
@@ -283,6 +279,10 @@ void GameState::Draw()
 }
 void GameState::Enter()
 {
+	//Reset scores
+	m_userInfo.currentScore = 0;
+	m_userInfo.totalScore = 0;
+
 	//Initialize managers
 	m_wordManager = new WordManager();
 	m_itemManager = new ItemManager();
@@ -339,7 +339,7 @@ void GameState::Enter()
 	//Instantsiate game variables
 	m_userInfo.monstersDefeated = 0;
 	m_userInfo.oneShots = 0;
-	m_score = 0;
+	m_userInfo.currentScore = 0;
 	m_lastScore = 0;
 	m_life = 3;
 	m_speed = 800;
@@ -600,20 +600,27 @@ bool GameState::PlayMode(float deltaTime)
 	//Item movement
 	for (int i = 0; i < m_activeItems.size(); i++)
 	{
-		if (!m_activeItems.at(i)->IsActive())
+		Item* item = m_activeItems.at(i);
+		if (!item->IsActive())
 			continue;
 
 		//Not a bounce item
-		if (m_powerManager->GetBounceItem() != m_activeItems[i])
+		if (item->GetState() == ITEM_HIT)
 		{
-			m_activeItems[i]->Move(0, -m_speed * deltaTime);
+			sf::Vector2f dir = item->GetItemBounceDir();
+			dir *= m_speed * deltaTime;
+			item->Move(dir.x, dir.y);
+		}
+		else if (m_powerManager->GetBounceItem() != item)
+		{
+			item->Move(0, -m_speed * deltaTime);
 		}
 		else//Item is bouncy
 		{
 			//No Target
 			if (m_powerManager->GetBounceTarget() == nullptr)
 			{
-				m_activeItems[i]->Move(0, -m_speed * deltaTime);
+				item->Move(0, -m_speed * deltaTime);
 			}
 			else
 			{
@@ -657,13 +664,13 @@ bool GameState::PlayMode(float deltaTime)
 	}
 
 	//Update score display
-	if (m_score != m_lastScore)
+	if (m_userInfo.currentScore != m_lastScore)
 	{
-		m_scoreDisplay.setString(std::to_string(m_score));
+		m_scoreDisplay.setString(std::to_string(m_userInfo.currentScore));
 		float width = m_scoreDisplay.getGlobalBounds().width;
 		m_scoreDisplay.setPosition(1645 - width / 2, 935);
 	}
-	m_lastScore = m_score;
+	m_lastScore = m_userInfo.currentScore;
 
 	m_powerManager->Update(deltaTime);
 
@@ -677,12 +684,16 @@ bool GameState::PlayMode(float deltaTime)
 	if (m_life <= 0)
 	{
 		m_status = MODE_DEFEAT;
+		//Add current score to total score
+		m_userInfo.totalScore += m_userInfo.currentScore;
 	}
 	else if (!m_waveManager->IsActive() && !IsMonsters())
 	{
 		m_status = MODE_VICTORY;
 		m_active_theme->stop();
 		SetUserInfo();
+		//Add current score to total score
+		m_userInfo.totalScore += m_userInfo.currentScore;
 	}
 
 	return true;
@@ -698,6 +709,8 @@ bool GameState::VictoryMode(float deltaTime)
 		m_wave_level++;
 		m_waveManager->SetActiveWave(m_wave_level);
 		m_status = MODE_PLAYING;
+		//Reset current score
+		m_userInfo.currentScore = 0;
 	}
 	else if (m_back_to_menu_button->IsPressed())
 	{
@@ -730,7 +743,7 @@ bool GameState::DefeatMode(float deltaTime)
 		{
 			ScoreEntry entry;
 			entry.name = m_userName;
-			entry.score = m_score;
+			entry.score = m_userInfo.totalScore;
 			m_highscoreManager->WriteHighscore(entry);
 			m_losing_theme->stop();
 			return false;

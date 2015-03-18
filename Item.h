@@ -30,6 +30,8 @@ public:
 	void Activate();
 	void Reset();
 	void SetState(ItemState state);
+	ItemState GetState();
+	sf::Vector2f GetItemBounceDir();
 
 private:
 	ItemState m_state;
@@ -40,4 +42,6 @@ private:
 
 	bool m_inGame;
 	float m_speed;
+	sf::Vector2f m_bounceDir;
+	bool m_bounceAway;
 };

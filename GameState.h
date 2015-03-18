@@ -36,6 +36,7 @@ struct UserInfo
 
 	int monstersDefeated;
 	int oneShots;
+	int currentScore;
 	int totalScore;
 };
 
@@ -110,7 +111,6 @@ private:
 
 	//Test HUD
 	sf::Text m_scoreDisplay;
-	int m_score;
 	int m_lastScore;
 	unsigned int m_life;
 
