@@ -1,6 +1,7 @@
 #pragma once
 #include "State.h"
 #include "GameObject.h"
+
 class AudioManager;
 class ItemManager;
 class WordManager;
@@ -18,6 +19,7 @@ class Monster;
 class Player;
 class GUI_Button;
 class GUI_Label;
+class Buoy;
 
 enum mode 
 {
@@ -95,6 +97,8 @@ private:
 	HighscoreManager* m_highscoreManager;
 	BubbleManager* m_bubbleManager;
 
+	//Buoys
+	std::vector<Buoy*> m_buoys;
 	//Items
 	std::vector<Item*> m_activeItems;
 

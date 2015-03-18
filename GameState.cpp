@@ -23,6 +23,7 @@
 #include "Item.h"
 #include "Player.h"
 #include "Bubble.h"
+#include "Buoy.h"
 #include "Utility.h"
 #include "ParticleEmitter.h"
 #include "GUI_Button.h"
@@ -233,6 +234,11 @@ void GameState::Draw()
 		m_drawManager->Draw(m_ice_backgroundSprite, sf::RenderStates::Default);
 	}
 
+	//Draw buoys
+	for (unsigned int i = 0; i < m_buoys.size(); i++)
+	{
+		m_buoys[i]->Draw(m_drawManager);
+	}
 
 	//Draw life
 	if (m_life > 2)
@@ -325,13 +331,20 @@ void GameState::Enter()
 	m_conjureCompleteSound.setBuffer(*buffer);
 	m_conjureCompleteSound.setVolume(7);
 
-
 	m_powerManager = new PowerManager(&m_monsters, &m_activeItems, m_player);
 	m_bubbleManager = new BubbleManager(m_player, m_wordManager);
 
 	//Create bubbles and monster pool
 	InstantiateMonsters();
 	InstantiateBubbles();
+
+	texture = m_textureManager->LoadTexture("assets/sprites/buoy.png");
+	//Instantiate buoys
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		Buoy* b = new Buoy(texture, 45, 45 + i * 270);
+		m_buoys.push_back(b);
+	}
 
 	//Victory and Losing screen
 	texture = m_textureManager->LoadTexture("assets/sprites/victory_screen.png");
@@ -426,6 +439,19 @@ void GameState::Exit()
 	}
 
 	m_activeItems.clear();
+
+	//Delete buoys
+	auto it = m_buoys.begin();
+	while (it != m_buoys.end())
+	{
+		if (*it)
+		{
+			delete *it;
+			*it = nullptr;
+		}
+		it++;
+	}
+	m_buoys.clear();
 
 	//Delete monsters
 	auto itr = m_monsters.begin();
@@ -633,6 +659,12 @@ bool GameState::PlayMode(float deltaTime)
 		{
 			SpawnMonster();
 		}
+	}
+
+	//Update buoys
+	for (unsigned int i = 0; i < m_buoys.size(); i++)
+	{
+		m_buoys[i]->Update(deltaTime);
 	}
 
 	//Update active items

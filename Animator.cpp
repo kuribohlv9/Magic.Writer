@@ -41,6 +41,15 @@ void Animator::SetAnimation(const std::string& animationName)
 		m_sprite->setTextureRect(m_animations[m_animationName]->GetFrame(m_frame)->sourceRectangle);
 	}
 }
+void Animator::SetStartFrame(int frame)
+{
+	if (frame < 0)
+		frame = 0;
+	else if (frame >= m_animations[m_animationName]->Size() - 1)
+		frame = m_animations[m_animationName]->Size() - 1;
+
+	m_frame = frame;
+}
 void Animator::Update(float deltaTime)
 {
 	//Return if the animation is complete
