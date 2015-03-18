@@ -205,17 +205,18 @@ bool Monster::IsDead()
 	return m_health <= 0;
 }
 
-void Monster::Damage(ItemProperty property, bool& critical)
+void Monster::Damage(ItemProperty property, bool& oneShot)
 { 
-	critical = false;
+	oneShot = false;
 	int randomSoundIndex = rand() % 3;
 	m_hitSound.setBuffer(*m_hitBuffers[randomSoundIndex]);
 
 	if (property == m_weakness)
 	{
+		oneShot = (m_health == 2);
+
 		m_health -= 2;
 		m_state = MONSTER_CRITICAL;
-		critical = true;
 		m_head_animator->SetAnimation("critical");
 	}
 	else
