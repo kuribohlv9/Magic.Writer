@@ -16,11 +16,11 @@ class BubbleManager;
 class Item;
 class Monster;
 class Player;
-class Wave;
 class GUI_Button;
 class GUI_Label;
 
-enum mode {
+enum mode 
+{
 	MODE_UNKNOWN,
 	MODE_PLAYING,
 	MODE_DEFEAT,
@@ -36,6 +36,7 @@ struct UserInfo
 
 	int monstersDefeated;
 	int oneShots;
+	int currentScore;
 	int totalScore;
 };
 
@@ -56,7 +57,9 @@ public:
 private:
 	void ConvertWordToItem();
 	void CheckCollision();
-	void SetUserInfo();
+	void SetUserInfoVictory();
+	void SetUserInfoDefeat();
+	void UpdateScore();
 
 	void InstantiateBubbles();
 	void InstantiateMonsters();
@@ -93,10 +96,6 @@ private:
 	//Monster
 	std::vector<Monster*> m_monsters;
 
-	//Waves
-	std::vector<Wave*> m_waves;
-	float m_waveTimer;
-
 	//Background
 	sf::Sprite m_backgroundSprite;
 	sf::Sprite m_ice_backgroundSprite;
@@ -111,7 +110,6 @@ private:
 	//Test HUD
 	sf::Sprite m_lifeSprite, m_lifeSprite2, m_lifeSprite3;
 	sf::Text m_scoreDisplay;
-	int m_score;
 	int m_lastScore;
 	unsigned int m_life;
 

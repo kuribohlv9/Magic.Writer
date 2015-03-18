@@ -21,6 +21,8 @@ svennen 1270
 draculatva 1260
 charlie 1000
 laban 1000
+RAWR 850
+SAFT 850
 hakan 520
 simon 500
 ryssen 500
@@ -36,3 +38,6 @@ erik 50
 johannes 40
 morgan 10
 OLOLOL 0
+SEMIH 0
+SIGROD 0
+POLACKEN 0

@@ -55,7 +55,7 @@ GameState::GameState()
 	m_scoreDisplay.setColor(sf::Color(141, 119, 103, 255));
 	m_userInfoText.setFont(*m_font);
 	m_userInfoText.setPosition(450, ScreenHeight / 2 - 150);
-	m_userInfoText.setColor(sf::Color::Black);
+	m_userInfoText.setColor(sf::Color(141, 119, 103, 255));
 	m_userInfoText.setCharacterSize(25);
 
 	//Load Music
@@ -173,19 +173,19 @@ void GameState::CheckCollision()
 						//Check for critical
 						if (oneShot)
 						{
-							m_score += m_userInfo.criticalHitScore;
+							m_userInfo.currentScore += m_userInfo.criticalHitScore;
 							m_userInfo.oneShots++;
 						}
 						else
 						{
-							m_score += m_userInfo.neutralHitScore;
+							m_userInfo.currentScore += m_userInfo.neutralHitScore;
 						}
 
 						//Monster is dead
 						if (monster->IsDead())
 						{
 							//Increase score
-							m_score += m_userInfo.monsterDefeatedScore;
+							m_userInfo.currentScore += m_userInfo.monsterDefeatedScore;
 							m_userInfo.monstersDefeated++;
 						}
 					}
@@ -293,8 +293,6 @@ void GameState::Draw()
 		m_drawManager->Draw(m_userTextBox, sf::RenderStates::Default);
 		m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);
 	}
-	SetUserInfo();
-	m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);
 }
 void GameState::Enter()
 {
@@ -329,10 +327,17 @@ void GameState::Enter()
 	m_victory_window.setTexture(*texture);
 	m_victory_window.setTextureRect(sf::IntRect(0, 0, 1320, 680));
 
+	m_next_wave_button = new GUI_Button(475, ScreenHeight - 275, nullptr, texture, sf::IntRect(0, 670, 261, 163));
+	m_next_wave_button->Refresh();
+
 	texture = m_textureManager->LoadTexture("assets/sprites/defeat_screen.png");
 	m_defeat_window.setPosition(300, 200);
 	m_defeat_window.setTexture(*texture);
 	m_defeat_window.setTextureRect(sf::IntRect(0, 0, 1320, 680));
+	
+	m_back_to_menu_button = new GUI_Button(1445, ScreenHeight - 275, nullptr, texture, sf::IntRect(196, 683, 285, 163));
+	m_back_to_menu_button->Refresh();
+	m_submit_button = new GUI_Button(750, ScreenHeight - 450, nullptr, texture, sf::IntRect(1, 683, 183, 84));
 
 	//Life sprite
 	texture = m_textureManager->LoadTexture("assets/sprites/plupp_collection.png");
@@ -349,27 +354,20 @@ void GameState::Enter()
 	m_lifeSprite3.setOrigin(texture->getSize().x / 2, 0);
 	m_lifeSprite3.setPosition(ScreenWidth - 125, texture->getSize().y * 2);
 
-	texture = m_textureManager->LoadTexture("assets/sprites/magic writer victory screen buttons.png");
-	m_next_wave_button = new GUI_Button(475, ScreenHeight - 275, nullptr, texture, sf::IntRect(0, 0, 250, 100));
-	m_next_wave_button->Refresh();
-	m_back_to_menu_button = new GUI_Button(1445, ScreenHeight - 275, nullptr, texture, sf::IntRect(250, 0, 250, 100));
-	m_back_to_menu_button->Refresh();
-	m_submit_button = new GUI_Button(1445, ScreenHeight - 550, nullptr, texture, sf::IntRect(500, 0, 250, 100));
-
 	//Highscore input
-	m_submit_button = new GUI_Button(1445, ScreenHeight - 500, nullptr, texture, sf::IntRect(500, 0, 250, 100));
-	m_submit_button->Refresh();
 	m_userName = "";
 	m_userTextBox.setFont(*m_font);
-	m_userTextBox.setCharacterSize(45);
-	m_userTextBox.setPosition(1445 - 500, ScreenHeight - 500);
+	m_userTextBox.setCharacterSize(40);
+	m_userTextBox.setPosition(420, ScreenHeight - 465);
 	m_userTextBox.setString(m_userName);
+	m_userTextBox.setColor(sf::Color(110, 81, 35, 255));
 	m_scoreDisplay.setString("0");
 
 	//Instantsiate game variables
 	m_userInfo.monstersDefeated = 0;
 	m_userInfo.oneShots = 0;
-	m_score = 0;
+	m_userInfo.currentScore = 0;
+	m_userInfo.totalScore = 0;
 	m_lastScore = 0;
 	m_life = 3;
 	m_speed = 800;
@@ -377,8 +375,6 @@ void GameState::Enter()
 	m_status = MODE_PLAYING;
 	m_next_state = STATE_MENU;
 	m_waveManager->SetActiveWave(0);
-	m_userTextBox.setFont(*m_font);
-	m_userTextBox.setPosition(1000, ScreenHeight - 500);
 
 	m_active_theme = m_game_themes[rand() % 5];
 	m_active_theme->play();
@@ -431,19 +427,6 @@ void GameState::Exit()
 		itr++;
 	}
 	m_monsters.clear();
-
-	//Delete waves
-	auto itra = m_waves.begin();
-	while (itra != m_waves.end())
-	{
-		if (*itra)
-		{
-			delete *itra;
-			*itra = nullptr;
-		}
-		itra++;
-	}
-	m_waves.clear();
 
 	if (m_back_to_menu_button)
 	{
@@ -590,11 +573,36 @@ bool GameState::IsMonsters()
 
 	return false;
 }
-void GameState::SetUserInfo()
+void GameState::SetUserInfoVictory()
 {
 	std::string i = "";
+	m_userInfoText.setCharacterSize(35);
+	m_userInfoText.setPosition(430, ScreenHeight / 2 - 150);
+	i += "Monsters defeated: " + std::to_string(m_userInfo.monstersDefeated);
+	i += "\nOne hit kills: " + std::to_string(m_userInfo.oneShots);
+	i += "\nLives left: " + std::to_string(m_life);
+	i += "\nScore this wave: " + std::to_string(m_userInfo.currentScore);
 
+	UpdateScore();
+	i += "\nTotal score: " + std::to_string(m_userInfo.totalScore);
 	m_userInfoText.setString(i);
+
+	//Reset stuff
+	m_userInfo.monstersDefeated = 0;
+	m_userInfo.oneShots = 0;
+}
+void GameState::SetUserInfoDefeat()
+{
+	UpdateScore();
+
+	m_userInfoText.setCharacterSize(40);
+	m_userInfoText.setPosition(570, ScreenHeight / 2 - 50);
+	m_userInfoText.setString(std::to_string(m_userInfo.totalScore));
+}
+void GameState::UpdateScore()
+{
+	m_userInfo.totalScore += m_userInfo.currentScore;
+	m_userInfo.currentScore = 0;
 }
 
 bool GameState::PlayMode(float deltaTime)
@@ -689,13 +697,13 @@ bool GameState::PlayMode(float deltaTime)
 	}
 
 	//Update score display
-	if (m_score != m_lastScore)
+	if (m_userInfo.currentScore != m_lastScore)
 	{
-		m_scoreDisplay.setString(std::to_string(m_score));
+		m_scoreDisplay.setString(std::to_string(m_userInfo.currentScore));
 		float width = m_scoreDisplay.getGlobalBounds().width;
 		m_scoreDisplay.setPosition(1645 - width / 2, 935);
 	}
-	m_lastScore = m_score;
+	m_lastScore = m_userInfo.currentScore;
 
 	m_powerManager->Update(deltaTime);
 
@@ -709,12 +717,13 @@ bool GameState::PlayMode(float deltaTime)
 	if (m_life <= 0)
 	{
 		m_status = MODE_DEFEAT;
+		SetUserInfoDefeat();
 	}
 	else if (!m_waveManager->IsActive() && !IsMonsters())
 	{
 		m_status = MODE_VICTORY;
 		m_active_theme->stop();
-		SetUserInfo();
+		SetUserInfoVictory();
 	}
 
 	return true;
@@ -762,7 +771,7 @@ bool GameState::DefeatMode(float deltaTime)
 		{
 			ScoreEntry entry;
 			entry.name = m_userName;
-			entry.score = m_score;
+			entry.score = m_userInfo.totalScore;
 			m_highscoreManager->WriteHighscore(entry);
 			m_losing_theme->stop();
 			return false;
