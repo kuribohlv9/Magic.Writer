@@ -48,10 +48,6 @@ void WordManager::Update(float deltaTime)
 	//Check if a key was pressed
 	if (m_userChar != ' ')
 	{
-		if (m_userInput.size() == 0)
-		{
-			m_perfectWord = true;
-		}
 		//If a key was pressed, check the words using the character
 		CheckWords();
 	}
@@ -126,13 +122,6 @@ void WordManager::CheckWords()
 		m_correctKey = true;
 		m_userInput += m_userChar;
 	}
-	else
-	{
-		if (m_userInput.size() > 0)
-		{
-			m_perfectWord = false;
-		}
-	}
 
 
 	//Loop through the words again
@@ -174,10 +163,9 @@ void WordManager::SetWordPosition(sf::Vector2f position, int wordIndex)
 	m_structs[wordIndex].position = position;
 }
 
-std::string WordManager::GetFinishedWord(bool& perfectWord)
+std::string WordManager::GetFinishedWord()
 {
 	std::string finishedWord = "";
-	perfectWord = false;
 
 	//Find any word that matches the user input and return the word. Set the word slot to empty string.
 	for (size_t i = 0; i < m_structs.size(); i++)
@@ -188,8 +176,6 @@ std::string WordManager::GetFinishedWord(bool& perfectWord)
 			m_structs[i].text = "";
 			Reset();
 			m_correctKey = false;
-			perfectWord = m_perfectWord;
-			m_perfectWord = false;
 			return finishedWord;
 		}
 	}

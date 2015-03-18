@@ -49,13 +49,10 @@ GameState::GameState()
 
 	//Load HUD
 	m_font = m_textureManager->LoadFont("assets/fonts/game.ttf");
-	m_score_sign_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/sign_score.png"));
-	m_score_sign_sprite.setPosition(ScreenWidth - 270, -20);
-	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
 	m_scoreDisplay.setFont(*m_font);
 	m_scoreDisplay.setCharacterSize(40);
-	m_scoreDisplay.setPosition(1750, 75);
-	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
+	m_scoreDisplay.setPosition(1645, 935);
+	m_scoreDisplay.setColor(sf::Color(141, 119, 103, 255));
 	m_userInfoText.setFont(*m_font);
 	m_userInfoText.setPosition(450, ScreenHeight / 2 - 150);
 	m_userInfoText.setColor(sf::Color::Black);
@@ -169,23 +166,27 @@ void GameState::CheckCollision()
 
 					if (damageMonster)
 					{
-						bool critical = false;
+						bool oneShot = false;
 						//Damage monster
-						monster->Damage(item->GetProperty(), critical);
+						monster->Damage(item->GetProperty(), oneShot);
 
 						//Check for critical
-						if (critical)
+						if (oneShot)
 						{
-							m_score += m_userInfo.criticalScore;
-							m_userInfo.criticalHits++;
+							m_score += m_userInfo.criticalHitScore;
+							m_userInfo.oneShots++;
+						}
+						else
+						{
+							m_score += m_userInfo.neutralHitScore;
 						}
 
 						//Monster is dead
 						if (monster->IsDead())
 						{
 							//Increase score
-							m_score += m_userInfo.defeatedMonsterScore;
-							m_userInfo.defeatedMonster++;
+							m_score += m_userInfo.monsterDefeatedScore;
+							m_userInfo.monstersDefeated++;
 						}
 					}
 				}
@@ -232,13 +233,6 @@ void GameState::Draw()
 	//Draw HUD
 	m_powerManager->Draw(m_drawManager);
 
-	//Draw lives
-	for (int i = 0; i < m_life; i++)
-	{
-		m_life_sprite.setPosition(1400 + 150 * i, 1080 - 107);
-		m_drawManager->Draw(m_life_sprite, sf::RenderStates::Default);
-	}
-
 	//Draw monster
 	for (int i = 0; i < m_monsters.size(); i++)
 	{
@@ -266,7 +260,6 @@ void GameState::Draw()
 		}
 	}
 
-	m_drawManager->Draw(m_score_sign_sprite, sf::RenderStates::Default);
 	m_drawManager->Draw(m_scoreDisplay, sf::RenderStates::Default);
 
 	//Draw Victory and Losing screen
@@ -344,9 +337,8 @@ void GameState::Enter()
 	m_scoreDisplay.setString("0");
 
 	//Instantsiate game variables
-	m_userInfo.criticalHits = 0;
-	m_userInfo.defeatedMonster = 0;
-	m_userInfo.perfectWords = 0;
+	m_userInfo.monstersDefeated = 0;
+	m_userInfo.oneShots = 0;
 	m_score = 0;
 	m_lastScore = 0;
 	m_life = 3;
@@ -357,7 +349,6 @@ void GameState::Enter()
 	m_waveManager->SetActiveWave(0);
 	m_userTextBox.setFont(*m_font);
 	m_userTextBox.setPosition(1000, ScreenHeight - 500);
-
 
 	m_active_theme = m_game_themes[rand() % 5];
 	m_active_theme->play();
@@ -521,8 +512,7 @@ void GameState::ConvertWordToItem()
 	//If the item is not spawned, check if a word is complete and spawn it.
 	if (!spawnedItem)
 	{
-		bool perfectWord = false;
-		std::string finishedWord = m_wordManager->GetFinishedWord(perfectWord);
+		std::string finishedWord = m_wordManager->GetFinishedWord();
 		if (finishedWord.size() == 0)
 			return;
 
@@ -542,13 +532,8 @@ void GameState::ConvertWordToItem()
 
 			m_conjureCompleteSound.play();
 
-			//If player entered a word with no errors
-			if (perfectWord)
-			{
-				m_powerManager->AddPowerupPlupps(2);
-				m_score += m_userInfo.perfectWordScore;
-				m_userInfo.perfectWords++;
-			}
+			//Increase power plupps
+			m_powerManager->AddPowerupPlupps(2);
 			break;
 		}
 	}
@@ -578,9 +563,6 @@ bool GameState::IsMonsters()
 void GameState::SetUserInfo()
 {
 	std::string i = "";
-	i += m_userInfo.GetDefeatedMonster();
-	i += "\n" + m_userInfo.GetCriticalHits();
-	i += "\n" + m_userInfo.GetPerfectWords();
 
 	m_userInfoText.setString(i);
 }
@@ -681,7 +663,7 @@ bool GameState::PlayMode(float deltaTime)
 	{
 		m_scoreDisplay.setString(std::to_string(m_score));
 		float width = m_scoreDisplay.getGlobalBounds().width;
-		m_scoreDisplay.setPosition(1800 - width / 2, 75);
+		m_scoreDisplay.setPosition(1645 - width / 2, 935);
 	}
 	m_lastScore = m_score;
 
