@@ -302,8 +302,6 @@ void GameState::Draw()
 		m_drawManager->Draw(m_ready_text, sf::RenderStates::Default);
 	}
 
-	SetUserInfo();
-	m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);
 }
 void GameState::Enter()
 {

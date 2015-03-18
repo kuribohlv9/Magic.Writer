@@ -144,7 +144,6 @@ void Monster::Update(float deltaTime)
 		HandleBodyParts();
 
 		//Move monster position
-		m_speed = 500;
 		if (m_state == MONSTER_HIT || m_state == MONSTER_DEATH)
 			Move(0, -m_speed * deltaTime * 3);
 		else if (m_state == MONSTER_CRITICAL)
