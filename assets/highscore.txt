@@ -35,3 +35,4 @@ tom 100
 erik 50
 johannes 40
 morgan 10
+OLOLOL 0
