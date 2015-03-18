@@ -31,7 +31,6 @@ polacken 280
 rollover 260
 fluff 250
 sigrid 200
-INGESCRE 200
 tom 100
 erik 50
 johannes 40

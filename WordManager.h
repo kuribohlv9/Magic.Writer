@@ -20,7 +20,7 @@ public:
 	void Draw(DrawManager* drawManager);
 
 	//Returns any any finished word
-	std::string GetFinishedWord(bool& perfectWord);
+	std::string GetFinishedWord();
 
 	//Sets a new word
 	void SetNewWord(const std::string& newWord);
@@ -49,5 +49,4 @@ private:
 	//The current words text and active states
 	std::vector<Word> m_structs;
 	bool m_correctKey;
-	bool m_perfectWord;
 };

@@ -29,32 +29,15 @@ enum mode {
 };
 
 struct UserInfo
-{
-	int defeatedMonster;
-	int defeatedMonsterScore = 300;
-	std::string GetDefeatedMonster()
-	{
-		return "Monsters defeated: " + std::to_string(defeatedMonster) + "x"
-			+ std::to_string(defeatedMonsterScore) + " = " + std::to_string(defeatedMonster * defeatedMonsterScore);
-	}
+{	
+	//Scores
+	int neutralHitScore = 50;
+	int criticalHitScore = 150;
+	int monsterDefeatedScore = 100;
 
-	int criticalHits;
-	int criticalScore = 50;
-	std::string GetCriticalHits()
-	{
-		return "Critical hits: " + std::to_string(criticalHits)
-			+ "x" + std::to_string(criticalScore)
-			+ " = " + std::to_string(criticalHits * criticalScore);
-	}
-
-	int perfectWords;
-	int perfectWordScore = 100;
-	std::string GetPerfectWords()
-	{
-		return "Perfect words: " + std::to_string(perfectWords)
-			+ "x" + std::to_string(perfectWordScore)
-			+ " = " + std::to_string(perfectWords * perfectWordScore);
-	}
+	int monstersDefeated;
+	int oneShots;
+	int totalScore;
 };
 
 class GameState : public State
@@ -126,8 +109,6 @@ private:
 	sf::Font* m_font;
 
 	//Test HUD
-	sf::Sprite m_life_sprite;
-	sf::Sprite m_score_sign_sprite;
 	sf::Text m_scoreDisplay;
 	int m_score;
 	int m_lastScore;
