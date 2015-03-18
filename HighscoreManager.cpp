@@ -86,6 +86,11 @@ void HighscoreManager::ReadHighscore()
 		file >> entry.name;
 		file >> entry.score;
 
+		if (entry.name == "")
+		{
+			break;
+		}
+
 		m_entries.push_back(entry);
 	}
 

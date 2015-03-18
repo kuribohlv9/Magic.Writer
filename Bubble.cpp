@@ -7,7 +7,7 @@
 
 Bubble::Bubble(float x, float y, sf::Texture* texture, Player* player)
 {
-	m_width = texture->getSize().x / 4;
+	m_width = texture->getSize().x / 3;
 	m_height = texture->getSize().y;
 
 	m_sprite.setPosition(x, y);

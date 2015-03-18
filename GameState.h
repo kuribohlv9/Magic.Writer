@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "GameObject.h"
 
 class AudioManager;
 class ItemManager;
@@ -16,15 +17,17 @@ class BubbleManager;
 class Item;
 class Monster;
 class Player;
-class Wave;
 class GUI_Button;
 class GUI_Label;
+class Buoy;
 
-enum mode {
+enum mode 
+{
 	MODE_UNKNOWN,
 	MODE_PLAYING,
 	MODE_DEFEAT,
-	MODE_VICTORY
+	MODE_VICTORY,
+	MODE_READY
 };
 
 struct UserInfo
@@ -57,7 +60,10 @@ public:
 private:
 	void ConvertWordToItem();
 	void CheckCollision();
-	void SetUserInfo();
+	void SetUserInfoVictory();
+	void SetUserInfoDefeat();
+	void UpdateScore();
+	bool AllowProperty(ItemProperty prop);
 
 	void InstantiateBubbles();
 	void InstantiateMonsters();
@@ -66,6 +72,9 @@ private:
 	bool PlayMode(float deltaTime);
 	bool VictoryMode(float deltaTime);
 	bool DefeatMode(float deltaTime);
+	bool ReadyMode(float deltaTime);
+
+	void GotoReady();
 
 	bool IsMonsters();
 
@@ -88,15 +97,13 @@ private:
 	HighscoreManager* m_highscoreManager;
 	BubbleManager* m_bubbleManager;
 
+	//Buoys
+	std::vector<Buoy*> m_buoys;
 	//Items
 	std::vector<Item*> m_activeItems;
 
 	//Monster
 	std::vector<Monster*> m_monsters;
-
-	//Waves
-	std::vector<Wave*> m_waves;
-	float m_waveTimer;
 
 	//Background
 	sf::Sprite m_backgroundSprite;
@@ -110,6 +117,7 @@ private:
 	sf::Font* m_font;
 
 	//Test HUD
+	sf::Sprite m_lifeSprite, m_lifeSprite2, m_lifeSprite3;
 	sf::Text m_scoreDisplay;
 	int m_lastScore;
 	unsigned int m_life;
@@ -133,4 +141,9 @@ private:
 	std::vector<sf::Music*> m_game_themes;
 	sf::Music* m_active_theme;
 	sf::Music* m_losing_theme;
+
+	//Readymode
+	sf::Text m_ready_text;
+	std::string m_ready_string;
+	float m_ready_timer;
 };

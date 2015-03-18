@@ -11,10 +11,10 @@ ItemManager::ItemManager()
 	m_textureManager = ServiceLocator<TextureManager>::GetService();
 
 	sf::Texture* particle = m_textureManager->LoadTexture("assets/sprites/items/particle_alive.png");
-	AddItems("assets/sprites/items/item_alive.png", "assets/sprites/items/item_alive.txt", ITEM_ALIVE, particle);
+	AddItems("assets/sprites/items/item_alive.png", "assets/sprites/items/item_alive.txt", ITEM_NEUTRAL, particle);
 
 	particle = m_textureManager->LoadTexture("assets/sprites/items/particle_dead.png");
-	AddItems("assets/sprites/items/item_dead.png", "assets/sprites/items/item_dead.txt", ITEM_DEAD, particle);
+	AddItems("assets/sprites/items/item_dead.png", "assets/sprites/items/item_dead.txt", ITEM_NEUTRAL, particle);
 
 	particle = m_textureManager->LoadTexture("assets/sprites/items/particle_hot.png");
 	AddItems("assets/sprites/items/item_hot.png", "assets/sprites/items/item_hot.txt", ITEM_HOT, particle);
@@ -83,7 +83,7 @@ void ItemManager::AddItems(const std::string& spritesheetFilename, const std::st
 	stream.close();
 }
 
-Item* ItemManager::GetItem()
+Item* ItemManager::GetItem(bool allowHot, bool allowCold)
 {
 	//Start an infinite loop.
 	while (true)
@@ -97,6 +97,12 @@ Item* ItemManager::GetItem()
 		//Check if the item is not active and is not inside the game.
 		if (!item->IsActive() && !item->IsInGame())
 		{
+			ItemProperty p = item->GetProperty();
+
+			if ((!allowCold && p == ITEM_COLD) || (!allowHot && p == ITEM_HOT))
+			{
+				continue;
+			}
 			//Return the item and set in game to true.
 			item->SetInGame(true);
 			return item;

@@ -10,7 +10,7 @@ public:
 	ItemManager();
 	~ItemManager();
 
-	Item* GetItem();
+	Item* GetItem(bool allowHot, bool allowCold);
 
 private:
 	void AddItems(const std::string& spritesheetFilename, const std::string& textFilename, ItemProperty property, sf::Texture* particle);
