@@ -654,13 +654,11 @@ bool GameState::PlayMode(float deltaTime)
 		m_monsters[i]->Update(deltaTime);
 
 		//Activate burst
-		if (m_monsters[i]->GetY() >= 775 && m_monsters[i]->Burst())
-		{
-			if (m_life > 0)
-			{
-				m_life -= 1;
-			}
-		}
+		if (m_monsters[i]->GetY() >= 775)
+			m_monsters[i]->Burst();
+			
+		if (m_life > 0 && m_monsters[i]->GetY() >= ScreenHeight)
+			m_life -= 1;
 	}
 
 	//Convert written words into item
