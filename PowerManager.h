@@ -33,7 +33,10 @@ public:
 	void ActivatePierce();
 	Item* GetPierceItem();
 	bool AddItemToPierceList(Monster* monster);
+
+	//Power methods
 	void AddPowerupPlupps(int amount);
+	bool GetReadyPowerup(int powerupIndex);
 
 private:
 	void UpdatePowerBar();

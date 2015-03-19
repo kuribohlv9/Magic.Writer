@@ -59,8 +59,8 @@ BubbleManager::~BubbleManager()
 
 	while (itr != m_bubbles.end())
 	{
-		delete *it;
-		++it;
+		delete *itr;
+		++itr;
 	}
 	m_bubbles.clear();
 }

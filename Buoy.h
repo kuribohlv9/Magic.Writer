@@ -10,7 +10,7 @@ public:
 
 	void Update(float deltaTime);
 	void Draw(DrawManager* drawManager);
-	void SwitchFlag();
+	void SetReady(bool state);
 
 private:
 	Animator* m_animator;

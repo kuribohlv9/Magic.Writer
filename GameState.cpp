@@ -431,6 +431,11 @@ void GameState::Exit()
 		delete m_powerManager;
 		m_powerManager = nullptr;
 	}
+	if (m_bubbleManager)
+	{
+		delete m_bubbleManager;
+		m_bubbleManager = nullptr;
+	}
 
 	//Delete player
 	if (m_player)
@@ -665,6 +670,7 @@ bool GameState::PlayMode(float deltaTime)
 	//Update buoys
 	for (unsigned int i = 0; i < m_buoys.size(); i++)
 	{
+		m_buoys[2 - i]->SetReady(m_powerManager->GetReadyPowerup(i));
 		m_buoys[i]->Update(deltaTime);
 	}
 
@@ -688,7 +694,7 @@ bool GameState::PlayMode(float deltaTime)
 		if (item->GetState() == ITEM_HIT)
 		{
 			sf::Vector2f dir = item->GetItemBounceDir();
-			dir *= m_speed * deltaTime;
+			dir *= m_speed * 1.3f * deltaTime;
 			item->Move(dir.x, dir.y);
 		}
 		else if (m_powerManager->GetBounceItem() != item)

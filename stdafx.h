@@ -12,6 +12,7 @@
 #include <fstream>
 #include <algorithm>
 #include <math.h>
+#include <vld.h>
 
 //SFLM includes
 #include "SFML\Main.hpp"

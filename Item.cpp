@@ -45,7 +45,11 @@ void Item::Update(float deltaTime)
 	{
 		SetActive(false);
 		SetInGame(false);
-
+	}
+	else if (m_state == ITEM_HIT)
+	{
+		m_sprite.scale(1.01f, 1.01f);
+		m_sprite.rotate(10);
 	}
 }
 void Item::Draw(DrawManager* drawManager)

@@ -15,6 +15,11 @@ Buoy::Buoy(sf::Texture* texture, float x, float y, const std::string animationFi
 
 Buoy::~Buoy()
 {
+	if (m_animator)
+	{
+		delete m_animator;
+		m_animator = nullptr;
+	}
 }
 
 void Buoy::Update(float deltaTime)
@@ -25,11 +30,9 @@ void Buoy::Draw(DrawManager* drawManager)
 {
 	drawManager->Draw(m_sprite, sf::RenderStates::Default);
 }
-void Buoy::SwitchFlag()
+void Buoy::SetReady(bool state)
 {
-	m_red = !m_red;
-
-	if (m_red)
+	if (!state)
 		m_animator->SetAnimation("red");
 	else
 		m_animator->SetAnimation("green");

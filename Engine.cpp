@@ -115,6 +115,12 @@ void Engine::Shutdown()
 		delete m_particle_manager;
 		m_particle_manager = nullptr;
 	}
+
+	if (m_scores_manager)
+	{
+		delete m_scores_manager;
+		m_scores_manager = nullptr;
+	}
 }
 
 void Engine::Run()

@@ -158,6 +158,22 @@ void PowerManager::AddPowerupPlupps(int amount)
 	if (m_activePlupps > 23)
 		m_activePlupps = 23;
 }
+bool PowerManager::GetReadyPowerup(int powerupIndex)
+{
+	switch (powerupIndex)
+	{
+	case 0:
+		return (m_activePlupps >= 7);
+		break;
+	case 1:
+		return (m_activePlupps >= 15);
+		break;
+	case 2:
+		return (m_activePlupps >= 23);
+		break;
+	}
+}
+
 //Bounce methods
 void PowerManager::ActivateBounce()
 {
