@@ -338,11 +338,12 @@ void GameState::Enter()
 	InstantiateMonsters();
 	InstantiateBubbles();
 
-	texture = m_textureManager->LoadTexture("assets/sprites/buoy.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/buoys/buoy.png");
 	//Instantiate buoys
 	for (unsigned int i = 0; i < 3; i++)
 	{
-		Buoy* b = new Buoy(texture, 45, 45 + i * 270);
+		std::string file = "assets/sprites/buoys/buoy_animation_" + std::to_string(2 - i) + ".txt";
+		Buoy* b = new Buoy(texture, 45, 60 + i * 270, file);
 		m_buoys.push_back(b);
 	}
 
