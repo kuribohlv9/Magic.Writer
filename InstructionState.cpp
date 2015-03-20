@@ -38,6 +38,22 @@ InstructionState::~InstructionState()
 {
 	m_textureManager = nullptr;
 	m_drawManager = nullptr;
+
+	if (m_nextPageButton)
+	{
+		delete m_nextPageButton;
+		m_nextPageButton = nullptr;
+	}
+	if (m_lastPageButton)
+	{
+		delete m_lastPageButton;
+		m_lastPageButton = nullptr;
+	}
+	if (m_exitToMenuButton)
+	{
+		delete m_exitToMenuButton;
+		m_exitToMenuButton = nullptr;
+	}
 }
 
 bool InstructionState::Update(float deltaTime)

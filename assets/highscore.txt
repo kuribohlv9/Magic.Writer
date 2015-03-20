@@ -1,4 +1,5 @@
 akwopdiu 100000
+SIMON 46250
 ara 31190
 ellen 14580
 charlie 19820
@@ -21,6 +22,8 @@ svennen 1270
 draculatva 1260
 charlie 1000
 laban 1000
+RAWR 850
+SAFT 850
 hakan 520
 simon 500
 ryssen 500
@@ -31,8 +34,13 @@ polacken 280
 rollover 260
 fluff 250
 sigrid 200
-INGESCRE 200
 tom 100
 erik 50
 johannes 40
 morgan 10
+OLOLOL 0
+SEMIH 0
+SIGROD 0
+POLACKEN 0
+DERP 0
+ARA 0

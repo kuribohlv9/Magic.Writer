@@ -10,6 +10,7 @@ public:
 
 	void Update(float deltaTime);
 	void SetAnimation(const std::string& animationName);
+	void SetStartFrame(int frame);
 
 	bool Complete();
 

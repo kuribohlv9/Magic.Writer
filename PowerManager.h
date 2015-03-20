@@ -33,7 +33,10 @@ public:
 	void ActivatePierce();
 	Item* GetPierceItem();
 	bool AddItemToPierceList(Monster* monster);
+
+	//Power methods
 	void AddPowerupPlupps(int amount);
+	bool GetReadyPowerup(int powerupIndex);
 
 private:
 	void UpdatePowerBar();
@@ -58,6 +61,8 @@ private:
 	std::vector<sf::Sprite> m_plupps;
 	sf::Color m_fadeColor;
 	int m_activePlupps;
+	float m_pluppTimer;
+	float m_timerDelay;
 
 	std::vector<Monster*> m_monsterPierceList;
 	std::vector<Monster*>* m_monsters;

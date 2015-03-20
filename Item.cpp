@@ -10,7 +10,7 @@ Item::Item(sf::Texture* texture, sf::Texture* particle, ItemProperty property, c
 {
 	m_active = false;
 	m_type = GAMEOBJECT_ITEM;
-	m_state = ITEM_HOLDING;
+	SetState(ITEM_HOLDING);
 	m_property = property;
 	m_name = name;
 	m_inGame = false;
@@ -39,10 +39,17 @@ void Item::Update(float deltaTime)
 	m_emitter->SetSpawnRate((float)(r / 100));
 
 	//Deactivate above screen
-	if (m_y <= -m_sprite.getTextureRect().height)
+	if (GetY() <= -m_sprite.getTextureRect().height
+		|| GetX() <= -m_sprite.getTextureRect().width
+		|| GetX() >= ScreenWidth + m_sprite.getTextureRect().width)
 	{
 		SetActive(false);
 		SetInGame(false);
+	}
+	else if (m_state == ITEM_HIT)
+	{
+		m_sprite.scale(1.01f, 1.01f);
+		m_sprite.rotate(10);
 	}
 }
 void Item::Draw(DrawManager* drawManager)
@@ -98,10 +105,34 @@ void Item::SetName(const std::string& name)
 void Item::SetState(ItemState state)
 {
 	m_sprite.setTextureRect(m_sourceRectangles[state]);
+	m_state = state;
+
+	if (state == ITEM_HIT)
+	{
+		m_collider->SetWidthHeight(0, 0);
+
+		float angle = 180 + rand() % 180;
+		float radians = angle * (3.14f / 180.0f);
+		m_bounceDir = sf::Vector2f(cos(radians), sin(radians));
+		float length = sqrt(m_bounceDir.x * m_bounceDir.x + m_bounceDir.y * m_bounceDir.y);
+
+		m_bounceDir /= length;
+	}
 }
 void Item::Activate()
 {
 	SetActive(true);
 	SetState(ITEM_FLYING);
 	m_emitter->SetActive(true);
+
+	m_collider->SetWidthHeight(m_sprite.getTextureRect().width, m_sprite.getTextureRect().height);
+}
+ItemState Item::GetState()
+{
+	return m_state;
+}
+
+sf::Vector2f Item::GetItemBounceDir()
+{
+	return m_bounceDir;
 }

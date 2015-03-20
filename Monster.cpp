@@ -205,20 +205,21 @@ bool Monster::IsDead()
 	return m_health <= 0;
 }
 
-void Monster::Damage(ItemProperty property, bool& critical)
+void Monster::Damage(ItemProperty property, bool& oneShot)
 { 
-	critical = false;
+	oneShot = false;
 	int randomSoundIndex = rand() % 3;
 	m_hitSound.setBuffer(*m_hitBuffers[randomSoundIndex]);
 
 	if (property == m_weakness)
 	{
+		oneShot = (m_health == 2);
+
 		m_health -= 2;
 		m_state = MONSTER_CRITICAL;
-		critical = true;
 		m_head_animator->SetAnimation("critical");
 	}
-	else
+	else if (property == ITEM_NEUTRAL)
 	{
 		m_health -= 1;
 		m_state = MONSTER_HIT;
@@ -279,13 +280,13 @@ void Monster::HandleBodyParts()
 	}
 }
 
-void Monster::Activate(int speed, int health)
+void Monster::Activate(int speed)
 {
 	//Activation and reset function
 	m_frozen = false;
 	m_activeBurst = false;
 	m_speed = speed;
-	m_health = health;
+	m_health = 2;
 	m_state = MONSTER_MOVE;
 
 	//Set color

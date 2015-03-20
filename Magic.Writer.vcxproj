@@ -91,6 +91,7 @@
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Bubble.h" />
     <ClInclude Include="BubbleManager.h" />
+    <ClInclude Include="Buoy.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="DrawManager.h" />
@@ -132,6 +133,7 @@
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Bubble.cpp" />
     <ClCompile Include="BubbleManager.cpp" />
+    <ClCompile Include="Buoy.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="DrawManager.cpp" />

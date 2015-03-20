@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "GameObject.h"
 
 class AudioManager;
 class ItemManager;
@@ -16,44 +17,30 @@ class BubbleManager;
 class Item;
 class Monster;
 class Player;
-class Wave;
 class GUI_Button;
 class GUI_Label;
+class Buoy;
 
-enum mode {
+enum mode 
+{
 	MODE_UNKNOWN,
 	MODE_PLAYING,
 	MODE_DEFEAT,
-	MODE_VICTORY
+	MODE_VICTORY,
+	MODE_READY
 };
 
 struct UserInfo
-{
-	int defeatedMonster;
-	int defeatedMonsterScore = 300;
-	std::string GetDefeatedMonster()
-	{
-		return "Monsters defeated: " + std::to_string(defeatedMonster) + "x"
-			+ std::to_string(defeatedMonsterScore) + " = " + std::to_string(defeatedMonster * defeatedMonsterScore);
-	}
+{	
+	//Scores
+	int neutralHitScore = 50;
+	int criticalHitScore = 150;
+	int monsterDefeatedScore = 100;
 
-	int criticalHits;
-	int criticalScore = 50;
-	std::string GetCriticalHits()
-	{
-		return "Critical hits: " + std::to_string(criticalHits)
-			+ "x" + std::to_string(criticalScore)
-			+ " = " + std::to_string(criticalHits * criticalScore);
-	}
-
-	int perfectWords;
-	int perfectWordScore = 100;
-	std::string GetPerfectWords()
-	{
-		return "Perfect words: " + std::to_string(perfectWords)
-			+ "x" + std::to_string(perfectWordScore)
-			+ " = " + std::to_string(perfectWords * perfectWordScore);
-	}
+	int monstersDefeated;
+	int oneShots;
+	int currentScore;
+	int totalScore;
 };
 
 class GameState : public State
@@ -73,7 +60,10 @@ public:
 private:
 	void ConvertWordToItem();
 	void CheckCollision();
-	void SetUserInfo();
+	void SetUserInfoVictory();
+	void SetUserInfoDefeat();
+	void UpdateScore();
+	bool AllowProperty(ItemProperty prop);
 
 	void InstantiateBubbles();
 	void InstantiateMonsters();
@@ -82,6 +72,9 @@ private:
 	bool PlayMode(float deltaTime);
 	bool VictoryMode(float deltaTime);
 	bool DefeatMode(float deltaTime);
+	bool ReadyMode(float deltaTime);
+
+	void GotoReady();
 
 	bool IsMonsters();
 
@@ -104,15 +97,13 @@ private:
 	HighscoreManager* m_highscoreManager;
 	BubbleManager* m_bubbleManager;
 
+	//Buoys
+	std::vector<Buoy*> m_buoys;
 	//Items
 	std::vector<Item*> m_activeItems;
 
 	//Monster
 	std::vector<Monster*> m_monsters;
-
-	//Waves
-	std::vector<Wave*> m_waves;
-	float m_waveTimer;
 
 	//Background
 	sf::Sprite m_backgroundSprite;
@@ -126,10 +117,8 @@ private:
 	sf::Font* m_font;
 
 	//Test HUD
-	sf::Sprite m_life_sprite;
-	sf::Sprite m_score_sign_sprite;
+	sf::Sprite m_lifeSprite, m_lifeSprite2, m_lifeSprite3;
 	sf::Text m_scoreDisplay;
-	int m_score;
 	int m_lastScore;
 	unsigned int m_life;
 
@@ -151,4 +140,10 @@ private:
 	//Music
 	std::vector<sf::Music*> m_game_themes;
 	sf::Music* m_active_theme;
+	sf::Music* m_losing_theme;
+
+	//Readymode
+	sf::Text m_ready_text;
+	std::string m_ready_string;
+	float m_ready_timer;
 };

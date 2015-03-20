@@ -23,6 +23,7 @@
 #include "Item.h"
 #include "Player.h"
 #include "Bubble.h"
+#include "Buoy.h"
 #include "Utility.h"
 #include "ParticleEmitter.h"
 #include "GUI_Button.h"
@@ -49,16 +50,13 @@ GameState::GameState()
 
 	//Load HUD
 	m_font = m_textureManager->LoadFont("assets/fonts/game.ttf");
-	m_score_sign_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/sign_score.png"));
-	m_score_sign_sprite.setPosition(ScreenWidth - 270, -20);
-	m_life_sprite.setTexture(*m_textureManager->LoadTexture("assets/sprites/HUD/life.png"));
 	m_scoreDisplay.setFont(*m_font);
 	m_scoreDisplay.setCharacterSize(40);
-	m_scoreDisplay.setPosition(1750, 75);
-	m_scoreDisplay.setColor(sf::Color(0, 28, 34, 255));
+	m_scoreDisplay.setPosition(1645, 935);
+	m_scoreDisplay.setColor(sf::Color(141, 119, 103, 255));
 	m_userInfoText.setFont(*m_font);
 	m_userInfoText.setPosition(450, ScreenHeight / 2 - 150);
-	m_userInfoText.setColor(sf::Color::Black);
+	m_userInfoText.setColor(sf::Color(141, 119, 103, 255));
 	m_userInfoText.setCharacterSize(25);
 
 	//Load Music
@@ -77,6 +75,9 @@ GameState::GameState()
 	music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Zanzibar.ogg");
 	music->setVolume(20);
 	m_game_themes.push_back(music);
+
+	music = m_audioManager->LoadMusicFromFile("assets/Audio/Game_Over_-_Banjo-Kazooie.ogg");
+	m_losing_theme = music;
 }
 GameState::~GameState()
 {
@@ -95,6 +96,9 @@ bool GameState::Update(float deltaTime)
 
 		case MODE_DEFEAT:
 			return DefeatMode(deltaTime);
+
+		case MODE_READY:
+			return ReadyMode(deltaTime);
 
 		default:
 			return true;
@@ -137,10 +141,10 @@ void GameState::CheckCollision()
 
 							if (!m_powerManager->SetNewBounceTarget(monster))
 							{
-								item->SetActive(false);
-								item->SetInGame(false);
 								item->SetState(ITEM_HIT);
 							}
+
+							//Hej snälla och gulliga Ara! <3
 						}
 						else if (targetMonster == nullptr)
 						{
@@ -148,8 +152,6 @@ void GameState::CheckCollision()
 
 							if (!m_powerManager->SetNewBounceTarget(monster))
 							{
-								item->SetActive(false);
-								item->SetInGame(false);
 								item->SetState(ITEM_HIT);
 							}
 						}
@@ -159,30 +161,35 @@ void GameState::CheckCollision()
 						//Damage and check for crit
 						damageMonster = true;
 
-						item->SetActive(false);
-						item->SetInGame(false);
 						item->SetState(ITEM_HIT);
 					}
 
 					if (damageMonster)
 					{
-						bool critical = false;
+						bool oneShot = false;
 						//Damage monster
-						monster->Damage(item->GetProperty(), critical);
+						monster->Damage(item->GetProperty(), oneShot);
 
 						//Check for critical
-						if (critical)
+						if (oneShot)
 						{
-							m_score += m_userInfo.criticalScore;
-							m_userInfo.criticalHits++;
+							m_userInfo.currentScore += m_userInfo.criticalHitScore;
+							m_userInfo.oneShots++;
+							
+							//Increase power plupps
+							m_powerManager->AddPowerupPlupps(2);
+						}
+						else
+						{
+							m_userInfo.currentScore += m_userInfo.neutralHitScore;
 						}
 
 						//Monster is dead
 						if (monster->IsDead())
 						{
 							//Increase score
-							m_score += m_userInfo.defeatedMonsterScore;
-							m_userInfo.defeatedMonster++;
+							m_userInfo.currentScore += m_userInfo.monsterDefeatedScore;
+							m_userInfo.monstersDefeated++;
 						}
 					}
 				}
@@ -223,18 +230,31 @@ void GameState::Draw()
 		m_drawManager->Draw(m_ice_backgroundSprite, sf::RenderStates::Default);
 	}
 
+	//Draw buoys
+	for (unsigned int i = 0; i < m_buoys.size(); i++)
+	{
+		m_buoys[i]->Draw(m_drawManager);
+	}
+
+	//Draw life
+	if (m_life > 2)
+	{
+		m_drawManager->Draw(m_lifeSprite, sf::RenderStates::Default);
+	}
+	if (m_life > 1)
+	{
+		m_drawManager->Draw(m_lifeSprite2, sf::RenderStates::Default);
+	}
+	if (m_life > 0)
+	{
+		m_drawManager->Draw(m_lifeSprite3, sf::RenderStates::Default);
+	}
+
 	//Draw Particles
 	m_particleManager->Draw(m_drawManager);
 
 	//Draw HUD
 	m_powerManager->Draw(m_drawManager);
-
-	//Draw lives
-	for (int i = 0; i < m_life; i++)
-	{
-		m_life_sprite.setPosition(1400 + 150 * i, 1080 - 107);
-		m_drawManager->Draw(m_life_sprite, sf::RenderStates::Default);
-	}
 
 	//Draw monster
 	for (int i = 0; i < m_monsters.size(); i++)
@@ -263,7 +283,6 @@ void GameState::Draw()
 		}
 	}
 
-	m_drawManager->Draw(m_score_sign_sprite, sf::RenderStates::Default);
 	m_drawManager->Draw(m_scoreDisplay, sf::RenderStates::Default);
 
 	//Draw Victory and Losing screen
@@ -282,11 +301,19 @@ void GameState::Draw()
 		m_drawManager->Draw(m_userTextBox, sf::RenderStates::Default);
 		m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);
 	}
-	SetUserInfo();
-	m_drawManager->Draw(m_userInfoText, sf::RenderStates::Default);
+	if (m_status == MODE_READY)
+	{
+		//test
+		m_drawManager->Draw(m_ready_text, sf::RenderStates::Default);
+	}
+
 }
 void GameState::Enter()
 {
+	//Reset scores
+	m_userInfo.currentScore = 0;
+	m_userInfo.totalScore = 0;
+
 	//Initialize managers
 	m_wordManager = new WordManager();
 	m_itemManager = new ItemManager();
@@ -304,7 +331,6 @@ void GameState::Enter()
 	m_conjureCompleteSound.setBuffer(*buffer);
 	m_conjureCompleteSound.setVolume(7);
 
-
 	m_powerManager = new PowerManager(&m_monsters, &m_activeItems, m_player);
 	m_bubbleManager = new BubbleManager(m_player, m_wordManager);
 
@@ -312,39 +338,62 @@ void GameState::Enter()
 	InstantiateMonsters();
 	InstantiateBubbles();
 
+	texture = m_textureManager->LoadTexture("assets/sprites/buoys/buoy.png");
+	//Instantiate buoys
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		std::string file = "assets/sprites/buoys/buoy_animation_" + std::to_string(2 - i) + ".txt";
+		Buoy* b = new Buoy(texture, 45, 60 + i * 270, file);
+		m_buoys.push_back(b);
+	}
+
 	//Victory and Losing screen
 	texture = m_textureManager->LoadTexture("assets/sprites/victory_screen.png");
 	m_victory_window.setPosition(300, 200);
 	m_victory_window.setTexture(*texture);
 	m_victory_window.setTextureRect(sf::IntRect(0, 0, 1320, 680));
 
+	m_next_wave_button = new GUI_Button(475, ScreenHeight - 275, nullptr, texture, sf::IntRect(0, 670, 261, 163));
+	m_next_wave_button->Refresh();
+
 	texture = m_textureManager->LoadTexture("assets/sprites/defeat_screen.png");
 	m_defeat_window.setPosition(300, 200);
 	m_defeat_window.setTexture(*texture);
 	m_defeat_window.setTextureRect(sf::IntRect(0, 0, 1320, 680));
-
-	texture = m_textureManager->LoadTexture("assets/sprites/magic writer victory screen buttons.png");
-	m_next_wave_button = new GUI_Button(475, ScreenHeight - 275, nullptr, texture, sf::IntRect(0, 0, 250, 100));
-	m_next_wave_button->Refresh();
-	m_back_to_menu_button = new GUI_Button(1445, ScreenHeight - 275, nullptr, texture, sf::IntRect(250, 0, 250, 100));
+	
+	m_back_to_menu_button = new GUI_Button(1445, ScreenHeight - 275, nullptr, texture, sf::IntRect(196, 683, 285, 163));
 	m_back_to_menu_button->Refresh();
-	m_submit_button = new GUI_Button(1445, ScreenHeight - 550, nullptr, texture, sf::IntRect(500, 0, 250, 100));
+	m_submit_button = new GUI_Button(750, ScreenHeight - 450, nullptr, texture, sf::IntRect(1, 683, 183, 84));
+
+	//Life sprite
+	texture = m_textureManager->LoadTexture("assets/sprites/plupp_collection.png");
+	m_lifeSprite.setTexture(*texture);
+	m_lifeSprite.setOrigin(texture->getSize().x / 2, 0);
+	m_lifeSprite.setPosition(ScreenWidth - 125, 0);
+
+	m_lifeSprite2.setTexture(*texture);
+	m_lifeSprite2.setOrigin(texture->getSize().x / 2, 0);
+	m_lifeSprite2.setColor(sf::Color(241, 132, 132, 255));
+	m_lifeSprite2.setPosition(ScreenWidth - 125, texture->getSize().y);
+
+	m_lifeSprite3.setTexture(*texture);
+	m_lifeSprite3.setOrigin(texture->getSize().x / 2, 0);
+	m_lifeSprite3.setPosition(ScreenWidth - 125, texture->getSize().y * 2);
 
 	//Highscore input
-	m_submit_button = new GUI_Button(1445, ScreenHeight - 500, nullptr, texture, sf::IntRect(500, 0, 250, 100));
-	m_submit_button->Refresh();
 	m_userName = "";
 	m_userTextBox.setFont(*m_font);
-	m_userTextBox.setCharacterSize(45);
-	m_userTextBox.setPosition(1445 - 500, ScreenHeight - 500);
+	m_userTextBox.setCharacterSize(40);
+	m_userTextBox.setPosition(420, ScreenHeight - 465);
 	m_userTextBox.setString(m_userName);
+	m_userTextBox.setColor(sf::Color(110, 81, 35, 255));
 	m_scoreDisplay.setString("0");
 
 	//Instantsiate game variables
-	m_userInfo.criticalHits = 0;
-	m_userInfo.defeatedMonster = 0;
-	m_userInfo.perfectWords = 0;
-	m_score = 0;
+	m_userInfo.monstersDefeated = 0;
+	m_userInfo.oneShots = 0;
+	m_userInfo.currentScore = 0;
+	m_userInfo.totalScore = 0;
 	m_lastScore = 0;
 	m_life = 3;
 	m_speed = 800;
@@ -352,12 +401,9 @@ void GameState::Enter()
 	m_status = MODE_PLAYING;
 	m_next_state = STATE_MENU;
 	m_waveManager->SetActiveWave(0);
-	m_userTextBox.setFont(*m_font);
-	m_userTextBox.setPosition(1000, ScreenHeight - 500);
 
-
-	m_active_theme = m_game_themes[rand() % 5];
-	m_active_theme->play();
+	//Readymode
+	GotoReady();
 }
 void GameState::Exit()
 {
@@ -385,6 +431,11 @@ void GameState::Exit()
 		delete m_powerManager;
 		m_powerManager = nullptr;
 	}
+	if (m_bubbleManager)
+	{
+		delete m_bubbleManager;
+		m_bubbleManager = nullptr;
+	}
 
 	//Delete player
 	if (m_player)
@@ -394,6 +445,19 @@ void GameState::Exit()
 	}
 
 	m_activeItems.clear();
+
+	//Delete buoys
+	auto it = m_buoys.begin();
+	while (it != m_buoys.end())
+	{
+		if (*it)
+		{
+			delete *it;
+			*it = nullptr;
+		}
+		it++;
+	}
+	m_buoys.clear();
 
 	//Delete monsters
 	auto itr = m_monsters.begin();
@@ -407,19 +471,6 @@ void GameState::Exit()
 		itr++;
 	}
 	m_monsters.clear();
-
-	//Delete waves
-	auto itra = m_waves.begin();
-	while (itra != m_waves.end())
-	{
-		if (*itra)
-		{
-			delete *itra;
-			*itra = nullptr;
-		}
-		itra++;
-	}
-	m_waves.clear();
 
 	if (m_back_to_menu_button)
 	{
@@ -450,7 +501,7 @@ void GameState::InstantiateBubbles()
 	//Instantiate thought bubble items
 	for (int i = 0; i < 3; i++)
 	{
-		Item* item = m_itemManager->GetItem();
+		Item* item = m_itemManager->GetItem(true, true);
 
 		m_bubbleManager->GetBubble(i)->SetItem(item);
 		m_wordManager->SetNewWord(item->GetName());
@@ -458,9 +509,7 @@ void GameState::InstantiateBubbles()
 }
 void GameState::InstantiateMonsters()
 {
-	sf::Texture* undeadTexture = m_textureManager->LoadTexture("assets/sprites/monster/undead_monster_spritesheet.png");
 	sf::Texture* lavaTexture = m_textureManager->LoadTexture("assets/sprites/monster/lava_monster_spritesheet.png");
-	sf::Texture* aliveTexture = m_textureManager->LoadTexture("assets/sprites/monster/alive_monster_spritesheet.png");
 	sf::Texture* iceTexture = m_textureManager->LoadTexture("assets/sprites/monster/ice_monster_spritesheet.png");
 
 	sf::Texture* particle = m_textureManager->LoadTexture("assets/sprites/monster/particle.png");
@@ -469,27 +518,15 @@ void GameState::InstantiateMonsters()
 	sf::SoundBuffer* monsterHitBufferTwo = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
 	sf::SoundBuffer* monsterHitBufferThree = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
 	//Monster pool
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		if (i < 5)
-		{
-			Monster* undeadMonster = new Monster(undeadTexture, "assets/sprites/monster/undead_monster_animation.txt", 173, 183, 45, ITEM_ALIVE, particle);
-			undeadMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
-			m_monsters.push_back(undeadMonster);
-		}
-		else if (i > 4 && i < 10)
 		{
 			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 153, 173, 45, ITEM_COLD, particle);
 			lavaMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
 			m_monsters.push_back(lavaMonster);
 		}
-		else if (i > 9 && i < 15)
-		{
-			Monster* aliveMonster = new Monster(aliveTexture, "assets/sprites/monster/alive_monster_animation.txt", 178, 161, 45, ITEM_DEAD, particle);
-			aliveMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
-			m_monsters.push_back(aliveMonster);
-		}
-		else if (i > 14)
+		else if (i >=5 )
 		{
 			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 182, 178, 45, ITEM_HOT, particle);
 			iceMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
@@ -501,11 +538,11 @@ void GameState::SpawnMonster()
 {
 	while (true)
 	{
-		int randomMonster = rand() % 20;
+		int randomMonster = rand() % m_monsters.size();
 		Monster* monster = m_monsters[randomMonster];
 		if (!monster->IsActive())
 		{
-			monster->Activate(20 + 5*m_wave_level, 2+1*m_wave_level/2);
+			monster->Activate(25 + 7*m_wave_level);
 			break;
 		}
 	}
@@ -518,8 +555,7 @@ void GameState::ConvertWordToItem()
 	//If the item is not spawned, check if a word is complete and spawn it.
 	if (!spawnedItem)
 	{
-		bool perfectWord = false;
-		std::string finishedWord = m_wordManager->GetFinishedWord(perfectWord);
+		std::string finishedWord = m_wordManager->GetFinishedWord();
 		if (finishedWord.size() == 0)
 			return;
 
@@ -531,21 +567,13 @@ void GameState::ConvertWordToItem()
 			if (item->GetName() != finishedWord)
 				continue;
 
-			Item* newItem = m_itemManager->GetItem();
+			Item* newItem = m_itemManager->GetItem(AllowProperty(ITEM_HOT), AllowProperty(ITEM_COLD));
 
 			m_player->SetItem(item);
 			m_wordManager->SetNewWord(newItem->GetName());
 			bubble->SetItem(newItem);
 
 			m_conjureCompleteSound.play();
-
-			//If player entered a word with no errors
-			if (perfectWord)
-			{
-				m_powerManager->AddPowerupPlupps(2);
-				m_score += m_userInfo.perfectWordScore;
-				m_userInfo.perfectWords++;
-			}
 			break;
 		}
 	}
@@ -572,14 +600,50 @@ bool GameState::IsMonsters()
 
 	return false;
 }
-void GameState::SetUserInfo()
+void GameState::SetUserInfoVictory()
 {
 	std::string i = "";
-	i += m_userInfo.GetDefeatedMonster();
-	i += "\n" + m_userInfo.GetCriticalHits();
-	i += "\n" + m_userInfo.GetPerfectWords();
+	m_userInfoText.setCharacterSize(35);
+	m_userInfoText.setPosition(430, ScreenHeight / 2 - 150);
+	i += "Monsters defeated: " + std::to_string(m_userInfo.monstersDefeated);
+	i += "\nOne hit kills: " + std::to_string(m_userInfo.oneShots);
+	i += "\nLives left: " + std::to_string(m_life);
+	i += "\nScore this wave: " + std::to_string(m_userInfo.currentScore);
 
+	UpdateScore();
+	i += "\nTotal score: " + std::to_string(m_userInfo.totalScore);
 	m_userInfoText.setString(i);
+
+	//Reset stuff
+	m_userInfo.monstersDefeated = 0;
+	m_userInfo.oneShots = 0;
+}
+void GameState::SetUserInfoDefeat()
+{
+	UpdateScore();
+
+	m_userInfoText.setCharacterSize(40);
+	m_userInfoText.setPosition(570, ScreenHeight / 2 - 50);
+	m_userInfoText.setString(std::to_string(m_userInfo.totalScore));
+}
+void GameState::UpdateScore()
+{
+	m_userInfo.totalScore += m_userInfo.currentScore;
+	m_userInfo.currentScore = 0;
+}
+bool GameState::AllowProperty(ItemProperty prop)
+{
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		ItemProperty p = m_bubbleManager->GetBubble(i)->GetItem()->GetProperty();
+
+		if (p == prop)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 bool GameState::PlayMode(float deltaTime)
@@ -603,6 +667,13 @@ bool GameState::PlayMode(float deltaTime)
 		}
 	}
 
+	//Update buoys
+	for (unsigned int i = 0; i < m_buoys.size(); i++)
+	{
+		m_buoys[2 - i]->SetReady(m_powerManager->GetReadyPowerup(i));
+		m_buoys[i]->Update(deltaTime);
+	}
+
 	//Update active items
 	for (int i = 0; i < m_activeItems.size(); i++)
 	{
@@ -615,20 +686,27 @@ bool GameState::PlayMode(float deltaTime)
 	//Item movement
 	for (int i = 0; i < m_activeItems.size(); i++)
 	{
-		if (!m_activeItems.at(i)->IsActive())
+		Item* item = m_activeItems.at(i);
+		if (!item->IsActive())
 			continue;
 
 		//Not a bounce item
-		if (m_powerManager->GetBounceItem() != m_activeItems[i])
+		if (item->GetState() == ITEM_HIT)
 		{
-			m_activeItems[i]->Move(0, -m_speed * deltaTime);
+			sf::Vector2f dir = item->GetItemBounceDir();
+			dir *= m_speed * 1.3f * deltaTime;
+			item->Move(dir.x, dir.y);
+		}
+		else if (m_powerManager->GetBounceItem() != item)
+		{
+			item->Move(0, -m_speed * deltaTime);
 		}
 		else//Item is bouncy
 		{
 			//No Target
 			if (m_powerManager->GetBounceTarget() == nullptr)
 			{
-				m_activeItems[i]->Move(0, -m_speed * deltaTime);
+				item->Move(0, -m_speed * deltaTime);
 			}
 			else
 			{
@@ -651,12 +729,12 @@ bool GameState::PlayMode(float deltaTime)
 		m_monsters[i]->Update(deltaTime);
 
 		//Activate burst
-		if (m_monsters[i]->GetY() >= 775 && m_monsters[i]->Burst())
+		if (m_monsters[i]->GetY() >= 775)
+			m_monsters[i]->Burst();
+			
+		if (m_life > 0 && m_monsters[i]->GetY() >= ScreenHeight)
 		{
-			if (m_life > 0)
-			{
-				m_life -= 1;
-			}
+			m_life -= 1;
 		}
 	}
 
@@ -674,17 +752,17 @@ bool GameState::PlayMode(float deltaTime)
 	}
 
 	//Update score display
-	if (m_score != m_lastScore)
+	if (m_userInfo.currentScore != m_lastScore)
 	{
-		m_scoreDisplay.setString(std::to_string(m_score));
+		m_scoreDisplay.setString(std::to_string(m_userInfo.currentScore));
 		float width = m_scoreDisplay.getGlobalBounds().width;
-		m_scoreDisplay.setPosition(1800 - width / 2, 75);
+		m_scoreDisplay.setPosition(1645 - width / 2, 935);
 	}
-	m_lastScore = m_score;
+	m_lastScore = m_userInfo.currentScore;
 
 	m_powerManager->Update(deltaTime);
 
-	if (m_active_theme->getStatus() == sf::Music::Status::Stopped)
+	if (!m_active_theme || m_active_theme->getStatus() == sf::Music::Status::Stopped)
 	{
 		m_active_theme = m_game_themes[rand() % 5];
 		m_active_theme->play();
@@ -694,12 +772,13 @@ bool GameState::PlayMode(float deltaTime)
 	if (m_life <= 0)
 	{
 		m_status = MODE_DEFEAT;
+		SetUserInfoDefeat();
 	}
 	else if (!m_waveManager->IsActive() && !IsMonsters())
 	{
 		m_status = MODE_VICTORY;
 		m_active_theme->stop();
-		SetUserInfo();
+		SetUserInfoVictory();
 	}
 
 	return true;
@@ -715,6 +794,8 @@ bool GameState::VictoryMode(float deltaTime)
 		m_wave_level++;
 		m_waveManager->SetActiveWave(m_wave_level);
 		m_status = MODE_PLAYING;
+		m_life = 3;
+		GotoReady();
 	}
 	else if (m_back_to_menu_button->IsPressed())
 	{
@@ -724,6 +805,11 @@ bool GameState::VictoryMode(float deltaTime)
 }
 bool GameState::DefeatMode(float deltaTime)
 {
+	if (m_losing_theme->getStatus() == sf::Music::Status::Stopped)
+	{
+		m_losing_theme->play();
+	}
+
 	m_back_to_menu_button->Update();
 	m_submit_button->Update();
 
@@ -742,8 +828,9 @@ bool GameState::DefeatMode(float deltaTime)
 		{
 			ScoreEntry entry;
 			entry.name = m_userName;
-			entry.score = m_score;
+			entry.score = m_userInfo.totalScore;
 			m_highscoreManager->WriteHighscore(entry);
+			m_losing_theme->stop();
 			return false;
 		}
 	}
@@ -759,7 +846,32 @@ bool GameState::DefeatMode(float deltaTime)
 
 	if (m_back_to_menu_button->IsPressed())
 	{
+		m_losing_theme->stop();
 		return false;
 	}
 	return true;
+}
+
+bool GameState::ReadyMode(float deltaTime)
+{
+	m_ready_timer++;
+	if (m_ready_timer > 180)
+	{
+		m_status = MODE_PLAYING;
+	}
+	return true;
+}
+
+void GameState::GotoReady()
+{
+	m_ready_string = "Wave " + std::to_string(m_wave_level) + " Start!";
+	m_ready_text.setFont(*m_font);
+	m_ready_text.setColor(sf::Color::Black);
+	m_ready_text.setStyle(sf::Text::Bold);
+	m_ready_text.setCharacterSize(40);
+	m_ready_text.setString(m_ready_string);
+	m_ready_text.setPosition(ScreenWidth/2 - m_ready_text.getLocalBounds().width/2, 100);
+
+	m_ready_timer = 0;
+	m_status = MODE_READY;
 }

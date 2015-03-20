@@ -14,8 +14,7 @@ enum GType
 
 enum ItemProperty
 {
-	ITEM_ALIVE,
-	ITEM_DEAD,
+	ITEM_NEUTRAL,
 	ITEM_HOT,
 	ITEM_COLD
 };
