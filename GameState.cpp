@@ -367,7 +367,7 @@ void GameState::Enter()
 	m_submit_button = new GUI_Button(750, ScreenHeight - 450, nullptr, texture, sf::IntRect(7, 683, 181, 82));
 
 	//Life sprite
-	texture = m_textureManager->LoadTexture("assets/sprites/plupp_collection.png");
+	texture = m_textureManager->LoadTexture("assets/sprites/buoys/plupp_collection.png");
 	m_lifeSprite.setTexture(*texture);
 	m_lifeSprite.setOrigin(texture->getSize().x / 2, 0);
 	m_lifeSprite.setPosition(ScreenWidth - 125, 0);
