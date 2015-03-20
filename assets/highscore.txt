@@ -1,4 +1,5 @@
 akwopdiu 100000
+SEMIPRO 84200
 SIMON 46250
 ara 31190
 ellen 14580
@@ -12,9 +13,11 @@ saft 3520
 semihskakor 3510
 marcus 3000
 ellensuger 2840
+ARAMOHAM 2750
 polack 2740
 dracula 2400
 olle 2000
+USCHVADA 1950
 matilda 1570
 sebssebastian 1440
 tomilop 1280

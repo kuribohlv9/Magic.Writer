@@ -351,19 +351,20 @@ void GameState::Enter()
 	texture = m_textureManager->LoadTexture("assets/sprites/victory_screen.png");
 	m_victory_window.setPosition(300, 200);
 	m_victory_window.setTexture(*texture);
-	m_victory_window.setTextureRect(sf::IntRect(0, 0, 1320, 680));
+	m_victory_window.setTextureRect(sf::IntRect(0, 0, 1276, 662));
 
-	m_next_wave_button = new GUI_Button(475, ScreenHeight - 275, nullptr, texture, sf::IntRect(0, 670, 261, 163));
+	m_next_wave_button = new GUI_Button(475, ScreenHeight - 275, nullptr, texture, sf::IntRect(306, 670, 260, 160));
 	m_next_wave_button->Refresh();
+
+	m_back_to_menu_button = new GUI_Button(1445, ScreenHeight - 275, nullptr, texture, sf::IntRect(0, 666, 296, 172));
+	m_back_to_menu_button->Refresh();
 
 	texture = m_textureManager->LoadTexture("assets/sprites/defeat_screen.png");
 	m_defeat_window.setPosition(300, 200);
 	m_defeat_window.setTexture(*texture);
 	m_defeat_window.setTextureRect(sf::IntRect(0, 0, 1320, 680));
-	
-	m_back_to_menu_button = new GUI_Button(1445, ScreenHeight - 275, nullptr, texture, sf::IntRect(196, 683, 285, 163));
-	m_back_to_menu_button->Refresh();
-	m_submit_button = new GUI_Button(750, ScreenHeight - 450, nullptr, texture, sf::IntRect(1, 683, 183, 84));
+
+	m_submit_button = new GUI_Button(750, ScreenHeight - 450, nullptr, texture, sf::IntRect(7, 683, 181, 82));
 
 	//Life sprite
 	texture = m_textureManager->LoadTexture("assets/sprites/plupp_collection.png");

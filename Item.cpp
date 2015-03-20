@@ -87,6 +87,8 @@ void Item::Reset()
 {
 	m_sprite.setScale(0.7f, 0.7f);
 	m_sprite.setColor(sf::Color::White);
+	m_sprite.setRotation(0);
+	m_collider->SetWidthHeight(m_sprite.getTextureRect().width, m_sprite.getTextureRect().height);
 
 	SetState(ITEM_HOLDING);
 }
@@ -124,8 +126,6 @@ void Item::Activate()
 	SetActive(true);
 	SetState(ITEM_FLYING);
 	m_emitter->SetActive(true);
-
-	m_collider->SetWidthHeight(m_sprite.getTextureRect().width, m_sprite.getTextureRect().height);
 }
 ItemState Item::GetState()
 {
