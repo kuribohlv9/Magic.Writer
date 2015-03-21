@@ -116,7 +116,7 @@ void PowerManager::UpdatePowerBar()
 		sf::Color color = sf::Color(241, 132, 132, 255); // Red
 
 		if (i < m_activePlupps)
-			color = sf::Color::White;
+			color = sf::Color(75, 230, 36, 255);
 
 		m_plupps[i].setColor(color);
 	}

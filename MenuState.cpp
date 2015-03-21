@@ -21,7 +21,7 @@ MenuState::MenuState()
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");
 	sf::Font* font = m_textureManager->LoadFont("assets/fonts/game.ttf");
 	m_highscoreManager->SetFont(font);
-	m_highscoreManager->SetPosition(100, 125);
+	m_highscoreManager->SetPosition(135, 130);
 
 	m_poleSprite.setTexture(*texture);
 	m_poleSprite.setTextureRect(sf::IntRect(0, 305, 116, 539));

@@ -23,6 +23,12 @@ void HighscoreManager::Draw(DrawManager* drawManager)
 {
 	for (int i = 0; i < m_entries.size(); i++)
 	{
+		m_text.setColor(sf::Color(73, 47, 34, 255));
+		if (i == 0)
+		{
+			m_text.setColor(sf::Color(31, 155, 0, 255));
+		}
+
 		if (i < m_maxEntries)
 		{
 			m_text.setString(std::to_string(i + 1) + ". " + m_entries[i].GetText());
@@ -90,6 +96,11 @@ void HighscoreManager::ReadHighscore()
 		{
 			break;
 		}
+		else if (entry.name == "PUMZEEE" || entry.name == "ARA") //Add more developer names here with ||...
+		{
+			std::string newName = "(D) " + entry.name;
+			entry.name = newName;
+		}
 
 		m_entries.push_back(entry);
 	}
@@ -100,7 +111,6 @@ void HighscoreManager::SetFont(sf::Font* font)
 {
 	m_text.setFont(*font);
 	m_text.setCharacterSize(20);
-	m_text.setColor(sf::Color(73, 47, 34, 255));
 }
 void HighscoreManager::SetPosition(float x, float y)
 {
