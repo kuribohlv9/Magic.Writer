@@ -523,7 +523,7 @@ void GameState::InstantiateMonsters()
 	{
 		if (i < 5)
 		{
-			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 153, 173, 45, ITEM_COLD, particle);
+			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 172, 158, 45, ITEM_COLD, particle);
 			lavaMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
 			m_monsters.push_back(lavaMonster);
 		}

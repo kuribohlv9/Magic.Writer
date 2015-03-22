@@ -37,7 +37,7 @@ void HighscoreManager::Draw(DrawManager* drawManager)
 			drawManager->Draw(m_text, sf::RenderStates::Default);
 
 		}
-		else if (m_lastEntry.name == m_entries[i].name)
+		else if (m_lastEntry.name == m_entries[i].name && m_lastEntry.score == m_entries[i].score)
 		{
 			m_text.setString(std::to_string(i + 1) + ". " + m_entries[i].GetText());
 			float yvalue = m_maxEntries + 0.5f;
@@ -95,11 +95,6 @@ void HighscoreManager::ReadHighscore()
 		if (entry.name == "")
 		{
 			break;
-		}
-		else if (entry.name == "PUMZEEE" || entry.name == "ARA") //Add more developer names here with ||...
-		{
-			std::string newName = "(D) " + entry.name;
-			entry.name = newName;
 		}
 
 		m_entries.push_back(entry);

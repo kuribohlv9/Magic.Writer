@@ -13,7 +13,12 @@ struct ScoreEntry
 	//Returns a string that connects the name and score as one string
 	std::string GetText()
 	{
-		return (name + " " + std::to_string(score));
+		if (name == "PUMZEEE" || name == "TUNA" || name == "ARA") //Add more developer names here with ||...
+		{
+			return "(D) " + name + " " + std::to_string(score);
+		}
+		else
+			return (name + " " + std::to_string(score));
 	}
 };
 

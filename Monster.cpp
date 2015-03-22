@@ -293,6 +293,7 @@ void Monster::Activate(int speed)
 	m_foam_sprite.setColor(sf::Color::White);
 	m_snail_sprite.setColor(sf::Color(255, 255, 255, 0));
 	m_sprite.setColor(sf::Color::White);
+	m_sprite.setTextureRect(sf::IntRect(m_sprite_width * 2, 0, m_sprite_width, m_sprite_height));
 
 
 	//Randomize start position
