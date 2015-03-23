@@ -47,7 +47,7 @@ Player::Player(sf::Texture* texture, sf::Texture* particle, sf::Texture* sandPar
 	m_throwing_buffers.push_back(ServiceLocator<AudioManager>::GetService()->LoadSoundFromFile("assets/audio/ljud_studio/wizard_throw_0_converted.wav"));
 	m_throwing_buffers.push_back(ServiceLocator<AudioManager>::GetService()->LoadSoundFromFile("assets/audio/ljud_studio/wizard_throw_1.wav"));
 	m_throwing_buffers.push_back(ServiceLocator<AudioManager>::GetService()->LoadSoundFromFile("assets/audio/complete/wizard_spell_complete01.wav"));
-	m_throwing_sound.setVolume(100);
+	m_throwing_sound.setVolume(60);
 
 	//Set emitter
 	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particle, 100);
@@ -218,6 +218,7 @@ void Player::SetItem(Item* item)
 		m_animator->SetAnimation("throwing");
 		int randnumber = rand() % 3;
 		m_throwing_sound.setBuffer(*m_throwing_buffers[0]);
+		m_throwing_sound.setPlayingOffset(sf::seconds(0.3f));
 		m_throwing_sound.play();
 	}
 
