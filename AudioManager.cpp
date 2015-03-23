@@ -41,7 +41,10 @@ sf::SoundBuffer* AudioManager::LoadSoundFromFile(const std::string& filename)
 	if (it == m_buffers.end())
 	{
 		sf::SoundBuffer* buffer = new sf::SoundBuffer();
-		buffer->loadFromFile(filename);
+		if (!buffer->loadFromFile(filename))
+		{
+			printf("Something fucked up yo!");
+		}
 
 		m_buffers.insert(std::pair<std::string, sf::SoundBuffer*>(filename, buffer));
 

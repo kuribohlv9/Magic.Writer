@@ -766,7 +766,7 @@ bool GameState::PlayMode(float deltaTime)
 	if (!m_active_theme || m_active_theme->getStatus() == sf::Music::Status::Stopped)
 	{
 		m_active_theme = m_game_themes[rand() % 5];
-		m_active_theme->play();
+		//m_active_theme->play();
 	}
 
 	//Check win and lose condition
