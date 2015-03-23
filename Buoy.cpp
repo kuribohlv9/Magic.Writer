@@ -7,7 +7,7 @@ Buoy::Buoy(sf::Texture* texture, float x, float y, const std::string animationFi
 {
 	m_sprite.setTexture(*texture);
 	m_sprite.setPosition(x, y);
-	m_sprite.setOrigin(64, 64);
+	m_sprite.setOrigin(128, 128);
 	m_animator = new Animator(&m_sprite, animationFile);
 	m_animator->SetAnimation("red");
 	m_animator->SetStartFrame(rand() % 6);
