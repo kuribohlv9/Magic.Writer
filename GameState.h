@@ -140,7 +140,6 @@ private:
 	//Music
 	std::vector<sf::Music*> m_game_themes;
 	sf::Music* m_active_theme;
-	sf::Music* m_losing_theme;
 	std::vector<sf::SoundBuffer*> m_wizard_quotes;
 	sf::Sound m_wizard_quote;
 

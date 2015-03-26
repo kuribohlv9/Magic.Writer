@@ -75,9 +75,6 @@ GameState::GameState()
 	music = m_audioManager->LoadMusicFromFile("assets/Audio/Soundtracks - Theme & Bakground/Zanzibar.ogg");
 	music->setVolume(20);
 	m_game_themes.push_back(music);
-
-	music = m_audioManager->LoadMusicFromFile("");
-	m_losing_theme = music;
 }
 GameState::~GameState()
 {
@@ -833,11 +830,6 @@ bool GameState::VictoryMode(float deltaTime)
 }
 bool GameState::DefeatMode(float deltaTime)
 {
-	if (m_losing_theme->getStatus() == sf::Music::Status::Stopped)
-	{
-		m_losing_theme->play();
-	}
-
 	m_back_to_menu_button->Update();
 	m_submit_button->Update();
 
@@ -858,7 +850,6 @@ bool GameState::DefeatMode(float deltaTime)
 			entry.name = m_userName;
 			entry.score = m_userInfo.totalScore;
 			m_highscoreManager->WriteHighscore(entry);
-			m_losing_theme->stop();
 			return false;
 		}
 	}
@@ -874,7 +865,6 @@ bool GameState::DefeatMode(float deltaTime)
 
 	if (m_back_to_menu_button->IsPressed())
 	{
-		m_losing_theme->stop();
 		return false;
 	}
 	return true;
