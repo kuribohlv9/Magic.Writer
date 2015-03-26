@@ -31,7 +31,8 @@ public:
 	void SetSounds(
 		sf::SoundBuffer* hitBuffer,
 		sf::SoundBuffer* hitBufferTwo,
-		sf::SoundBuffer* hitBufferThree);
+		sf::SoundBuffer* hitBufferThree,
+		sf::SoundBuffer* hitBufferFour);
 
 private:
 	void HandleBodyParts();

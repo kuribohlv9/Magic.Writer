@@ -209,6 +209,7 @@ void Monster::Damage(ItemProperty property, bool& oneShot)
 { 
 	oneShot = false;
 	int randomSoundIndex = rand() % 3;
+	m_hitSound.setVolume(100);
 	m_hitSound.setBuffer(*m_hitBuffers[randomSoundIndex]);
 
 	if (property == m_weakness)
@@ -225,6 +226,11 @@ void Monster::Damage(ItemProperty property, bool& oneShot)
 		m_state = MONSTER_HIT;
 		m_head_animator->SetAnimation("hit");
 	}
+	else
+	{
+		m_hitSound.setVolume(10);
+		m_hitSound.setBuffer(*m_hitBuffers[3]);
+	}
 
 	if (m_health <= 0)
 	{
@@ -232,6 +238,7 @@ void Monster::Damage(ItemProperty property, bool& oneShot)
 		m_head_animator->SetAnimation("death");
 		m_collider->SetWidthHeight(0, 0);
 		m_emitter->SetActive(false);
+		m_hitSound.setVolume(10);
 		m_hitSound.setBuffer(*m_cheering);
 
 		m_foam_sprite.setColor(sf::Color::Transparent);
@@ -309,11 +316,12 @@ void Monster::Activate(int speed)
 	m_emitter->SetActive(true);
 }
 
-void Monster::SetSounds(sf::SoundBuffer* hitBuffer, sf::SoundBuffer* hitBufferTwo, sf::SoundBuffer* hitBufferThree)
+void Monster::SetSounds(sf::SoundBuffer* hitBuffer, sf::SoundBuffer* hitBufferTwo, sf::SoundBuffer* hitBufferThree, sf::SoundBuffer* hitBufferFour)
 {
 	m_hitBuffers[0] = hitBuffer;
 	m_hitBuffers[1] = hitBufferTwo;
 	m_hitBuffers[2] = hitBufferThree;
+	m_hitBuffers[3] = hitBufferFour;
 
 	m_hitSound.setVolume(10);
 

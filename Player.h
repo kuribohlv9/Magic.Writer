@@ -47,6 +47,7 @@ private:
 	sf::Sound m_changeLaneSound;
 	std::vector<sf::SoundBuffer*> m_throwing_buffers;
 	sf::Sound m_throwing_sound;
+	sf::Sound m_knockdown_sound;
 	int m_lane;
 
 	float m_targetX;

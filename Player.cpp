@@ -45,9 +45,9 @@ Player::Player(sf::Texture* texture, sf::Texture* particle, sf::Texture* sandPar
 	m_changeLaneSound.setBuffer(*changeLaneBuffer);
 	m_changeLaneSound.setVolume(10);
 	m_throwing_buffers.push_back(ServiceLocator<AudioManager>::GetService()->LoadSoundFromFile("assets/audio/ljud_studio/wizard_throw_0_converted.wav"));
-	m_throwing_buffers.push_back(ServiceLocator<AudioManager>::GetService()->LoadSoundFromFile("assets/audio/ljud_studio/wizard_throw_1.wav"));
-	m_throwing_buffers.push_back(ServiceLocator<AudioManager>::GetService()->LoadSoundFromFile("assets/audio/complete/wizard_spell_complete01.wav"));
+	m_throwing_buffers.push_back(ServiceLocator<AudioManager>::GetService()->LoadSoundFromFile("assets/audio/ljud_studio/wizard_throw_1_converted.wav"));
 	m_throwing_sound.setVolume(60);
+	m_knockdown_sound.setBuffer(*ServiceLocator<AudioManager>::GetService()->LoadSoundFromFile("assets/audio/ljud_studio/wizard_knockdown_converted.wav"));
 
 	//Set emitter
 	m_emitter = ServiceLocator<ParticleManager>::GetService()->CreateEmitter(particle, 100);
@@ -216,9 +216,8 @@ void Player::SetItem(Item* item)
 		//Change state to throwing and change animation
 		m_state = PLAYER_THROWING;
 		m_animator->SetAnimation("throwing");
-		int randnumber = rand() % 3;
-		m_throwing_sound.setBuffer(*m_throwing_buffers[0]);
-		m_throwing_sound.setPlayingOffset(sf::seconds(0.3f));
+		int randnumber = rand() % 2;
+		m_throwing_sound.setBuffer(*m_throwing_buffers[randnumber]);
 		m_throwing_sound.play();
 	}
 
@@ -262,6 +261,7 @@ void Player::Knockdown()
 		knockDirection *= -1;
 	}
 	m_state = PLAYER_KNOCKEDDOWN;
+	m_knockdown_sound.play();
 	m_animator->SetAnimation("knockback");
 	m_sprite.setScale(knockDirection * 0.9f, 0.9f);
 

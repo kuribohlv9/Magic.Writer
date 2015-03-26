@@ -76,7 +76,7 @@ GameState::GameState()
 	music->setVolume(20);
 	m_game_themes.push_back(music);
 
-	music = m_audioManager->LoadMusicFromFile("assets/Audio/Game_Over_-_Banjo-Kazooie.ogg");
+	music = m_audioManager->LoadMusicFromFile("");
 	m_losing_theme = music;
 }
 GameState::~GameState()
@@ -403,6 +403,26 @@ void GameState::Enter()
 	m_next_state = STATE_MENU;
 	m_waveManager->SetActiveWave(0);
 
+	//Wizard Quotes
+	sf::SoundBuffer* quote = m_audioManager->LoadSoundFromFile("assets/Audio/Ljud_studio/wave_start_0_converted.wav");
+	m_wizard_quotes.push_back(quote);
+	quote = m_audioManager->LoadSoundFromFile("assets/Audio/Ljud_studio/wave_start_1_converted.wav");
+	m_wizard_quotes.push_back(quote);
+	quote = m_audioManager->LoadSoundFromFile("assets/Audio/Ljud_studio/wave_start_2_converted.wav");
+	m_wizard_quotes.push_back(quote);
+	quote = m_audioManager->LoadSoundFromFile("assets/Audio/Ljud_studio/wave_victory_0_converted.wav");
+	m_wizard_quotes.push_back(quote);
+	quote = m_audioManager->LoadSoundFromFile("assets/Audio/Ljud_studio/wave_victory_1_converted.wav");
+	m_wizard_quotes.push_back(quote);
+	quote = m_audioManager->LoadSoundFromFile("assets/Audio/Ljud_studio/wave_victory_2_converted.wav");
+	m_wizard_quotes.push_back(quote);
+	quote = m_audioManager->LoadSoundFromFile("assets/Audio/Ljud_studio/wave_defeat_0_converted.wav");
+	m_wizard_quotes.push_back(quote);
+	quote = m_audioManager->LoadSoundFromFile("assets/Audio/Ljud_studio/wave_defeat_1_converted.wav");
+	m_wizard_quotes.push_back(quote);
+	quote = m_audioManager->LoadSoundFromFile("assets/Audio/Ljud_studio/wave_defeat_2_converted.wav");
+	m_wizard_quotes.push_back(quote);
+
 	//Readymode
 	GotoReady();
 }
@@ -515,22 +535,23 @@ void GameState::InstantiateMonsters()
 
 	sf::Texture* particle = m_textureManager->LoadTexture("assets/sprites/monster/particle.png");
 
-	sf::SoundBuffer* monsterHitBuffer = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
-	sf::SoundBuffer* monsterHitBufferTwo = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
-	sf::SoundBuffer* monsterHitBufferThree = m_audioManager->LoadSoundFromFile("assets/audio/Misc/BAM.wav");
+	sf::SoundBuffer* monsterHitBuffer = m_audioManager->LoadSoundFromFile("assets/audio/ljud_studio/monster_hit_0_converted.wav");
+	sf::SoundBuffer* monsterHitBufferTwo = m_audioManager->LoadSoundFromFile("assets/audio/ljud_studio/monster_hit_1_converted.wav");
+	sf::SoundBuffer* monsterHitBufferThree = m_audioManager->LoadSoundFromFile("assets/audio/ljud_studio/monster_hit_2_converted.wav");
+	sf::SoundBuffer* monsterHitBufferFour = m_audioManager->LoadSoundFromFile("assets/audio/misc/bam.wav");
 	//Monster pool
 	for (int i = 0; i < 10; i++)
 	{
 		if (i < 5)
 		{
 			Monster* lavaMonster = new Monster(lavaTexture, "assets/sprites/monster/lava_monster_animation.txt", 172, 158, 45, ITEM_COLD, particle);
-			lavaMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
+			lavaMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree, monsterHitBufferFour);
 			m_monsters.push_back(lavaMonster);
 		}
 		else if (i >=5 )
 		{
 			Monster* iceMonster = new Monster(iceTexture, "assets/sprites/monster/ice_monster_animation.txt", 182, 178, 45, ITEM_HOT, particle);
-			iceMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree);
+			iceMonster->SetSounds(monsterHitBuffer, monsterHitBufferTwo, monsterHitBufferThree, monsterHitBufferFour);
 			m_monsters.push_back(iceMonster);
 		}
 	}
@@ -766,18 +787,24 @@ bool GameState::PlayMode(float deltaTime)
 	if (!m_active_theme || m_active_theme->getStatus() == sf::Music::Status::Stopped)
 	{
 		m_active_theme = m_game_themes[rand() % 5];
-		//m_active_theme->play();
+		m_active_theme->play();
 	}
 
 	//Check win and lose condition
 	if (m_life <= 0)
 	{
 		m_status = MODE_DEFEAT;
+		int randnumber = rand() % 3 + 6;
+		m_wizard_quote.setBuffer(*m_wizard_quotes[randnumber]);
+		m_wizard_quote.play();
 		SetUserInfoDefeat();
 	}
 	else if (!m_waveManager->IsActive() && !IsMonsters())
 	{
 		m_status = MODE_VICTORY;
+		int randnumber = rand() % 3 + 3;
+		m_wizard_quote.setBuffer(*m_wizard_quotes[randnumber]);
+		m_wizard_quote.play();
 		m_active_theme->stop();
 		SetUserInfoVictory();
 	}
@@ -875,4 +902,7 @@ void GameState::GotoReady()
 
 	m_ready_timer = 0;
 	m_status = MODE_READY;
+	int randnumber = rand() % 3;
+	m_wizard_quote.setBuffer(*m_wizard_quotes[randnumber]);
+	m_wizard_quote.play();
 }
