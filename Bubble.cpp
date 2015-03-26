@@ -13,11 +13,11 @@ Bubble::Bubble(float x, float y, sf::Texture* texture, Player* player)
 	m_sprite.setPosition(x, y);
 	m_sprite.setTexture(*texture);
 	m_sprite.setTextureRect(sf::IntRect(0, 0, m_width, m_height));
-	m_sprite.setOrigin(m_width / 2, m_height / 2);
+	m_sprite.setOrigin(m_width / 2.0f, m_height / 2.0f);
 
 	m_item = nullptr;
 	m_player = player;
-	m_playerOffset = m_sprite.getPosition().x - player->GetX();
+	m_playerOffset = (int)(m_sprite.getPosition().x - player->GetX());
 
 	m_lifeTime += 75 + x * 100;
 

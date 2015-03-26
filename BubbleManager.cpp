@@ -68,7 +68,7 @@ BubbleManager::~BubbleManager()
 void BubbleManager::Update(float deltaTime)
 {
 	//Update bubbles
-	for (int i = 0; i < m_bubbles.size(); i++)
+	for (unsigned int i = 0; i < m_bubbles.size(); i++)
 	{
 		m_bubbles[i]->Update(deltaTime);
 		m_wordManager->SetWordPosition(m_bubbles[i]->GetPosition(), i);

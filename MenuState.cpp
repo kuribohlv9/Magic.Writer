@@ -19,7 +19,7 @@ MenuState::MenuState()
 	m_nextState = STATE_INVALID;
 
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/sign_spritesheet.png");
-	sf::Font* font = m_textureManager->LoadFont("assets/fonts/game.ttf");
+	sf::Font* font = m_textureManager->LoadFont("assets/fonts/menu.ttf");
 	m_highscoreManager->SetFont(font);
 	m_highscoreManager->SetPosition(135, 130);
 
@@ -62,37 +62,34 @@ MenuState::~MenuState()
 }
 bool MenuState::Update(float deltaTime)
 {
-	if (!m_helpScreen)
+	for (unsigned int i = 0; i < m_buttons.size(); i++)
 	{
-		for (int i = 0; i < m_buttons.size(); i++)
-		{
-			m_buttons[i]->Update();
-		}
-
-		if (m_playButton->IsPressed())
-		{
-			m_nextState = STATE_GAME;
-			return false;
-		}
-		else if (m_highscoreButton->IsPressed())
-		{
-			m_nextState = STATE_INSTRUCTION;
-			return false;
-		}
-		else if (m_exitButton->IsPressed())
-		{
-			m_nextState = STATE_INVALID;
-			return false;
-		}
-		return true;
+		m_buttons[i]->Update();
 	}
+
+	if (m_playButton->IsPressed())
+	{
+		m_nextState = STATE_GAME;
+		return false;
+	}
+	else if (m_highscoreButton->IsPressed())
+	{
+		m_nextState = STATE_INSTRUCTION;
+		return false;
+	}
+	else if (m_exitButton->IsPressed())
+	{
+		m_nextState = STATE_INVALID;
+		return false;
+	}
+	return true;
 }
 void MenuState::Draw()
 {
 	m_drawManager->Draw(m_backgroundSprite, sf::RenderStates::Default);
 	m_drawManager->Draw(m_poleSprite, sf::RenderStates::Default);
 
-	for (int i = 0; i < m_buttons.size(); i++)
+	for (unsigned int i = 0; i < m_buttons.size(); i++)
 	{
 		m_buttons[i]->Draw(m_drawManager);
 	}

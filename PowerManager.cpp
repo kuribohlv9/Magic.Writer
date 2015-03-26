@@ -34,17 +34,17 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 	m_activePlupps = 0;
 	m_fadeColor = sf::Color(100, 100, 150, 255);
 	
-	m_pierceSprite.setOrigin(96 / 2, 96 / 2);
-	m_pierceSprite.setScale(0.8, 0.8);
-	m_pierceSprite.setPosition(123, 596);
+	m_pierceSprite.setOrigin(96.0f / 2.0f, 96.0f / 2.0f);
+	m_pierceSprite.setScale(0.8f, 0.8f);
+	m_pierceSprite.setPosition(123.0f, 596.0f);
 
-	m_bounceSprite.setOrigin(96 / 2, 96 / 2);
-	m_bounceSprite.setScale(0.8, 0.8);
-	m_bounceSprite.setPosition(123, 320);
+	m_bounceSprite.setOrigin(96.0f / 2.0f, 96.0f / 2.0f);
+	m_bounceSprite.setScale(0.8f, 0.8f);
+	m_bounceSprite.setPosition(123.0f, 320.0f);
 
-	m_freezeSprite.setOrigin(96 / 2, 96 / 2);
-	m_freezeSprite.setScale(0.8, 0.8);
-	m_freezeSprite.setPosition(123, 48);
+	m_freezeSprite.setOrigin(96.0f / 2.0f, 96.0f / 2.0f);
+	m_freezeSprite.setScale(0.8f, 0.8f);
+	m_freezeSprite.setPosition(123.0f, 48.0f);
 
 	sf::Texture* texture = m_textureManager->LoadTexture("assets/sprites/hud/pluppen.png");
 	int extraHeight = 0;
@@ -52,12 +52,12 @@ PowerManager::PowerManager(std::vector<Monster*>* monsters, std::vector<Item*>* 
 	{
 		sf::Sprite s;
 		s.setTexture(*texture);
-		s.setOrigin(texture->getSize().x / 2, texture->getSize().y / 2);
+		s.setOrigin(texture->getSize().x / 2.0f, texture->getSize().y / 2.0f);
 
 		if (i == 7 || i == 15 || i == 23)
 			extraHeight += 50;
 
-		s.setPosition(125, (texture->getSize().y * 22) - i * texture->getSize().y - i * -8 - extraHeight);
+		s.setPosition(125.0f, (float)((texture->getSize().y * 22.0f) - i * texture->getSize().y - i * -8.0f - extraHeight));
 
 		m_plupps.push_back(s);
 	}
@@ -115,7 +115,7 @@ void PowerManager::UpdatePowerBar()
 	{
 		sf::Color color = sf::Color(241, 132, 132, 255); // Red
 
-		if (i < m_activePlupps)
+		if (i < (unsigned int)m_activePlupps)
 			color = sf::Color(75, 230, 36, 255);
 
 		m_plupps[i].setColor(color);
@@ -172,6 +172,8 @@ bool PowerManager::GetReadyPowerup(int powerupIndex)
 		return (m_activePlupps >= 23);
 		break;
 	}
+
+	return false;
 }
 
 //Bounce methods
@@ -193,7 +195,7 @@ void PowerManager::ActivateBounce()
 }
 bool PowerManager::SetNewBounceTarget(Monster* hitMonster)
 {
-	m_LaneBounceList.push_back(hitMonster->GetX());
+	m_LaneBounceList.push_back((int)(hitMonster->GetX()));
 	if (m_bounceCurrentItem != nullptr)
 	{
 		for (unsigned int i = 0; i < m_monsters->size(); i++)

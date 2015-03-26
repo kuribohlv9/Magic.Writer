@@ -7,7 +7,7 @@
 SmallBubble::SmallBubble(sf::Texture* texture, Player* player, Bubble* targetBubble, float percentageFromPlayer)
 {
 	m_sprite.setTexture(*texture);
-	m_sprite.setOrigin(texture->getSize().x / 2, texture->getSize().y / 2);
+	m_sprite.setOrigin(texture->getSize().x / 2.0f, texture->getSize().y / 2.0f);
 
 	m_acceleration = 0.01f;
 	m_velocity = sf::Vector2f(0, -100);

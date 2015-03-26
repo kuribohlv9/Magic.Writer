@@ -187,7 +187,7 @@ void Player::ChangeLane(int xDirection)
 	if (m_sandEmitter && xDirection != 0)
 	{
 		//Activate emitter
-		float angle = (xDirection == 1) ? 0 : 180;
+		int angle = (xDirection == 1) ? 0 : 180;
 		m_sandEmitter->SetActive(true);
 		m_sandEmitter->SetStartAngle(angle, angle);
 	}

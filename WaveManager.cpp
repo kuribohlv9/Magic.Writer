@@ -19,14 +19,14 @@ void WaveManager::Update(float deltaTime)
 
 	if (m_timer >= m_spawnTime)
 	{
-		if (m_active_wave.size() > m_monster_number)
+		if ((int)m_active_wave.size() > m_monster_number)
 		{
 			//currentWave->erase(currentWave->begin());
 			m_spawnMonster = true;
 			m_timer = 0;
 			m_monster_number++;
 
-			if (m_active_wave.size() > m_monster_number)
+			if ((int)m_active_wave.size() > m_monster_number)
 				m_spawnTime = m_active_wave.at(m_monster_number);
 		}
 		else if (m_active_wave.size() == m_monster_number)
@@ -116,13 +116,13 @@ void WaveManager::SetActiveWave(int level)
 	{
 		if (level < 4)
 		{
-			wave_level = 5.0 - level/2;
+			wave_level = 5 - level / 2;
 		}
 		else
 		{
-			wave_level = 3.0;
+			wave_level = 3;
 		}
-		wave.push_back(wave_level);
+		wave.push_back((float)wave_level);
 	}
 	m_active_wave = wave;
 	//m_active_wave = m_waves[0];

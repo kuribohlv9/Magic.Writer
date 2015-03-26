@@ -32,7 +32,7 @@
 
 GameState::GameState()
 {
-	srand(time(NULL));
+	srand(static_cast<unsigned int>(time(NULL)));
 
 	//Initiallize managers
 	m_textureManager = ServiceLocator<TextureManager>::GetService();
@@ -49,7 +49,7 @@ GameState::GameState()
 	m_ice_backgroundSprite.setTexture(*texture);
 
 	//Load HUD
-	m_font = m_textureManager->LoadFont("assets/fonts/game.ttf");
+	m_font = m_textureManager->LoadFont("assets/fonts/menu.ttf");
 	m_scoreDisplay.setFont(*m_font);
 	m_scoreDisplay.setCharacterSize(40);
 	m_scoreDisplay.setPosition(1645, 935);
@@ -106,13 +106,13 @@ void GameState::CheckCollision()
 	if (m_status == MODE_PLAYING)
 	{
 		//Collision between items and monsters
-		for (int i = 0; i < m_activeItems.size(); i++)
+		for (unsigned int i = 0; i < m_activeItems.size(); i++)
 		{
 			Item* item = m_activeItems[i];
 			if (!item->IsActive())
 				continue;
 
-			for (int j = 0; j < m_monsters.size(); j++)
+			for (unsigned int j = 0; j < m_monsters.size(); j++)
 			{
 				Monster* monster = m_monsters[j];
 				if (!monster->IsActive())
@@ -194,7 +194,7 @@ void GameState::CheckCollision()
 		}
 
 		//Collision between monsters and player
-		for (int i = 0; i < m_monsters.size(); i++)
+		for (unsigned int i = 0; i < m_monsters.size(); i++)
 		{
 			if (CollisionManager::Check(m_monsters[i]->GetCollider(), m_player->GetCollider()))
 			{
@@ -205,7 +205,7 @@ void GameState::CheckCollision()
 		//Cleanup
 
 		//Remove active items
-		for (int i = 0; i < m_activeItems.size(); i++)
+		for (unsigned int i = 0; i < m_activeItems.size(); i++)
 		{
 			if (!m_activeItems[i]->IsActive())
 			{
@@ -250,11 +250,13 @@ void GameState::Draw()
 	//Draw Particles
 	m_particleManager->Draw(m_drawManager);
 
+	m_drawManager->Draw(m_scoreDisplay, sf::RenderStates::Default);
+
 	//Draw HUD
 	m_powerManager->Draw(m_drawManager);
 
 	//Draw monster
-	for (int i = 0; i < m_monsters.size(); i++)
+	for (unsigned int i = 0; i < m_monsters.size(); i++)
 	{
 		if (m_monsters[i]->IsActive())
 		{
@@ -272,7 +274,7 @@ void GameState::Draw()
 	m_wordManager->Draw(m_drawManager);
 
 	//Draw active items
-	for (int i = 0; i < m_activeItems.size(); i++)
+	for (unsigned int i = 0; i < m_activeItems.size(); i++)
 	{
 		if (m_activeItems[i]->IsActive())
 		{
@@ -280,7 +282,6 @@ void GameState::Draw()
 		}
 	}
 
-	m_drawManager->Draw(m_scoreDisplay, sf::RenderStates::Default);
 
 	//Draw Victory and Losing screen
 	if (m_status == MODE_VICTORY)
@@ -340,7 +341,7 @@ void GameState::Enter()
 	for (unsigned int i = 0; i < 3; i++)
 	{
 		std::string file = "assets/sprites/buoys/buoy_animation_" + std::to_string(2 - i) + ".txt";
-		Buoy* b = new Buoy(texture, 45, 60 + i * 270, file);
+		Buoy* b = new Buoy(texture, 45.0f, 60.0f + i * 270.0f, file);
 		m_buoys.push_back(b);
 	}
 
@@ -366,21 +367,21 @@ void GameState::Enter()
 	//Life sprite
 	texture = m_textureManager->LoadTexture("assets/sprites/buoys/plupp_collection.png");
 	m_lifeSprite.setTexture(*texture);
-	m_lifeSprite.setOrigin(texture->getSize().x / 2, 0);
-	m_lifeSprite.setPosition(ScreenWidth - 125, 0);
+	m_lifeSprite.setOrigin(texture->getSize().x / 2.0f, 0.0f);
+	m_lifeSprite.setPosition(ScreenWidth - 125.0f, 0.0f);
 
 	m_lifeSprite2.setTexture(*texture);
-	m_lifeSprite2.setOrigin(texture->getSize().x / 2, 0);
+	m_lifeSprite2.setOrigin(texture->getSize().x / 2.0f, 0.0f);
 	m_lifeSprite2.setColor(sf::Color(241, 132, 132, 255));
-	m_lifeSprite2.setPosition(ScreenWidth - 125, texture->getSize().y);
+	m_lifeSprite2.setPosition(ScreenWidth - 125.0f, (float)texture->getSize().y);
 
 	m_lifeSprite3.setTexture(*texture);
-	m_lifeSprite3.setOrigin(texture->getSize().x / 2, 0);
-	m_lifeSprite3.setPosition(ScreenWidth - 125, texture->getSize().y * 2);
+	m_lifeSprite3.setOrigin(texture->getSize().x / 2.0f, 0.0f);
+	m_lifeSprite3.setPosition(ScreenWidth - 125.0f, texture->getSize().y * 2.0f);
 
 	//Highscore input
 	m_userName = "";
-	m_userTextBox.setFont(*m_font);
+	m_userTextBox.setFont(*m_textureManager->LoadFont("assets/fonts/menu.ttf"));
 	m_userTextBox.setCharacterSize(40);
 	m_userTextBox.setPosition(420, ScreenHeight - 465);
 	m_userTextBox.setString(m_userName);
@@ -611,7 +612,7 @@ void GameState::ConvertWordToItem()
 bool GameState::IsMonsters()
 {
 	//Check if there is any active monsters and return the result
-	for (int i = 0; i < m_monsters.size(); i++)
+	for (unsigned int i = 0; i < m_monsters.size(); i++)
 	{
 		if (m_monsters[i]->IsActive())
 			return true;
@@ -694,7 +695,7 @@ bool GameState::PlayMode(float deltaTime)
 	}
 
 	//Update active items
-	for (int i = 0; i < m_activeItems.size(); i++)
+	for (unsigned int i = 0; i < m_activeItems.size(); i++)
 	{
 		if (!m_activeItems[i]->IsActive())
 			continue;
@@ -703,7 +704,7 @@ bool GameState::PlayMode(float deltaTime)
 	}
 
 	//Item movement
-	for (int i = 0; i < m_activeItems.size(); i++)
+	for (unsigned int i = 0; i < m_activeItems.size(); i++)
 	{
 		Item* item = m_activeItems.at(i);
 		if (!item->IsActive())
@@ -740,7 +741,7 @@ bool GameState::PlayMode(float deltaTime)
 	m_player->Update(deltaTime);
 
 	//Update monsters
-	for (int i = 0; i < m_monsters.size(); i++)
+	for (unsigned int i = 0; i < m_monsters.size(); i++)
 	{
 		if (!m_monsters[i]->IsActive())
 			continue;

@@ -21,7 +21,7 @@ bool HighscoreManager::Initialize()
 
 void HighscoreManager::Draw(DrawManager* drawManager)
 {
-	for (int i = 0; i < m_entries.size(); i++)
+	for (unsigned int i = 0; i < m_entries.size(); i++)
 	{
 		m_text.setColor(sf::Color(73, 47, 34, 255));
 		if (i == 0)
@@ -55,7 +55,7 @@ void HighscoreManager::WriteHighscore(ScoreEntry entry)
 	file.open(m_highscore_filename);
 
 	bool entryApplied = false;
-	for (int i = 0; i < m_entries.size(); i++)
+	for (unsigned int i = 0; i < m_entries.size(); i++)
 	{
 		if (entry.score > m_entries[i].score && !entryApplied)
 		{
@@ -66,7 +66,7 @@ void HighscoreManager::WriteHighscore(ScoreEntry entry)
 		file << m_entries[i].name;
 		file << " " << m_entries[i].score;
 
-		if (i < m_entries.size() - 1)
+		if (i < static_cast<unsigned int>(m_entries.size() - 1))
 			file << std::endl;
 	}
 

@@ -15,7 +15,7 @@ struct ScoreEntry
 	{
 		if (name == "PUMZEEE" || name == "TUNA" || name == "ARA" || name == "KURI" || name == "SCHULLE" || name == "FIRENZ") //Add more developer names here with ||...
 		{
-			return "(D) " + name + " " + std::to_string(score);
+			return "(D)" + name + " " + std::to_string(score);
 		}
 		else
 			return (name + " " + std::to_string(score));
@@ -43,7 +43,7 @@ private:
 	std::vector<ScoreEntry> m_entries;
 	std::string m_highscore_filename;
 
-	int m_maxEntries;
+	unsigned int m_maxEntries;
 	ScoreEntry m_lastEntry;
 	sf::Vector2f m_position;
 	sf::Text m_text;

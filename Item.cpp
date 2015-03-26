@@ -113,7 +113,7 @@ void Item::SetState(ItemState state)
 	{
 		m_collider->SetWidthHeight(0, 0);
 
-		float angle = 180 + rand() % 180;
+		float angle = 180.0f + rand() % 180;
 		float radians = angle * (3.14f / 180.0f);
 		m_bounceDir = sf::Vector2f(cos(radians), sin(radians));
 		float length = sqrt(m_bounceDir.x * m_bounceDir.x + m_bounceDir.y * m_bounceDir.y);

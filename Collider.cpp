@@ -37,8 +37,8 @@ void Collider::SetPosition(float x, float y)
 
 void Collider::SetWidthHeight(int width, int height)
 {
-	m_area.width = width;
-	m_area.height = height;
+	m_area.width = (float)width;
+	m_area.height = (float)height;
 }
 
 sf::FloatRect Collider::GetArea()

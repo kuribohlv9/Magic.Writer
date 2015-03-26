@@ -69,8 +69,8 @@ void InputManager::SetKey(int key, bool state)
 
 void InputManager::SetMousePosition(int x, int y)
 {
-	m_mouse_position.x = x;
-	m_mouse_position.y = y;
+	m_mouse_position.x = (float)x;
+	m_mouse_position.y = (float)y;
 
 	m_mouseCollider->SetPosition(m_mouse_position.x, m_mouse_position.y);
 }

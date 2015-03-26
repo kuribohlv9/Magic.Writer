@@ -292,7 +292,7 @@ void Monster::Activate(int speed)
 	//Activation and reset function
 	m_frozen = false;
 	m_activeBurst = false;
-	m_speed = speed;
+	m_speed = (float)speed;
 	m_health = 2;
 	m_state = MONSTER_MOVE;
 

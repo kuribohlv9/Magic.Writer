@@ -29,14 +29,14 @@ ParticleEmitter* ParticleManager::CreateEmitter(sf::Texture* texture, int partic
 
 void ParticleManager::Update(float deltaTime)
 {
-	for (int i = 0; i < m_emitters.size(); i++)
+	for (unsigned int i = 0; i < m_emitters.size(); i++)
 	{
 		m_emitters[i]->Update(deltaTime);
 	}
 }
 void ParticleManager::Draw(DrawManager* drawManager)
 {
-	for (int i = 0; i < m_emitters.size(); i++)
+	for (unsigned int i = 0; i < m_emitters.size(); i++)
 	{
 		m_emitters[i]->Draw(drawManager);
 	}
